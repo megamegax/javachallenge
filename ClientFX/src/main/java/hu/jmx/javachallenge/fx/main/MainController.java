@@ -1,4 +1,4 @@
-package hu.javachallenge.main;
+package hu.jmx.javachallenge.fx.main;
 
 import javafx.fxml.Initializable;
 

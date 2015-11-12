@@ -1,6 +1,6 @@
-package hu.javachallenge;
+package hu.jmx.javachallenge.fx;
 
-import hu.javachallenge.main.MainController;
+import hu.jmx.javachallenge.fx.main.MainController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.JavaFXBuilderFactory;
