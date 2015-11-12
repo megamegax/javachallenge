@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.canvas.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="474.0" prefWidth="870.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <TreeTableView layoutX="515.0" layoutY="48.0" prefHeight="426.0" prefWidth="303.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="567.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="48.0">
+         <columns>
+            <TreeTableColumn prefWidth="75.0" text="Esemény" />
+            <TreeTableColumn prefWidth="75.0" text="Kör" />
+         </columns>
+      </TreeTableView>
+      <ImageView fitHeight="426.0" fitWidth="578.0" layoutY="48.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="48.0">
+         <image>
+            <Image url="@../frame.png" />
+         </image>
+      </ImageView>
+      <AnchorPane layoutX="10.0" layoutY="10.0" prefHeight="48.0" prefWidth="818.0" style="-fx-background-color: linear-gradient(#fefefe  0%, #98a8bd 100%);; -fx-effect: dropshadow( one-pass-box , rgba(0,0,0,0.8) , 0, 0.0 , 0 , -1 );;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Button layoutX="14.0" layoutY="12.0" mnemonicParsing="false" text="Szimuláció indítása" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="12.0" />
+            <ImageView fitHeight="40.0" fitWidth="40.0" layoutX="778.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="4.0">
+               <image>
+                  <Image url="@../dotsicon-1.png" />
+               </image>
+            </ImageView>
+            <Button layoutX="778.0" layoutY="12.0" mnemonicParsing="false" text="&gt;" />
+            <Button layoutX="742.0" layoutY="12.0" mnemonicParsing="false" text="&lt;" />
+         </children>
+      </AnchorPane>
+      <Canvas height="406.0" layoutX="12.0" layoutY="59.0" width="545.0" AnchorPane.bottomAnchor="9.0" AnchorPane.leftAnchor="12.0" AnchorPane.rightAnchor="313.0" AnchorPane.topAnchor="59.0" />
+      <AnchorPane layoutX="1.0" layoutY="48.0" prefHeight="48.0" prefWidth="568.0" style="-fx-background-color: rgba(0,0,0,0.1); -fx-opacity: 1;">
+         <children>
+            <Button layoutX="494.0" layoutY="9.0" mnemonicParsing="false" text="+" />
+            <Button layoutX="529.0" layoutY="9.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="-" />
+            <Text layoutX="22.0" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" text="X: Y:   ... egyéb infók salala" wrappingWidth="420.13671875" AnchorPane.topAnchor="16.0" />
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>
