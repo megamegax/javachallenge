@@ -18,10 +18,11 @@ public class Client {
     public void run() {
         System.out.println("Hello JMX");
         service = Service.getInstance();
+        service.startGame();
         service.getSpaceShuttlePos();
         service.getSpaceShuttlePosExit();
         service.getActionCost();
-        service.startGame();
+
 
         System.out.println("űrkomp merre néz:" + Util.calculateDirection(service.getSpaceShuttlePos().getCord(), service.getSpaceShuttlePosExit().getCord()).name());
         int i = 1;
