@@ -68,4 +68,11 @@ public class WsCoordinate {
         this.y = value;
     }
 
+    @Override
+    public String toString() {
+        return "WsCoordinate{" +
+                "x=" + x +
+                ", y=" + y +
+                '}';
+    }
 }

@@ -1,11 +1,7 @@
 
 package eu.loxon.centralcontrol;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlSchemaType;
-import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.*;
 
 
 /**
@@ -117,4 +113,12 @@ public class Scouting {
         this.team = value;
     }
 
+    @Override
+    public String toString() {
+        return "Scouting{" +
+                "cord=" + cord +
+                ", object=" + object +
+                ", team='" + team + '\'' +
+                '}';
+    }
 }

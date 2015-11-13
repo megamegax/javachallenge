@@ -31,12 +31,13 @@ public enum WsDirection {
     LEFT,
     RIGHT;
 
+    public static WsDirection fromValue(String v) {
+        return valueOf(v);
+    }
+
     public String value() {
         return name();
     }
 
-    public static WsDirection fromValue(String v) {
-        return valueOf(v);
-    }
 
 }

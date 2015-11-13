@@ -78,4 +78,11 @@ public class WsBuilderunit {
         this.unitid = value;
     }
 
+    @Override
+    public String toString() {
+        return "WsBuilderunit{" +
+                "cord=" + cord +
+                ", unitid=" + unitid +
+                '}';
+    }
 }

@@ -106,4 +106,13 @@ public class WsScore {
         this.total = value;
     }
 
+    @Override
+    public String toString() {
+        return "WsScore{" +
+                "reward=" + reward +
+                ", bonus=" + bonus +
+                ", penalty=" + penalty +
+                ", total=" + total +
+                '}';
+    }
 }

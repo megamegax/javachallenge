@@ -1,11 +1,7 @@
 
 package eu.loxon.centralcontrol;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlSchemaType;
-import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.*;
 
 
 /**
@@ -221,4 +217,17 @@ public class CommonResp {
         this.score = value;
     }
 
+    @Override
+    public String toString() {
+        return "CommonResp{" +
+                "actionPointsLeft=" + actionPointsLeft +
+                ", explosivesLeft=" + explosivesLeft +
+                ", turnsLeft=" + turnsLeft +
+                ", type=" + type +
+                ", builderUnit=" + builderUnit +
+                ", message='" + message + '\'' +
+                ", code='" + code + '\'' +
+                ", score=" + score +
+                '}';
+    }
 }

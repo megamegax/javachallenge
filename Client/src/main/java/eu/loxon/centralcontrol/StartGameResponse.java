@@ -1,20 +1,16 @@
 
 package eu.loxon.centralcontrol;
 
+import javax.xml.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
 
 
 /**
  * <p>Java class for anonymous complex type.
- * 
+ * <p>
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ * <p>
  * <pre>
  * &lt;complexType>
  *   &lt;complexContent>
@@ -28,14 +24,12 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "size",
-    "result",
-    "units"
+        "size",
+        "result",
+        "units"
 })
 @XmlRootElement(name = "startGameResponse")
 public class StartGameResponse {
@@ -49,11 +43,9 @@ public class StartGameResponse {
 
     /**
      * Gets the value of the size property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link WsCoordinate }
-     *     
+     *
+     * @return possible object is
+     * {@link WsCoordinate }
      */
     public WsCoordinate getSize() {
         return size;
@@ -61,11 +53,9 @@ public class StartGameResponse {
 
     /**
      * Sets the value of the size property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link WsCoordinate }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link WsCoordinate }
      */
     public void setSize(WsCoordinate value) {
         this.size = value;
@@ -73,11 +63,9 @@ public class StartGameResponse {
 
     /**
      * Gets the value of the result property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link CommonResp }
-     *     
+     *
+     * @return possible object is
+     * {@link CommonResp }
      */
     public CommonResp getResult() {
         return result;
@@ -85,11 +73,9 @@ public class StartGameResponse {
 
     /**
      * Sets the value of the result property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link CommonResp }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link CommonResp }
      */
     public void setResult(CommonResp value) {
         this.result = value;
@@ -97,31 +83,37 @@ public class StartGameResponse {
 
     /**
      * Gets the value of the units property.
-     * 
+     * <p>
      * <p>
      * This accessor method returns a reference to the live list,
      * not a snapshot. Therefore any modification you make to the
      * returned list will be present inside the JAXB object.
      * This is why there is not a <CODE>set</CODE> method for the units property.
-     * 
+     * <p>
      * <p>
      * For example, to add a new item, do as follows:
      * <pre>
      *    getUnits().add(newItem);
      * </pre>
-     * 
-     * 
+     * <p>
+     * <p>
      * <p>
      * Objects of the following type(s) are allowed in the list
      * {@link WsBuilderunit }
-     * 
-     * 
      */
     public List<WsBuilderunit> getUnits() {
         if (units == null) {
-            units = new ArrayList<WsBuilderunit>();
+            units = new ArrayList<>();
         }
         return this.units;
     }
 
+    @Override
+    public String toString() {
+        return "StartGameResponse{" +
+                "size=" + size +
+                ", result=" + result +
+                ", units=" + units +
+                '}';
+    }
 }
