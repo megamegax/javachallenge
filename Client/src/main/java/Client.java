@@ -24,7 +24,7 @@ public class Client {
         initialActionCost = service.getActionCost();
         initialGameState = service.startGame();
         for (int i = 0; i < 1; i++) {
-            Thread.sleep(1001);
+            Thread.sleep(3001);
             if (service.isMyTurn()) {
                 doJob(i);
             }

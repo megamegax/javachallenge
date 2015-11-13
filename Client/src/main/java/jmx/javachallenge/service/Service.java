@@ -11,6 +11,7 @@ import java.util.stream.Stream;
  */
 public class Service {
     public static CentralControl api = null;
+    public static CommonResp serviceState;
 
     static {
         java.net.Authenticator.setDefault(new java.net.Authenticator() {
@@ -56,6 +57,8 @@ public class Service {
 
     public boolean isMyTurn() {
         IsMyTurnResponse res = api.isMyTurn(new IsMyTurnRequest());
+        serviceState = res.getResult();
+
         //     printMessage(res.getResult());
         return res.isIsYourTurn();
     }
@@ -63,6 +66,7 @@ public class Service {
     public ActionCostResponse getActionCost() {
         ActionCostResponse res = api.getActionCost(new ActionCostRequest());
         printMessage(res.getResult());
+        serviceState = res.getResult();
         System.out.println(res.toString());
 
         return res;
@@ -75,7 +79,7 @@ public class Service {
         unitState.get(1).setCord(res.getCord());
         unitState.get(2).setCord(res.getCord());
         unitState.get(3).setCord(res.getCord());
-
+        serviceState = res.getResult();
         System.out.println(res.toString());
         return res;
     }
@@ -103,7 +107,10 @@ public class Service {
         MoveBuilderUnitRequest req = new MoveBuilderUnitRequest();
         req.setUnit(unitID);
         req.setDirection(direction);
+
         MoveBuilderUnitResponse res = api.moveBuilderUnit(req);
+        serviceState = res.getResult();
+
         System.out.println(res.toString());
     }
 
@@ -113,5 +120,7 @@ public class Service {
         req.getCord().add(unitState.get(unitID).getCord());
         RadarResponse res = api.radar(req);
         System.out.println(res.toString());
+        serviceState = res.getResult();
+
     }
 }
