@@ -51,12 +51,12 @@ public class Client {
 
     private WsDirection moveRandomly() {
         Random random = new Random();
-        int r = random.nextInt(4) + 1;
-        if (r == 1) {
+        int r = random.nextInt(10) + 1;
+        if (r < 5) {
             return WsDirection.RIGHT;
-        } else if (r == 2) {
+        } else if (r <= 7) {
             return WsDirection.LEFT;
-        } else if (r == 3) {
+        } else if (r < 9) {
             return WsDirection.UP;
         } else return WsDirection.DOWN;
     }
