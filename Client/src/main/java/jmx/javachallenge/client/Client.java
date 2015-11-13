@@ -1,6 +1,7 @@
 package jmx.javachallenge.client;
 
 import eu.loxon.centralcontrol.WsCoordinate;
+import eu.loxon.centralcontrol.WsDirection;
 import jmx.javachallenge.helper.Util;
 import jmx.javachallenge.service.Service;
 
@@ -34,13 +35,30 @@ public class Client {
 
     private void doJob(int i) {
         service.startTurn(i);
-        List<WsCoordinate> coordinates = new ArrayList<>();
-        //service.serviceState.getBuilderUnit()
-        coordinates.add(service.unitState.get(Service.serviceState.getBuilderUnit()).getCord());
-        service.radar(coordinates);
+        if (isCurrentUnitInSpaceComp()) {
+            service.moveUnit(moveOutFromSpaceComp());
+            service.radar(radarAround());
+        } else {
+            //TODO építkezni, mozogni, nem visszalépni, figyelni mi merre van hajaj Marci alkoss valamit :D
+        }
+    }
 
-        //service.moveUnit(0, WsDirection.RIGHT);
-        //service.getStats();
+    private List<WsCoordinate> radarAround() {
+        List<WsCoordinate> coordinates = new ArrayList<>();
+        coordinates.add(new WsCoordinate(Service.currentCoordinates.getX() + 1, Service.currentCoordinates.getY()));
+        coordinates.add(new WsCoordinate(Service.currentCoordinates.getX() - 1, Service.currentCoordinates.getY()));
+        coordinates.add(new WsCoordinate(Service.currentCoordinates.getX(), Service.currentCoordinates.getY() + 1));
+        coordinates.add(new WsCoordinate(Service.currentCoordinates.getX(), Service.currentCoordinates.getY() - 1));
+        return coordinates;
+    }
+
+    private WsDirection moveOutFromSpaceComp() {
+        WsDirection direction = Util.calculateDirection(service.getSpaceShuttlePos().getCord(), service.getSpaceShuttlePosExit().getCord());
+        return direction;
+    }
+
+    private boolean isCurrentUnitInSpaceComp() {
+        return service.unitState.get(Service.serviceState.getBuilderUnit()).getCord() == Service.initialPos.getCord();
     }
 
 

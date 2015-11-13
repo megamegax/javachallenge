@@ -14,7 +14,8 @@ public class Service {
     public static CentralControl api = null;
     public static CommonResp serviceState;
     public static int actionPointsForTurn = 14;
-    private static GetSpaceShuttlePosResponse initialPos;
+    public static GetSpaceShuttlePosResponse initialPos;
+    public static WsCoordinate currentCoordinates;
     private static GetSpaceShuttleExitPosResponse initialExitPos;
     private static ActionCostResponse initialActionCost;
     private static StartGameResponse initialGameState;
@@ -129,7 +130,7 @@ public class Service {
 
             MoveBuilderUnitResponse res = api.moveBuilderUnit(req);
             serviceState = res.getResult();
-
+            currentCoordinates = unitState.get(serviceState.getBuilderUnit()).getCord();
             System.out.println(res.toString());
             return true;
         } else
@@ -167,5 +168,7 @@ public class Service {
     public void startTurn(int i) {
         actionPointsForTurn = 14;
         System.out.println("kör:" + (i + 1));
+        currentCoordinates = unitState.get(serviceState.getBuilderUnit()).getCord();
+
     }
 }

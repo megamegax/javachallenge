@@ -8,9 +8,9 @@ import javax.xml.bind.annotation.XmlType;
 
 /**
  * <p>Java class for wsCoordinate complex type.
- * 
+ * <p>
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ * <p>
  * <pre>
  * &lt;complexType name="wsCoordinate">
  *   &lt;complexContent>
@@ -23,22 +23,27 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "wsCoordinate", propOrder = {
-    "x",
-    "y"
+        "x",
+        "y"
 })
 public class WsCoordinate {
 
     protected int x;
     protected int y;
 
+    public WsCoordinate() {
+    }
+
+    public WsCoordinate(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+
     /**
      * Gets the value of the x property.
-     * 
      */
     public int getX() {
         return x;
@@ -46,7 +51,6 @@ public class WsCoordinate {
 
     /**
      * Sets the value of the x property.
-     * 
      */
     public void setX(int value) {
         this.x = value;
@@ -54,7 +58,6 @@ public class WsCoordinate {
 
     /**
      * Gets the value of the y property.
-     * 
      */
     public int getY() {
         return y;
@@ -62,7 +65,6 @@ public class WsCoordinate {
 
     /**
      * Sets the value of the y property.
-     * 
      */
     public void setY(int value) {
         this.y = value;
