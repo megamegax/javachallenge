@@ -25,7 +25,7 @@ public class Client {
 
         System.out.println("űrkomp merre néz:" + Util.calculateDirection(service.getSpaceShuttlePos().getCord(), service.getSpaceShuttlePosExit().getCord()).name());
         int i = 1;
-        while (service.turnLeft != 1) {
+        while (service.turnLeft != 0) {
             Util.wait(301);
             if (service.isMyTurn()) {
                 doJob(i);
