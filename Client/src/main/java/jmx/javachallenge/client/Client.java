@@ -24,10 +24,12 @@ public class Client {
         service.startGame();
 
         System.out.println("űrkomp merre néz:" + Util.calculateDirection(service.getSpaceShuttlePos().getCord(), service.getSpaceShuttlePosExit().getCord()).name());
-        for (int i = 0; i < 34; i++) {
-            Util.wait(1300);
+        int i = 1;
+        while (service.turnLeft != 1) {
+            Util.wait(301);
             if (service.isMyTurn()) {
                 doJob(i);
+                i++;
             }
         }
     }

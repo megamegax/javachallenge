@@ -26,6 +26,7 @@ public class Service {
     public GetSpaceShuttlePosResponse initialPos;
     public WsCoordinate currentCoordinates;
     public HashMap<Integer, WsBuilderunit> unitState = new HashMap<>();
+    public int turnLeft = 70;
     private GetSpaceShuttleExitPosResponse initialExitPos;
     private ActionCostResponse initialActionCost;
     private StartGameResponse initialGameState;
@@ -64,8 +65,15 @@ public class Service {
     public boolean isMyTurn() {
         IsMyTurnResponse res = api.isMyTurn(new IsMyTurnRequest());
         serviceState = res.getResult();
+        if (turnLeft > res.getResult().getTurnsLeft()) {
+            turnLeft = res.getResult().getTurnsLeft();
+            System.out.println("ismyturn:" + res.toString());
+            actionPointsForTurn = res.getResult().getActionPointsLeft();
+            return res.isIsYourTurn();
+        }
+
         //     printMessage(res.getResult());
-        return res.isIsYourTurn();
+        return false;
     }
 
     public ActionCostResponse getActionCost() {
@@ -167,8 +175,7 @@ public class Service {
     }
 
     public void startTurn(int i) {
-        System.out.println("kör:" + (i + 1));
-        getActionCost();
+        System.out.println("kör:" + i);
         currentCoordinates = unitState.get(serviceState.getBuilderUnit()).getCord();
 
     }
