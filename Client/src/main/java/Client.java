@@ -23,18 +23,21 @@ public class Client {
         initialExitPos = service.getSpaceShuttlePosExit();
         initialActionCost = service.getActionCost();
         initialGameState = service.startGame();
-        for (int i = 0; i < 70; i++) {
-            Thread.sleep(301);
+        for (int i = 0; i < 1; i++) {
+            Thread.sleep(1001);
             if (service.isMyTurn()) {
                 doJob(i);
             }
         }
-        service.getStats();
+
     }
 
     private static void doJob(int i) {
         System.out.println("kör:" + (i + 1));
+        service.radar(0);
 
+        //service.moveUnit(0, WsDirection.RIGHT);
+        //service.getStats();
     }
 }
 
