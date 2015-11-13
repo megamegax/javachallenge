@@ -11,15 +11,6 @@ import java.util.stream.Stream;
  * Created by MegaX on 2015. 11. 12..
  */
 public class Service {
-    public static CentralControl api = null;
-    public static CommonResp serviceState;
-    public static int actionPointsForTurn = 14;
-    public static GetSpaceShuttlePosResponse initialPos;
-    public static WsCoordinate currentCoordinates;
-    private static GetSpaceShuttleExitPosResponse initialExitPos;
-    private static ActionCostResponse initialActionCost;
-    private static StartGameResponse initialGameState;
-
     static {
         java.net.Authenticator.setDefault(new java.net.Authenticator() {
             @Override
@@ -29,7 +20,15 @@ public class Service {
         });
     }
 
+    public CentralControl api = null;
+    public CommonResp serviceState;
+    public int actionPointsForTurn = 14;
+    public GetSpaceShuttlePosResponse initialPos;
+    public WsCoordinate currentCoordinates;
     public HashMap<Integer, WsBuilderunit> unitState = new HashMap<>();
+    private GetSpaceShuttleExitPosResponse initialExitPos;
+    private ActionCostResponse initialActionCost;
+    private StartGameResponse initialGameState;
 
     public Service() {
         CentralControlServiceService service = new CentralControlServiceService();
@@ -95,7 +94,9 @@ public class Service {
     }
 
     public void printMessage(CommonResp res) {
+        actionPointsForTurn = res.getActionPointsLeft();
         // System.out.println(res.getMessage());
+
         // System.out.println(res.getType().value());
     }
 
@@ -166,8 +167,8 @@ public class Service {
     }
 
     public void startTurn(int i) {
-        actionPointsForTurn = 14;
         System.out.println("kör:" + (i + 1));
+        getActionCost();
         currentCoordinates = unitState.get(serviceState.getBuilderUnit()).getCord();
 
     }
