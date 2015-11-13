@@ -79,16 +79,18 @@ public class Service {
     }
 
     public GetSpaceShuttlePosResponse getSpaceShuttlePos() {
-        GetSpaceShuttlePosResponse res = api.getSpaceShuttlePos(new GetSpaceShuttlePosRequest());
-        printMessage(res.getResult());
-        initialPos = res;
-        unitState.get(0).setCord(res.getCord());
-        unitState.get(1).setCord(res.getCord());
-        unitState.get(2).setCord(res.getCord());
-        unitState.get(3).setCord(res.getCord());
-        serviceState = res.getResult();
-        System.out.println(res.toString());
-        return res;
+        if (initialPos == null) {
+            GetSpaceShuttlePosResponse res = api.getSpaceShuttlePos(new GetSpaceShuttlePosRequest());
+            printMessage(res.getResult());
+            initialPos = res;
+            unitState.get(0).setCord(res.getCord());
+            unitState.get(1).setCord(res.getCord());
+            unitState.get(2).setCord(res.getCord());
+            unitState.get(3).setCord(res.getCord());
+            serviceState = res.getResult();
+            System.out.println(res.toString());
+            return res;
+        } else return initialPos;
     }
 
     public void printMessage(CommonResp res) {
@@ -97,12 +99,14 @@ public class Service {
     }
 
     public GetSpaceShuttleExitPosResponse getSpaceShuttlePosExit() {
-        GetSpaceShuttleExitPosResponse res = api.getSpaceShuttleExitPos(new GetSpaceShuttleExitPosRequest());
-        printMessage(res.getResult());
-        initialExitPos = res;
-        System.out.println(res.toString());
+        if (initialExitPos == null) {
+            GetSpaceShuttleExitPosResponse res = api.getSpaceShuttleExitPos(new GetSpaceShuttleExitPosRequest());
+            printMessage(res.getResult());
+            initialExitPos = res;
+            System.out.println(res.toString());
 
-        return res;
+            return res;
+        } else return initialExitPos;
     }
 
     public boolean watch() {
@@ -160,7 +164,8 @@ public class Service {
             return false;
     }
 
-    public void startTurn() {
+    public void startTurn(int i) {
         actionPointsForTurn = 14;
+        System.out.println("kör:" + (i + 1));
     }
 }
