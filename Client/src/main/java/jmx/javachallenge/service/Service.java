@@ -76,7 +76,7 @@ public class Service {
     public boolean isMyTurn() {
         IsMyTurnResponse res = api.isMyTurn(new IsMyTurnRequest());
         serviceState = res.getResult();
-        if (turnLeft > res.getResult().getTurnsLeft()) {
+        if (turnLeft >= res.getResult().getTurnsLeft()) {
             turnLeft = res.getResult().getTurnsLeft();
             System.out.println("ismyturn:" + res.toString());
             actionPointsForTurn = res.getResult().getActionPointsLeft();
