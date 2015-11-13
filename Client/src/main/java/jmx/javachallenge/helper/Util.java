@@ -2,6 +2,7 @@ package jmx.javachallenge.helper;
 
 import eu.loxon.centralcontrol.WsCoordinate;
 import eu.loxon.centralcontrol.WsDirection;
+import jmx.javachallenge.service.Service;
 
 /**
  * Created by MegaX on 2015. 11. 13..
@@ -25,6 +26,24 @@ public class Util {
             Thread.sleep(wait);
         } catch (InterruptedException e) {
             e.printStackTrace();
+        }
+    }
+
+    public static void updateCoords(int unitID, WsDirection direction) {
+        WsCoordinate oldCoordinate = Service.getInstance().builderUnits.get(unitID).getCord();
+        switch (direction) {
+            case LEFT:
+                Service.getInstance().builderUnits.get(unitID).setCord(new WsCoordinate(oldCoordinate.getX() - 1, oldCoordinate.getY()));
+                break;
+            case RIGHT:
+                Service.getInstance().builderUnits.get(unitID).setCord(new WsCoordinate(oldCoordinate.getX() + 1, oldCoordinate.getY()));
+                break;
+            case UP:
+                Service.getInstance().builderUnits.get(unitID).setCord(new WsCoordinate(oldCoordinate.getX(), oldCoordinate.getY() + 1));
+                break;
+            case DOWN:
+                Service.getInstance().builderUnits.get(unitID).setCord(new WsCoordinate(oldCoordinate.getX(), oldCoordinate.getY() - 1));
+                break;
         }
     }
 }

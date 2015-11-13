@@ -1,6 +1,7 @@
 package jmx.javachallenge.service;
 
 import eu.loxon.centralcontrol.*;
+import jmx.javachallenge.helper.Util;
 
 import java.util.HashMap;
 import java.util.List;
@@ -11,6 +12,8 @@ import java.util.stream.Stream;
  * Created by MegaX on 2015. 11. 12..
  */
 public class Service {
+    private static Service service = null;
+
     static {
         java.net.Authenticator.setDefault(new java.net.Authenticator() {
             @Override
@@ -25,20 +28,28 @@ public class Service {
     public int actionPointsForTurn = 14;
     public GetSpaceShuttlePosResponse initialPos;
     public WsCoordinate currentCoordinates;
-    public HashMap<Integer, WsBuilderunit> unitState = new HashMap<>();
+    public HashMap<Integer, WsBuilderunit> builderUnits = new HashMap<>();
     public int turnLeft = 70;
     private GetSpaceShuttleExitPosResponse initialExitPos;
     private ActionCostResponse initialActionCost;
     private StartGameResponse initialGameState;
 
-    public Service() {
+    private Service() {
         CentralControlServiceService service = new CentralControlServiceService();
         api = service.getCentralControlPort();
-        unitState.put(0, new WsBuilderunit());
-        unitState.put(1, new WsBuilderunit());
-        unitState.put(2, new WsBuilderunit());
-        unitState.put(3, new WsBuilderunit());
+        builderUnits.put(0, new WsBuilderunit());
+        builderUnits.put(1, new WsBuilderunit());
+        builderUnits.put(2, new WsBuilderunit());
+        builderUnits.put(3, new WsBuilderunit());
         /** jociFaktor(); **/
+        Service.service = this;
+    }
+
+    public static Service getInstance() {
+        if (service == null) {
+            return new Service();
+        }
+        return service;
     }
 
     private void jociFaktor() {
@@ -91,10 +102,10 @@ public class Service {
             GetSpaceShuttlePosResponse res = api.getSpaceShuttlePos(new GetSpaceShuttlePosRequest());
             printMessage(res.getResult());
             initialPos = res;
-            unitState.get(0).setCord(res.getCord());
-            unitState.get(1).setCord(res.getCord());
-            unitState.get(2).setCord(res.getCord());
-            unitState.get(3).setCord(res.getCord());
+            builderUnits.get(0).setCord(res.getCord());
+            builderUnits.get(1).setCord(res.getCord());
+            builderUnits.get(2).setCord(res.getCord());
+            builderUnits.get(3).setCord(res.getCord());
             serviceState = res.getResult();
             System.out.println(res.toString());
             return res;
@@ -139,7 +150,8 @@ public class Service {
 
             MoveBuilderUnitResponse res = api.moveBuilderUnit(req);
             serviceState = res.getResult();
-            currentCoordinates = unitState.get(serviceState.getBuilderUnit()).getCord();
+            Util.updateCoords(res.getResult().getBuilderUnit(), direction);
+            currentCoordinates = builderUnits.get(serviceState.getBuilderUnit()).getCord();
             System.out.println(res.toString());
             return true;
         } else
@@ -176,7 +188,7 @@ public class Service {
 
     public void startTurn(int i) {
         System.out.println("kör:" + i);
-        currentCoordinates = unitState.get(serviceState.getBuilderUnit()).getCord();
+        currentCoordinates = builderUnits.get(serviceState.getBuilderUnit()).getCord();
 
     }
 }

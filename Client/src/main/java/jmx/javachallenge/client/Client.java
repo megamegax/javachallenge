@@ -17,7 +17,7 @@ public class Client {
 
     public void run() {
         System.out.println("Hello JMX");
-        service = new Service();
+        service = Service.getInstance();
         service.getSpaceShuttlePos();
         service.getSpaceShuttlePosExit();
         service.getActionCost();
@@ -76,7 +76,7 @@ public class Client {
     }
 
     private boolean isCurrentUnitInSpaceComp() {
-        return service.unitState.get(service.serviceState.getBuilderUnit()).getCord() == service.initialPos.getCord();
+        return service.builderUnits.get(service.serviceState.getBuilderUnit()).getCord() == service.initialPos.getCord();
     }
 
 
