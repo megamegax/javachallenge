@@ -196,14 +196,19 @@ public class Service {
     public boolean structureTunnel(int unitID, WsDirection direction) {
         actionPointsForTurn -= initialActionCost.getDrill();
         if (actionPointsForTurn > 0) {
-            StructureTunnelRequest req = new StructureTunnelRequest();
-            req.setUnit(unitID);
-            req.setDirection(direction);
-            StructureTunnelResponse res = api.structureTunnel(req);
-            map[selectBuilder(unitID).getCord().getX()][selectBuilder(unitID).getCord().getX()] = 1;
-            System.out.println(res.toString());
-            serviceState = res.getResult();
-            return true;
+            WsCoordinate simulatedCoordinate = Util.simulateMove(builderUnits.get(unitID), direction);
+            if (map[simulatedCoordinate.getX()][simulatedCoordinate.getY()] != 0) {
+                StructureTunnelRequest req = new StructureTunnelRequest();
+                req.setUnit(unitID);
+                req.setDirection(direction);
+                StructureTunnelResponse res = api.structureTunnel(req);
+
+                map[selectBuilder(unitID).getCord().getX()][selectBuilder(unitID).getCord().getX()] = 3;
+                System.out.println(res.toString());
+                serviceState = res.getResult();
+                return true;
+            }
+            return false;
         } else
             return false;
     }
