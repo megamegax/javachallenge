@@ -143,6 +143,10 @@ public class Service {
         actionPointsForTurn -= initialActionCost.getWatch();
         if (actionPointsForTurn > 0) {
             WatchResponse res = api.watch(new WatchRequest(unitID));
+            for (Scouting scout : res.getScout()) {
+                map[scout.getCord().getX()][scout.getCord().getX()] = Util.stringToCellType(scout.getObject().name()).getValue();
+            }
+            Util.printMap();
             System.out.println(res.toString());
             return true;
         } else
@@ -179,9 +183,10 @@ public class Service {
             req.getCord().addAll(coordinates);
             RadarResponse res = api.radar(req);
             System.out.println(res.toString());
-            for (Scouting scout : res.getScout())
-                map[scout.getCord().getX()][scout.getCord().getY()] = Util.stringToCellType(scout.getObject().name()).getValue();
-
+            for (Scouting scout : res.getScout()) {
+                map[scout.getCord().getX()][scout.getCord().getX()] = Util.stringToCellType(scout.getObject().name()).getValue();
+            }
+            Util.printMap();
             serviceState = res.getResult();
             return true;
         } else
