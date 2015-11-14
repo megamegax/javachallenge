@@ -37,31 +37,44 @@ public class Client {
 
     private void doJob(int i) {
         service.startTurn(i);
-        if (isUnitInSpaceComp(0)) {
-            service.structureTunnel(0, moveOutFromSpaceComp());
-            service.moveUnit(0, moveOutFromSpaceComp());
-            service.watch(0);
-          while(service.serviceState.getActionPointsLeft()>0){
-
-          }
+        int unit = chooseBuilder();
+        if (isUnitInSpaceComp(unit)) {
+            service.structureTunnel(unit, moveOutFromSpaceComp());
+            service.moveUnit(unit, moveOutFromSpaceComp());
+            service.watch(unit);
+            int repeat = 4;
+            while (repeat >= 0 && service.serviceState.getActionPointsLeft() > 0) {
+                repeat--;
+                WsDirection direction = moveRandomly();
+                service.structureTunnel(unit, direction);
+                service.moveUnit(unit, direction);
+            }
         } else {
             //TODO építkezni, mozogni, nem visszalépni, figyelni mi merre van hajaj Marci alkoss valamit :D
-
-            WsDirection direction = moveRandomly();
-            service.structureTunnel(0, direction);
-            service.moveUnit(0, direction);
-            service.radar(0, radarAround(0));
+            int repeat = 4;
+            while (repeat >= 0 && service.serviceState.getActionPointsLeft() > 0) {
+                repeat--;
+                WsDirection direction = moveRandomly();
+                if (service.structureTunnel(unit, direction)) {
+                    service.moveUnit(unit, direction);
+                    service.watch(unit);
+                }
+            }
         }
+    }
+
+    private int chooseBuilder() {
+        return new Random().nextInt(4) + 1;
     }
 
     private WsDirection moveRandomly() {
         Random random = new Random();
-        int r = random.nextInt(10) + 1;
-        if (r < 5) {
+        int r = random.nextInt(4) + 1;
+        if (r == 1) {
             return WsDirection.RIGHT;
-        } else if (r <= 7) {
+        } else if (r == 2) {
             return WsDirection.LEFT;
-        } else if (r < 9) {
+        } else if (r == 3) {
             return WsDirection.UP;
         } else return WsDirection.DOWN;
     }

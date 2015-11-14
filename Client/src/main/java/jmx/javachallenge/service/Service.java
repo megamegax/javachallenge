@@ -140,14 +140,16 @@ public class Service {
     }
 
     public boolean watch(int unitID) {
-        actionPointsForTurn -= initialActionCost.getWatch();
-        if (actionPointsForTurn > 0) {
+        int tempPoints = actionPointsForTurn;
+        tempPoints -= initialActionCost.getWatch();
+        if (tempPoints > 0) {
             WatchResponse res = api.watch(new WatchRequest(unitID));
             for (Scouting scout : res.getScout()) {
                 map[scout.getCord().getX()][scout.getCord().getX()] = Util.stringToCellType(scout.getObject().name()).getValue();
             }
             Util.printMap();
             System.out.println(res.toString());
+            actionPointsForTurn = tempPoints;
             return true;
         } else
             return false;
@@ -169,15 +171,16 @@ public class Service {
             Util.updateCoords(res.getResult().getBuilderUnit(), direction);
             System.out.println(res.toString());
 
-            actionPointsForTurn -= initialActionCost.getMove();
+            actionPointsForTurn = tempPoints;
             return true;
         } else
             return false;
     }
 
     public boolean radar(int unitID, List<WsCoordinate> coordinates) {
-        actionPointsForTurn -= initialActionCost.getRadar();
-        if (actionPointsForTurn > 0) {
+        int tempPoints = actionPointsForTurn;
+        tempPoints -= initialActionCost.getRadar() * coordinates.size();
+        if (tempPoints > 0) {
             RadarRequest req = new RadarRequest();
             req.setUnit(unitID);
             req.getCord().addAll(coordinates);
@@ -187,6 +190,7 @@ public class Service {
                 map[scout.getCord().getX()][scout.getCord().getX()] = Util.stringToCellType(scout.getObject().name()).getValue();
             }
             Util.printMap();
+            actionPointsForTurn = tempPoints;
             serviceState = res.getResult();
             return true;
         } else
@@ -194,10 +198,11 @@ public class Service {
     }
 
     public boolean structureTunnel(int unitID, WsDirection direction) {
-        actionPointsForTurn -= initialActionCost.getDrill();
-        if (actionPointsForTurn > 0) {
+        int tempPoints = actionPointsForTurn;
+        tempPoints -= initialActionCost.getDrill();
+        if (tempPoints > 0) {
             WsCoordinate simulatedCoordinate = Util.simulateMove(builderUnits.get(unitID), direction);
-            if (map[simulatedCoordinate.getX()][simulatedCoordinate.getY()] != 0) {
+            if (Util.checkMovement(simulatedCoordinate)) {
                 StructureTunnelRequest req = new StructureTunnelRequest();
                 req.setUnit(unitID);
                 req.setDirection(direction);
@@ -206,12 +211,15 @@ public class Service {
                 map[selectBuilder(unitID).getCord().getX()][selectBuilder(unitID).getCord().getX()] = 3;
                 System.out.println(res.toString());
                 serviceState = res.getResult();
+                actionPointsForTurn = tempPoints;
                 return true;
             }
             return false;
         } else
             return false;
     }
+
+
 
     public void startTurn(int i) {
         System.out.println("kör:" + i);
