@@ -37,16 +37,20 @@ public class Client {
 
     private void doJob(int i) {
         service.startTurn(i);
-        if (isCurrentUnitInSpaceComp()) {
-            service.structureTunnel(moveOutFromSpaceComp());
-            service.moveUnit(moveOutFromSpaceComp());
-            service.radar(radarAround());
+        if (isUnitInSpaceComp(0)) {
+            service.structureTunnel(0, moveOutFromSpaceComp());
+            service.moveUnit(0, moveOutFromSpaceComp());
+            service.watch(0);
+          while(service.serviceState.getActionPointsLeft()>0){
+
+          }
         } else {
             //TODO építkezni, mozogni, nem visszalépni, figyelni mi merre van hajaj Marci alkoss valamit :D
+
             WsDirection direction = moveRandomly();
-            service.structureTunnel(direction);
-            service.moveUnit(direction);
-            service.radar(radarAround());
+            service.structureTunnel(0, direction);
+            service.moveUnit(0, direction);
+            service.radar(0, radarAround(0));
         }
     }
 
@@ -62,12 +66,12 @@ public class Client {
         } else return WsDirection.DOWN;
     }
 
-    private List<WsCoordinate> radarAround() {
+    private List<WsCoordinate> radarAround(int unitID) {
         List<WsCoordinate> coordinates = new ArrayList<>();
-        coordinates.add(new WsCoordinate(service.currentCoordinates.getX() + 1, service.currentCoordinates.getY()));
-        coordinates.add(new WsCoordinate(service.currentCoordinates.getX() - 1, service.currentCoordinates.getY()));
-        coordinates.add(new WsCoordinate(service.currentCoordinates.getX(), service.currentCoordinates.getY() + 1));
-        coordinates.add(new WsCoordinate(service.currentCoordinates.getX(), service.currentCoordinates.getY() - 1));
+        coordinates.add(new WsCoordinate(service.selectBuilder(unitID).getCord().getX() + 1, service.selectBuilder(unitID).getCord().getY()));
+        coordinates.add(new WsCoordinate(service.selectBuilder(unitID).getCord().getX() - 1, service.selectBuilder(unitID).getCord().getY()));
+        coordinates.add(new WsCoordinate(service.selectBuilder(unitID).getCord().getX(), service.selectBuilder(unitID).getCord().getY() + 1));
+        coordinates.add(new WsCoordinate(service.selectBuilder(unitID).getCord().getX(), service.selectBuilder(unitID).getCord().getY() - 1));
         return coordinates;
     }
 
@@ -76,8 +80,8 @@ public class Client {
         return direction;
     }
 
-    private boolean isCurrentUnitInSpaceComp() {
-        return service.builderUnits.get(service.serviceState.getBuilderUnit()).getCord() == service.initialPos.getCord();
+    private boolean isUnitInSpaceComp(int unitID) {
+        return service.builderUnits.get(unitID).getCord() == service.initialPos.getCord();
     }
 
 

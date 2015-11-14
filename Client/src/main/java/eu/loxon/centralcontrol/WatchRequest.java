@@ -35,6 +35,12 @@ public class WatchRequest {
 
     protected int unit;
 
+    public WatchRequest(){}
+
+    public WatchRequest(int unitID) {
+        this.unit = unitID;
+    }
+
     /**
      * Gets the value of the unit property.
      * 

@@ -46,4 +46,21 @@ public class Util {
                 break;
         }
     }
+
+    public static CellType stringToCellType(String object) {
+        switch (object) {
+            case "ROCK":
+                return CellType.ROCK;
+            case "SHUTTLE":
+                return CellType.SHUTTLE;
+            case "OBSIDIAN":
+                return CellType.OBSIDIAN;
+            case "TUNNEL":
+                return CellType.TUNNEL;
+            case "GRANITE":
+                return CellType.GRANITE;
+            default:
+                return CellType.UNKNOWN;
+        }
+    }
 }
