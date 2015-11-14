@@ -38,10 +38,12 @@ public class Util {
     }
 
     public static boolean checkMovement(WsCoordinate simulatedCoordinate) {
-        if ((Service.getInstance().map[simulatedCoordinate.getX()][simulatedCoordinate.getY()] != 0) &&
-                (Service.getInstance().map[simulatedCoordinate.getX()][simulatedCoordinate.getY()] != 4) &&
-                (Service.getInstance().map[simulatedCoordinate.getX()][simulatedCoordinate.getY()] != 3)) {
-            return true;
+        if (simulatedCoordinate.getX() < Service.getInstance().initialGameState.getSize().getX() && simulatedCoordinate.getY() < Service.getInstance().initialGameState.getSize().getY()) {
+            if ((Service.getInstance().map[simulatedCoordinate.getX()][simulatedCoordinate.getY()] != 0) &&
+                    (Service.getInstance().map[simulatedCoordinate.getX()][simulatedCoordinate.getY()] != 4) &&
+                    (Service.getInstance().map[simulatedCoordinate.getX()][simulatedCoordinate.getY()] != 3)) {
+                return true;
+            } else return false;
         } else return false;
     }
 
