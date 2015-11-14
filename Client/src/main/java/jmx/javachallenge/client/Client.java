@@ -64,7 +64,7 @@ public class Client {
     }
 
     private int chooseBuilder() {
-        return new Random().nextInt(4) + 1;
+        return new Random().nextInt(3);
     }
 
     private WsDirection moveRandomly() {
@@ -94,6 +94,7 @@ public class Client {
     }
 
     private boolean isUnitInSpaceComp(int unitID) {
+        System.out.println("getting unit: "+unitID);
         return service.builderUnits.get(unitID).getCord() == service.initialPos.getCord();
     }
 
