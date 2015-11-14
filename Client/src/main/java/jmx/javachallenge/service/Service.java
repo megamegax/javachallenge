@@ -75,17 +75,12 @@ public class Service {
         StartGameResponse res = api.startGame(new StartGameRequest());
         initialGameState = res;
         System.out.println(res.toString());
-    String sMap ="";
 
         for (int x = 0; x < initialGameState.getSize().getX(); x++) {
             for (int y = 0; y < initialGameState.getSize().getY(); y++) {
                 map[x][y] = -1;
-                sMap+=" -1 ";
             }
-            sMap+="\n";
         }
-
-        System.out.println(sMap);
         return res;
     }
 
@@ -123,7 +118,9 @@ public class Service {
             builderUnits.get(2).setCord(res.getCord());
             builderUnits.get(3).setCord(res.getCord());
             serviceState = res.getResult();
-            System.out.println(res.toString());
+            map[res.getCord().getX()][res.getCord().getX()] = CellType.SHUTTLE.getValue();
+
+            Util.printMap();
             return res;
         } else return initialPos;
     }

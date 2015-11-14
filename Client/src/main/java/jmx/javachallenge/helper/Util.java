@@ -68,10 +68,12 @@ public class Util {
         String sMap = "";
         for (int x = 0; x < Service.getInstance().initialGameState.getSize().getX(); x++) {
             for (int y = 0; y < Service.getInstance().initialGameState.getSize().getY(); y++) {
-                sMap += " " + Service.getInstance().map[x][y] + " ";
+                sMap += (Service.getInstance().map[x][y] >= 0) ? " " + Service.getInstance().map[x][y]+ " " : Service.getInstance().map[x][y] + " ";
             }
             sMap += "\n";
         }
+        System.out.println("---------------");
         System.out.println(sMap);
+        System.out.println("---------------");
     }
 }
