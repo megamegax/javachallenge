@@ -61,6 +61,8 @@ public class Client {
                 if (service.structureTunnel(unit, direction)) {
                     service.moveUnit(unit, direction);
                     service.watch(unit);
+                }else{
+                    service.moveUnit(unit, direction);
                 }
             }
         }

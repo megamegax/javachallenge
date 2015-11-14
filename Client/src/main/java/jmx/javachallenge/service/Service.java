@@ -95,9 +95,6 @@ public class Service {
                 actionPointsForTurn = res.getResult().getActionPointsLeft();
                 return res.isIsYourTurn();
             }
-        } else {
-            Util.wait(301);
-            return isMyTurn();
         }
         //     printMessage(res.getResult());
         return false;
