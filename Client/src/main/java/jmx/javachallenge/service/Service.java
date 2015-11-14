@@ -123,7 +123,7 @@ public class Service {
             builderUnits.get(2).setCord(res.getCord());
             builderUnits.get(3).setCord(res.getCord());
             serviceState = res.getResult();
-            map[res.getCord().getX()][res.getCord().getX()] = CellType.SHUTTLE.getValue();
+            map[res.getCord().getX()][Util.convertCoordinateToMapCoordinate(res.getCord().getY())] = CellType.SHUTTLE.getValue();
 
             Util.printMap();
             return res;
@@ -152,7 +152,7 @@ public class Service {
             Util.wait(10);
             if (res.getResult().getType().equals(ResultType.DONE)) {
                 for (Scouting scout : res.getScout()) {
-                    map[scout.getCord().getX()][scout.getCord().getX()] = Util.stringToCellType(scout.getObject().name()).getValue();
+                    map[scout.getCord().getX()][Util.convertCoordinateToMapCoordinate(scout.getCord().getY())] = Util.stringToCellType(scout.getObject().name()).getValue();
                 }
                 Util.printMap();
                 System.out.println(res.toString());
@@ -209,7 +209,7 @@ public class Service {
             if (res.getResult().getType().equals(ResultType.DONE)) {
                 System.out.println(res.toString());
                 for (Scouting scout : res.getScout()) {
-                    map[scout.getCord().getX()][scout.getCord().getX()] = Util.stringToCellType(scout.getObject().name()).getValue();
+                    map[scout.getCord().getX()][Util.convertCoordinateToMapCoordinate(scout.getCord().getY())] = Util.stringToCellType(scout.getObject().name()).getValue();
                 }
                 Util.printMap();
                 actionPointsForTurn = tempPoints;
@@ -237,7 +237,7 @@ public class Service {
                 StructureTunnelResponse res = api.structureTunnel(req);
                 Util.wait(10);
                 if (res.getResult().getType().equals(ResultType.DONE)) {
-                    map[selectBuilder(unitID).getCord().getX()][selectBuilder(unitID).getCord().getX()] = 3;
+                    map[selectBuilder(unitID).getCord().getX()][Util.convertCoordinateToMapCoordinate(selectBuilder(unitID).getCord().getY())] = 3;
                     System.out.println(res.toString());
                     serviceState = res.getResult();
                     actionPointsForTurn = tempPoints;

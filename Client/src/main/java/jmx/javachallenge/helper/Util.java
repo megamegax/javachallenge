@@ -102,4 +102,8 @@ public class Util {
         System.out.println(sMap);
         System.out.println("---------------");
     }
+
+    public static int convertCoordinateToMapCoordinate(int y) {
+        return Service.getInstance().initialGameState.getSize().getY()-y;
+    }
 }
