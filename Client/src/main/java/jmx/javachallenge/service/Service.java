@@ -36,7 +36,7 @@ public class Service {
     public int turnLeft = 71;
     private GetSpaceShuttleExitPosResponse initialExitPos;
     private ActionCostResponse initialActionCost;
-    private StartGameResponse initialGameState;
+    public StartGameResponse initialGameState;
 
     private Service() {
         CentralControlServiceService service = new CentralControlServiceService();
@@ -46,11 +46,6 @@ public class Service {
         builderUnits.put(2, new WsBuilderunit());
         builderUnits.put(3, new WsBuilderunit());
 
-        for (int x = 0; x < initialGameState.getSize().getX(); x++) {
-            for (int y = 0; y < initialGameState.getSize().getY(); y++) {
-                map[x][y] = -1;
-            }
-        }
         /** jociFaktor(); **/
         Service.service = this;
     }
@@ -80,6 +75,17 @@ public class Service {
         StartGameResponse res = api.startGame(new StartGameRequest());
         initialGameState = res;
         System.out.println(res.toString());
+    String sMap ="";
+
+        for (int x = 0; x < initialGameState.getSize().getX(); x++) {
+            for (int y = 0; y < initialGameState.getSize().getY(); y++) {
+                map[x][y] = -1;
+                sMap+=" -1 ";
+            }
+            sMap+="\n";
+        }
+
+        System.out.println(sMap);
         return res;
     }
 
