@@ -87,14 +87,15 @@ public class Service {
     public boolean isMyTurn() {
         IsMyTurnResponse res = api.isMyTurn(new IsMyTurnRequest());
         serviceState = res.getResult();
+        System.out.println("isMyTurn:" + res.toString());
+
         if (res.isIsYourTurn()) {
             if (turnLeft > res.getResult().getTurnsLeft()) {
                 turnLeft = res.getResult().getTurnsLeft();
-                System.out.println("ismyturn:" + res.toString());
                 actionPointsForTurn = res.getResult().getActionPointsLeft();
                 return res.isIsYourTurn();
             }
-        }else{
+        } else {
             Util.wait(301);
             return isMyTurn();
         }
@@ -148,7 +149,8 @@ public class Service {
         tempPoints -= initialActionCost.getWatch();
         if (tempPoints > 0) {
             WatchResponse res = api.watch(new WatchRequest(unitID));
-            if (!res.getResult().getMessage().equals("Penalty happened:Wrong turn")) {
+            Util.wait(10);
+            if (res.getResult().getType().equals(ResultType.DONE)) {
                 for (Scouting scout : res.getScout()) {
                     map[scout.getCord().getX()][scout.getCord().getX()] = Util.stringToCellType(scout.getObject().name()).getValue();
                 }
@@ -157,7 +159,9 @@ public class Service {
                 actionPointsForTurn = tempPoints;
                 return true;
             } else {
-                Util.wait(1000);
+                Util.wait(100);
+                System.out.println(res.getResult());
+
                 return false;
             }
         } else
@@ -176,7 +180,8 @@ public class Service {
             req.setUnit(unitID);
             req.setDirection(direction);
             MoveBuilderUnitResponse res = api.moveBuilderUnit(req);
-            if (!res.getResult().getMessage().equals("Penalty happened:Wrong turn")) {
+            Util.wait(10);
+            if (res.getResult().getType().equals(ResultType.DONE)) {
                 serviceState = res.getResult();
                 Util.updateCoords(res.getResult().getBuilderUnit(), direction);
                 System.out.println(res.toString());
@@ -184,7 +189,9 @@ public class Service {
                 actionPointsForTurn = tempPoints;
                 return true;
             } else {
-                Util.wait(1000);
+                Util.wait(100);
+                System.out.println(res.getResult());
+
                 return false;
             }
         } else
@@ -199,7 +206,7 @@ public class Service {
             req.setUnit(unitID);
             req.getCord().addAll(coordinates);
             RadarResponse res = api.radar(req);
-            if (!res.getResult().getMessage().equals("Penalty happened:Wrong turn")) {
+            if (res.getResult().getType().equals(ResultType.DONE)) {
                 System.out.println(res.toString());
                 for (Scouting scout : res.getScout()) {
                     map[scout.getCord().getX()][scout.getCord().getX()] = Util.stringToCellType(scout.getObject().name()).getValue();
@@ -209,7 +216,9 @@ public class Service {
                 serviceState = res.getResult();
                 return true;
             } else {
-                Util.wait(1000);
+                Util.wait(100);
+                System.out.println(res.getResult());
+
                 return false;
             }
         } else
@@ -226,16 +235,20 @@ public class Service {
                 req.setUnit(unitID);
                 req.setDirection(direction);
                 StructureTunnelResponse res = api.structureTunnel(req);
-                if (!res.getResult().getMessage().equals("Penalty happened:Wrong turn")) {
+                Util.wait(10);
+                if (res.getResult().getType().equals(ResultType.DONE)) {
                     map[selectBuilder(unitID).getCord().getX()][selectBuilder(unitID).getCord().getX()] = 3;
                     System.out.println(res.toString());
                     serviceState = res.getResult();
                     actionPointsForTurn = tempPoints;
                     return true;
                 } else {
-                    Util.wait(1000);
+                    System.out.println(res.getResult());
+                    Util.wait(100);
                     return false;
                 }
+            }else{
+                System.out.println("ide nem lehet lépni:"+direction.name());
             }
             return false;
         } else

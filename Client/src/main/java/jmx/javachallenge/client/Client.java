@@ -29,15 +29,15 @@ public class Client {
         while (service.turnLeft != 0) {
             Util.wait(301);
             if (service.isMyTurn()) {
-                doJob(i);
+                doJob(i,0);
                 i++;
             }
         }
     }
 
-    private void doJob(int i) {
+    private void doJob(int i,int unit) {
         service.startTurn(i);
-        int unit = chooseBuilder();
+      //  int unit = chooseBuilder();
         if (isUnitInSpaceComp(unit)) {
             System.out.println(unit+", is in space comp");
             service.structureTunnel(unit, moveOutFromSpaceComp());
