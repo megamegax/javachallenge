@@ -87,13 +87,17 @@ public class Service {
     public boolean isMyTurn() {
         IsMyTurnResponse res = api.isMyTurn(new IsMyTurnRequest());
         serviceState = res.getResult();
-        if (turnLeft > res.getResult().getTurnsLeft()) {
-            turnLeft = res.getResult().getTurnsLeft();
-            System.out.println("ismyturn:" + res.toString());
-            actionPointsForTurn = res.getResult().getActionPointsLeft();
-            return res.isIsYourTurn();
+        if (res.isIsYourTurn()) {
+            if (turnLeft > res.getResult().getTurnsLeft()) {
+                turnLeft = res.getResult().getTurnsLeft();
+                System.out.println("ismyturn:" + res.toString());
+                actionPointsForTurn = res.getResult().getActionPointsLeft();
+                return res.isIsYourTurn();
+            }
+        }else{
+            Util.wait(301);
+            return isMyTurn();
         }
-
         //     printMessage(res.getResult());
         return false;
     }
@@ -144,13 +148,18 @@ public class Service {
         tempPoints -= initialActionCost.getWatch();
         if (tempPoints > 0) {
             WatchResponse res = api.watch(new WatchRequest(unitID));
-            for (Scouting scout : res.getScout()) {
-                map[scout.getCord().getX()][scout.getCord().getX()] = Util.stringToCellType(scout.getObject().name()).getValue();
+            if (!res.getResult().getMessage().equals("Penalty happened:Wrong turn")) {
+                for (Scouting scout : res.getScout()) {
+                    map[scout.getCord().getX()][scout.getCord().getX()] = Util.stringToCellType(scout.getObject().name()).getValue();
+                }
+                Util.printMap();
+                System.out.println(res.toString());
+                actionPointsForTurn = tempPoints;
+                return true;
+            } else {
+                Util.wait(1000);
+                return false;
             }
-            Util.printMap();
-            System.out.println(res.toString());
-            actionPointsForTurn = tempPoints;
-            return true;
         } else
             return false;
     }
@@ -167,12 +176,17 @@ public class Service {
             req.setUnit(unitID);
             req.setDirection(direction);
             MoveBuilderUnitResponse res = api.moveBuilderUnit(req);
-            serviceState = res.getResult();
-            Util.updateCoords(res.getResult().getBuilderUnit(), direction);
-            System.out.println(res.toString());
+            if (!res.getResult().getMessage().equals("Penalty happened:Wrong turn")) {
+                serviceState = res.getResult();
+                Util.updateCoords(res.getResult().getBuilderUnit(), direction);
+                System.out.println(res.toString());
 
-            actionPointsForTurn = tempPoints;
-            return true;
+                actionPointsForTurn = tempPoints;
+                return true;
+            } else {
+                Util.wait(1000);
+                return false;
+            }
         } else
             return false;
     }
@@ -185,14 +199,19 @@ public class Service {
             req.setUnit(unitID);
             req.getCord().addAll(coordinates);
             RadarResponse res = api.radar(req);
-            System.out.println(res.toString());
-            for (Scouting scout : res.getScout()) {
-                map[scout.getCord().getX()][scout.getCord().getX()] = Util.stringToCellType(scout.getObject().name()).getValue();
+            if (!res.getResult().getMessage().equals("Penalty happened:Wrong turn")) {
+                System.out.println(res.toString());
+                for (Scouting scout : res.getScout()) {
+                    map[scout.getCord().getX()][scout.getCord().getX()] = Util.stringToCellType(scout.getObject().name()).getValue();
+                }
+                Util.printMap();
+                actionPointsForTurn = tempPoints;
+                serviceState = res.getResult();
+                return true;
+            } else {
+                Util.wait(1000);
+                return false;
             }
-            Util.printMap();
-            actionPointsForTurn = tempPoints;
-            serviceState = res.getResult();
-            return true;
         } else
             return false;
     }
@@ -207,18 +226,21 @@ public class Service {
                 req.setUnit(unitID);
                 req.setDirection(direction);
                 StructureTunnelResponse res = api.structureTunnel(req);
-
-                map[selectBuilder(unitID).getCord().getX()][selectBuilder(unitID).getCord().getX()] = 3;
-                System.out.println(res.toString());
-                serviceState = res.getResult();
-                actionPointsForTurn = tempPoints;
-                return true;
+                if (!res.getResult().getMessage().equals("Penalty happened:Wrong turn")) {
+                    map[selectBuilder(unitID).getCord().getX()][selectBuilder(unitID).getCord().getX()] = 3;
+                    System.out.println(res.toString());
+                    serviceState = res.getResult();
+                    actionPointsForTurn = tempPoints;
+                    return true;
+                } else {
+                    Util.wait(1000);
+                    return false;
+                }
             }
             return false;
         } else
             return false;
     }
-
 
 
     public void startTurn(int i) {

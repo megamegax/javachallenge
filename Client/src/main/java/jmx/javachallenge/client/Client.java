@@ -39,6 +39,7 @@ public class Client {
         service.startTurn(i);
         int unit = chooseBuilder();
         if (isUnitInSpaceComp(unit)) {
+            System.out.println(unit+", is in space comp");
             service.structureTunnel(unit, moveOutFromSpaceComp());
             service.moveUnit(unit, moveOutFromSpaceComp());
             service.watch(unit);
@@ -50,6 +51,8 @@ public class Client {
                 service.moveUnit(unit, direction);
             }
         } else {
+            System.out.println(unit+", is NOT in space comp");
+
             //TODO építkezni, mozogni, nem visszalépni, figyelni mi merre van hajaj Marci alkoss valamit :D
             int repeat = 4;
             while (repeat >= 0 && service.serviceState.getActionPointsLeft() > 0) {
