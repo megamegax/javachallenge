@@ -156,7 +156,7 @@ public class Service {
                 System.out.println(res.getScout().get(1).getCord());
                 System.out.println(res.getScout().get(2).getCord());
                 System.out.println(res.getScout().get(3).getCord());
-                builderUnits.get(unitID).setCord(new WsCoordinate(res.getScout().get(0).getCord().getX(), res.getScout().get(0).getCord().getY() - 1));
+                builderUnits.get(unitID).setCord(new WsCoordinate(res.getScout().get(0).getCord().getX(), res.getScout().get(2).getCord().getY()));
                 Util.printMap();
                 actionPointsForTurn = tempPoints;
                 return true;
@@ -182,18 +182,19 @@ public class Service {
             req.setDirection(direction);
             MoveBuilderUnitResponse res = api.moveBuilderUnit(req);
             Util.wait(10);
+            System.out.println(res);
             if (res.getResult().getType().equals(ResultType.DONE)) {
                 serviceState = res.getResult();
                 WsCoordinate oldCoordinate = builderUnits.get(unitID).getCord();
                 map[Util.convertCoordinateToMapCoordinate(oldCoordinate.getY())][oldCoordinate.getX()].setBuilder(-1);
-                WsCoordinate coordinate = Util.updateCoords(res.getResult().getBuilderUnit(), direction);
+                WsCoordinate coordinate = Util.updateCoords(unitID, direction);
                 map[Util.convertCoordinateToMapCoordinate(coordinate.getY())][coordinate.getX()].setBuilder(unitID);
                 Util.printMap();
 
                 actionPointsForTurn = tempPoints;
                 return true;
             } else {
-                //  System.out.println(res.getResult());
+                 System.out.println(res.getResult());
                 return false;
             }
         } else return false;

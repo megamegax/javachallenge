@@ -35,19 +35,20 @@ public class Client {
         //  int unitID = chooseBuilder();
         if (isUnitInSpaceComp(unitID)) {
             System.out.println(unitID + ", is in space comp");
-            doMove(unitID, moveOutFromSpaceComp());
+            if (unitID == 0) {
+                service.structureTunnel(unitID, moveOutFromSpaceComp());
+            }
+            service.moveUnit(unitID, moveOutFromSpaceComp());
+            service.watch(unitID);
+            //  doMove(unitID, moveOutFromSpaceComp());
         } else {
             System.out.println(unitID + ", is NOT in space comp");
-
             //TODO építkezni, mozogni, nem visszalépni, figyelni mi merre van hajaj Marci alkoss valamit :D
 
             if (doMove(unitID, moveRandomly())) {
                 doMove(unitID, moveRandomly());
             }
-
         }
-
-
     }
 
     private boolean doMove(int unitID, WsDirection direction) {
@@ -73,7 +74,6 @@ public class Client {
             case NO_POINTS:
                 System.out.println("Elfogytak az elkölthető pontok");
                 return false;
-
         }
         return false;
     }

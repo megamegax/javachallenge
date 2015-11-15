@@ -91,6 +91,7 @@ public class Util {
                 Service.getInstance().builderUnits.get(unitID).setCord(new WsCoordinate(oldCoordinate.getX(), oldCoordinate.getY() - 1));
                 break;
         }
+        System.out.println("coordinates updated for unit: "+unitID+", "+Service.getInstance().builderUnits.get(unitID).getCord());
         return Service.getInstance().builderUnits.get(unitID).getCord();
     }
 
