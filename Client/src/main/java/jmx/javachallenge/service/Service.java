@@ -37,6 +37,7 @@ public class Service {
     private GetSpaceShuttleExitPosResponse initialExitPos;
     private ActionCostResponse initialActionCost;
     public StartGameResponse initialGameState;
+    public int selectedBuilder;
 
     private Service() {
         CentralControlServiceService service = new CentralControlServiceService();
@@ -90,11 +91,13 @@ public class Service {
         System.out.println("isMyTurn:" + res.toString());
 
         if (res.isIsYourTurn()) {
+            selectedBuilder = res.getResult().getBuilderUnit();
+            actionPointsForTurn = res.getResult().getActionPointsLeft();
             if (turnLeft > res.getResult().getTurnsLeft()) {
                 turnLeft = res.getResult().getTurnsLeft();
-                actionPointsForTurn = res.getResult().getActionPointsLeft();
-                return res.isIsYourTurn();
+                this.startTurn(70 - turnLeft);
             }
+            return true;
         }
         //     printMessage(res.getResult());
         return false;
@@ -152,11 +155,10 @@ public class Service {
                     map[scout.getCord().getX()][Util.convertCoordinateToMapCoordinate(scout.getCord().getY())] = Util.stringToCellType(scout.getObject().name()).getValue();
                 }
                 Util.printMap();
-                System.out.println(res.toString());
+               // System.out.println(res.toString());
                 actionPointsForTurn = tempPoints;
                 return true;
             } else {
-                Util.wait(100);
                 System.out.println(res.getResult());
 
                 return false;
@@ -176,21 +178,21 @@ public class Service {
             MoveBuilderUnitRequest req = new MoveBuilderUnitRequest();
             req.setUnit(unitID);
             req.setDirection(direction);
-            MoveBuilderUnitResponse res = api.moveBuilderUnit(req);
-            Util.wait(10);
-            if (res.getResult().getType().equals(ResultType.DONE)) {
-                serviceState = res.getResult();
-                Util.updateCoords(res.getResult().getBuilderUnit(), direction);
-                System.out.println(res.toString());
+            if (Util.checkMovement(Util.simulateMove(selectBuilder(unitID), direction))) {
+                MoveBuilderUnitResponse res = api.moveBuilderUnit(req);
+                Util.wait(10);
+                if (res.getResult().getType().equals(ResultType.DONE)) {
+                    serviceState = res.getResult();
+                    Util.updateCoords(res.getResult().getBuilderUnit(), direction);
+                   // System.out.println(res.toString());
 
-                actionPointsForTurn = tempPoints;
-                return true;
-            } else {
-                Util.wait(100);
-                System.out.println(res.getResult());
-
-                return false;
-            }
+                    actionPointsForTurn = tempPoints;
+                    return true;
+                } else {
+                  //  System.out.println(res.getResult());
+                    return false;
+                }
+            } else return false;
         } else
             return false;
     }
@@ -213,7 +215,6 @@ public class Service {
                 serviceState = res.getResult();
                 return true;
             } else {
-                Util.wait(100);
                 System.out.println(res.getResult());
 
                 return false;
@@ -241,11 +242,10 @@ public class Service {
                     return true;
                 } else {
                     System.out.println(res.getResult());
-                    Util.wait(100);
                     return false;
                 }
-            }else{
-                System.out.println("ide nem lehet lépni:"+direction.name());
+            } else {
+                System.out.println("ide nem lehet lépni:" + direction.name());
             }
             return false;
         } else

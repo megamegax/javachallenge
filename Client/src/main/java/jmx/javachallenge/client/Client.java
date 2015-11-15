@@ -29,17 +29,16 @@ public class Client {
         while (service.turnLeft != 0) {
             Util.wait(301);
             if (service.isMyTurn()) {
-                doJob(i,0);
+                doJob(service.selectedBuilder);
                 i++;
             }
         }
     }
 
-    private void doJob(int i,int unit) {
-        service.startTurn(i);
-      //  int unit = chooseBuilder();
+    private void doJob(int unit) {
+        //  int unit = chooseBuilder();
         if (isUnitInSpaceComp(unit)) {
-            System.out.println(unit+", is in space comp");
+            System.out.println(unit + ", is in space comp");
             service.structureTunnel(unit, moveOutFromSpaceComp());
             service.moveUnit(unit, moveOutFromSpaceComp());
             service.watch(unit);
@@ -51,19 +50,16 @@ public class Client {
                 service.moveUnit(unit, direction);
             }
         } else {
-            System.out.println(unit+", is NOT in space comp");
+            System.out.println(unit + ", is NOT in space comp");
 
             //TODO építkezni, mozogni, nem visszalépni, figyelni mi merre van hajaj Marci alkoss valamit :D
             int repeat = 4;
             while (repeat >= 0 && service.serviceState.getActionPointsLeft() > 0) {
                 repeat--;
                 WsDirection direction = moveRandomly();
-                if (service.structureTunnel(unit, direction)) {
-                    service.moveUnit(unit, direction);
-                    service.watch(unit);
-                }else{
-                    service.moveUnit(unit, direction);
-                }
+                if (service.structureTunnel(unit, direction))
+                    if (service.moveUnit(unit, direction))
+                        service.watch(unit);
             }
         }
     }
@@ -99,7 +95,7 @@ public class Client {
     }
 
     private boolean isUnitInSpaceComp(int unitID) {
-        System.out.println("getting unit: "+unitID);
+        System.out.println("getting unit: " + unitID);
         return service.builderUnits.get(unitID).getCord() == service.initialPos.getCord();
     }
 

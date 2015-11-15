@@ -37,14 +37,28 @@ public class Util {
         }
     }
 
-    public static boolean checkMovement(WsCoordinate simulatedCoordinate) {
+    public static Step checkMovement(WsCoordinate simulatedCoordinate) {
         if (simulatedCoordinate.getX() < Service.getInstance().initialGameState.getSize().getX() && simulatedCoordinate.getY() < Service.getInstance().initialGameState.getSize().getY()) {
-            if ((Service.getInstance().map[simulatedCoordinate.getX()][simulatedCoordinate.getY()] != 0) &&
-                    (Service.getInstance().map[simulatedCoordinate.getX()][simulatedCoordinate.getY()] != 4) &&
-                    (Service.getInstance().map[simulatedCoordinate.getX()][simulatedCoordinate.getY()] != 3)) {
-                return true;
-            } else return false;
-        } else return false;
+            switch (Service.getInstance().map[simulatedCoordinate.getX()][simulatedCoordinate.getY()]) {
+                case -1:
+                    return Step.WATCH;
+                case 0:
+                    return Step.STAY;
+                case 1:
+                    return Step.BUILD;
+                case 2:
+                    return Step.STAY;
+                case 3:
+                    return Step.MOVE;
+                case 4:
+                    return Step.STAY;
+                case 5:
+                    return Step.EXPLODE;
+                default:
+                    return Step.STAY;
+            }
+
+        } else return Step.STAY;
     }
 
     public static void wait(int wait) {
@@ -104,6 +118,6 @@ public class Util {
     }
 
     public static int convertCoordinateToMapCoordinate(int y) {
-        return Service.getInstance().initialGameState.getSize().getY()-y;
+        return Service.getInstance().initialGameState.getSize().getY() - y;
     }
 }
