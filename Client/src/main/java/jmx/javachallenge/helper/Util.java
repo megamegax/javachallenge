@@ -27,16 +27,16 @@ public class Util {
 
         switch (direction) {
             case LEFT:
-                System.out.println("to: " + new WsCoordinate(builder.getCord().getX() - 1, builder.getCord().getY()));
+                System.out.println("to left: " + new WsCoordinate(builder.getCord().getX() - 1, builder.getCord().getY()));
                 return new WsCoordinate(builder.getCord().getX() - 1, builder.getCord().getY());
             case RIGHT:
-                System.out.println("to: " + new WsCoordinate(builder.getCord().getX() - 1, builder.getCord().getY()));
+                System.out.println("to right: " + new WsCoordinate(builder.getCord().getX() + 1, builder.getCord().getY()));
                 return new WsCoordinate(builder.getCord().getX() + 1, builder.getCord().getY());
             case UP:
-                System.out.println("to: " + new WsCoordinate(builder.getCord().getX() - 1, builder.getCord().getY()));
+                System.out.println("to up: " + new WsCoordinate(builder.getCord().getX(), builder.getCord().getY() + 1));
                 return new WsCoordinate(builder.getCord().getX(), builder.getCord().getY() + 1);
             case DOWN:
-                System.out.println("to: " + new WsCoordinate(builder.getCord().getX() - 1, builder.getCord().getY()));
+                System.out.println("to down: " + new WsCoordinate(builder.getCord().getX(), builder.getCord().getY() - 1));
                 return new WsCoordinate(builder.getCord().getX(), builder.getCord().getY() - 1);
             default:
                 return builder.getCord();
@@ -44,8 +44,11 @@ public class Util {
     }
 
     public static Step checkMovement(WsCoordinate simulatedCoordinate) {
+        System.out.println("simulated coords: "+simulatedCoordinate);
         if (simulatedCoordinate.getX() < Service.getInstance().initialGameState.getSize().getX() && simulatedCoordinate.getY() < Service.getInstance().initialGameState.getSize().getY()) {
-            switch (Service.getInstance().map[simulatedCoordinate.getX()][simulatedCoordinate.getY()].getCellType()) {
+            int celltype = Service.getInstance().map[Util.convertCoordinateToMapCoordinate(simulatedCoordinate.getY())][simulatedCoordinate.getX()].getCellType();
+            System.out.println("in simulate---->"+celltype);
+            switch (celltype) {
                 case -1:
                     return Step.WATCH;
                 case 0:
@@ -130,6 +133,6 @@ public class Util {
     }
 
     public static int convertCoordinateToMapCoordinate(int y) {
-        return Service.getInstance().initialGameState.getSize().getY() - (y+1);
+        return Service.getInstance().initialGameState.getSize().getY() - (y + 1);
     }
 }

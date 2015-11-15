@@ -155,7 +155,6 @@ public class Service {
                     map[Util.convertCoordinateToMapCoordinate(scout.getCord().getY())][scout.getCord().getX()].setCellType(Util.stringToCellType(scout.getObject().name()));
                 }
                 Util.printMap();
-                // System.out.println(res.toString());
                 actionPointsForTurn = tempPoints;
                 return true;
             } else {
@@ -234,7 +233,9 @@ public class Service {
         if (tempPoints > 0) {
             WsCoordinate simulatedCoordinate = Util.simulateMove(builderUnits.get(unitID), direction);
             answer = Util.checkMovement(simulatedCoordinate);
+            System.out.println("in sturcture: --- " + answer.name());
             if (answer == Step.BUILD) {
+
                 StructureTunnelRequest req = new StructureTunnelRequest();
                 req.setUnit(unitID);
                 req.setDirection(direction);
@@ -247,12 +248,18 @@ public class Service {
                     return Util.checkMovement(simulatedCoordinate);
                 } else {
                     System.out.println(res.getResult());
-                    return answer;
+                    return Step.MOVE;
                 }
-            } else
+            } else {
+                System.out.println("not build: --- " + answer.name());
+
                 return answer;
-        } else
+            }
+        } else {
+            System.out.println("no points: --- " + answer.name());
+
             return answer;
+        }
     }
 
     public void explode(int unitID, WsDirection direction) {

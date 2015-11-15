@@ -40,16 +40,7 @@ public class Client {
         //  int unitID = chooseBuilder();
         if (isUnitInSpaceComp(unitID)) {
             System.out.println(unitID + ", is in space comp");
-            System.out.println(service.structureTunnel(unitID, moveOutFromSpaceComp()).name());
-            System.out.println(service.moveUnit(unitID, moveOutFromSpaceComp()).name());
-            service.watch(unitID);
-            int repeat = 4;
-            while (repeat >= 0 && service.serviceState.getActionPointsLeft() > 0) {
-                repeat--;
-                WsDirection direction = moveRandomly();
-                service.structureTunnel(unitID, direction);
-                service.moveUnit(unitID, direction);
-            }
+            doMove(unitID, moveOutFromSpaceComp());
         } else {
             System.out.println(unitID + ", is NOT in space comp");
 
@@ -63,8 +54,11 @@ public class Client {
     }
 
     private void doMove(int unit, WsDirection direction) {
-        switch (service.structureTunnel(unit, direction)) {
+        Step step = service.structureTunnel(unit, direction);
+        System.out.println(step.name());
+        switch (step) {
             case BUILD:
+                service.structureTunnel(unit, direction);
                 break;
             case MOVE:
                 service.moveUnit(unit, direction);
@@ -82,10 +76,6 @@ public class Client {
                 System.out.println("Elfogytak az elkölthető pontok");
                 break;
         }
-    }
-
-    private int chooseBuilder() {
-        return new Random().nextInt(3);
     }
 
     private WsDirection moveRandomly() {
