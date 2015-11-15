@@ -73,8 +73,8 @@ public class WsCoordinate {
     @Override
     public String toString() {
         return "WsCoordinate{" +
-                "x=" + x +
-                ", y=" + y +
+                "x=" + (x+1) +
+                ", y=" + (y+1) +
                 '}';
     }
 }

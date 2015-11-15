@@ -23,14 +23,20 @@ public class Util {
     }
 
     public static WsCoordinate simulateMove(WsBuilderunit builder, WsDirection direction) {
+        System.out.println("from: " + builder.getCord());
+
         switch (direction) {
             case LEFT:
+                System.out.println("to: " + new WsCoordinate(builder.getCord().getX() - 1, builder.getCord().getY()));
                 return new WsCoordinate(builder.getCord().getX() - 1, builder.getCord().getY());
             case RIGHT:
+                System.out.println("to: " + new WsCoordinate(builder.getCord().getX() - 1, builder.getCord().getY()));
                 return new WsCoordinate(builder.getCord().getX() + 1, builder.getCord().getY());
             case UP:
+                System.out.println("to: " + new WsCoordinate(builder.getCord().getX() - 1, builder.getCord().getY()));
                 return new WsCoordinate(builder.getCord().getX(), builder.getCord().getY() + 1);
             case DOWN:
+                System.out.println("to: " + new WsCoordinate(builder.getCord().getX() - 1, builder.getCord().getY()));
                 return new WsCoordinate(builder.getCord().getX(), builder.getCord().getY() - 1);
             default:
                 return builder.getCord();
@@ -104,12 +110,14 @@ public class Util {
     }
 
     public static void printMap() {
-        String sMap = "";
-        for (int x = 0; x < Service.getInstance().initialGameState.getSize().getX(); x++) {
-            for (int y = 0; y < Service.getInstance().initialGameState.getSize().getY(); y++) {
-                sMap += (Service.getInstance().map[x][y] >= 0) ? " " + Service.getInstance().map[x][y] + " " : Service.getInstance().map[x][y] + " ";
+        String sMap ="      1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19\n";
+        sMap += "  1: ";
+        for (int y = 0; y < Service.getInstance().initialGameState.getSize().getY(); y++) {
+            for (int x = 0; x < Service.getInstance().initialGameState.getSize().getX(); x++) {
+                sMap += (Service.getInstance().map[y][x] >= 0) ? " " + Service.getInstance().map[y][x] + " " : Service.getInstance().map[y][x] + " ";
             }
-            sMap += "\n";
+            if (y < Service.getInstance().initialGameState.getSize().getY() - 1)
+                sMap += "\n " + (y < 8 ? " " + (y + 2) : y + 2) + ": ";
         }
         System.out.println("---------------");
         System.out.println(sMap);
@@ -117,6 +125,6 @@ public class Util {
     }
 
     public static int convertCoordinateToMapCoordinate(int y) {
-        return Service.getInstance().initialGameState.getSize().getY() - y;
+        return y;// Service.getInstance().initialGameState.getSize().getY() - (y);
     }
 }
