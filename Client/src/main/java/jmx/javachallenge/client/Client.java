@@ -53,24 +53,25 @@ public class Client {
 
     }
 
-    private void doMove(int unit, WsDirection direction) {
-        Step step = service.structureTunnel(unit, direction);
-        System.out.println(step.name());
-        switch (step) {
+    private void doMove(int unitID, WsDirection direction) {
+        WsCoordinate simulatedCoordinate = Util.simulateMove(service.builderUnits.get(unitID), direction);
+        Step answer = Util.checkMovement(simulatedCoordinate);
+        System.out.println(answer);
+        switch (answer) {
             case BUILD:
-                service.structureTunnel(unit, direction);
+                service.structureTunnel(unitID, direction);
                 break;
             case MOVE:
-                service.moveUnit(unit, direction);
+                service.moveUnit(unitID, direction);
                 break;
             case WATCH:
-                service.watch(unit);
+                service.watch(unitID);
                 break;
             case EXPLODE:
-                service.explode(unit, direction);
+                service.explode(unitID, direction);
                 break;
             case STAY:
-                doMove(unit, moveRandomly());
+                doMove(unitID, moveRandomly());
                 break;
             case NO_POINTS:
                 System.out.println("Elfogytak az elkölthető pontok");
@@ -80,8 +81,10 @@ public class Client {
 
     private WsDirection moveRandomly() {
         Random random = new Random();
-        int r = random.nextInt(4) + 1;
+        int r = random.nextInt(5) + 1;
         if (r == 1) {
+            return WsDirection.RIGHT;
+        } else if (r == 5) {
             return WsDirection.RIGHT;
         } else if (r == 2) {
             return WsDirection.LEFT;

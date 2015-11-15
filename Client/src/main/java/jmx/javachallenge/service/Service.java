@@ -170,34 +170,31 @@ public class Service {
         return builderUnits.get(unitID);
     }
 
-    public Step moveUnit(int unitID, WsDirection direction) {
+    public boolean moveUnit(int unitID, WsDirection direction) {
         int tempPoints = actionPointsForTurn;
         tempPoints -= initialActionCost.getMove();
-        Step answer = Step.NO_POINTS;
         if (tempPoints > 0) {
             MoveBuilderUnitRequest req = new MoveBuilderUnitRequest();
             req.setUnit(unitID);
             req.setDirection(direction);
-            answer = Util.checkMovement(Util.simulateMove(selectBuilder(unitID), direction));
-            if (answer == Step.MOVE) {
-                MoveBuilderUnitResponse res = api.moveBuilderUnit(req);
-                Util.wait(10);
-                if (res.getResult().getType().equals(ResultType.DONE)) {
-                    serviceState = res.getResult();
-                    WsCoordinate oldCoordinate = builderUnits.get(unitID).getCord();
-                    map[Util.convertCoordinateToMapCoordinate(oldCoordinate.getY())][oldCoordinate.getX()].setBuilder(-1);
-                    WsCoordinate coordinate = Util.updateCoords(res.getResult().getBuilderUnit(), direction);
-                    map[Util.convertCoordinateToMapCoordinate(coordinate.getY())][coordinate.getX()].setBuilder(unitID);
+            MoveBuilderUnitResponse res = api.moveBuilderUnit(req);
+            Util.wait(10);
+            if (res.getResult().getType().equals(ResultType.DONE)) {
+                serviceState = res.getResult();
+                WsCoordinate oldCoordinate = builderUnits.get(unitID).getCord();
+                map[Util.convertCoordinateToMapCoordinate(oldCoordinate.getY())][oldCoordinate.getX()].setBuilder(-1);
+                WsCoordinate coordinate = Util.updateCoords(res.getResult().getBuilderUnit(), direction);
+                map[Util.convertCoordinateToMapCoordinate(coordinate.getY())][coordinate.getX()].setBuilder(unitID);
+                Util.printMap();
 
-                    actionPointsForTurn = tempPoints;
-                    return answer;
-                } else {
-                    //  System.out.println(res.getResult());
-                    return answer;
-                }
-            } else return answer;
-        } else
-            return answer;
+                actionPointsForTurn = tempPoints;
+                return true;
+            } else {
+                //  System.out.println(res.getResult());
+                return false;
+            }
+        } else return false;
+
     }
 
     public boolean radar(int unitID, List<WsCoordinate> coordinates) {
@@ -226,44 +223,36 @@ public class Service {
             return false;
     }
 
-    public Step structureTunnel(int unitID, WsDirection direction) {
+    public boolean structureTunnel(int unitID, WsDirection direction) {
         int tempPoints = actionPointsForTurn;
         tempPoints -= initialActionCost.getDrill();
-        Step answer = Step.NO_POINTS;
-        if (tempPoints > 0) {
-            WsCoordinate simulatedCoordinate = Util.simulateMove(builderUnits.get(unitID), direction);
-            answer = Util.checkMovement(simulatedCoordinate);
-            System.out.println("in sturcture: --- " + answer.name());
-            if (answer == Step.BUILD) {
+        if (tempPoints >= 0) {
 
-                StructureTunnelRequest req = new StructureTunnelRequest();
-                req.setUnit(unitID);
-                req.setDirection(direction);
-                StructureTunnelResponse res = api.structureTunnel(req);
-                Util.wait(10);
-                if (res.getResult().getType().equals(ResultType.DONE)) {
-                    map[Util.convertCoordinateToMapCoordinate(selectBuilder(unitID).getCord().getY())][selectBuilder(unitID).getCord().getX()].setCellType(CellType.TUNNEL);
-                    serviceState = res.getResult();
-                    actionPointsForTurn = tempPoints;
-                    return Util.checkMovement(simulatedCoordinate);
-                } else {
-                    System.out.println(res.getResult());
-                    return Step.WATCH;
-                }
+            StructureTunnelRequest req = new StructureTunnelRequest();
+            req.setUnit(unitID);
+            req.setDirection(direction);
+            StructureTunnelResponse res = api.structureTunnel(req);
+            Util.wait(10);
+            if (res.getResult().getType().equals(ResultType.DONE)) {
+                map[Util.convertCoordinateToMapCoordinate(selectBuilder(unitID).getCord().getY())][selectBuilder(unitID).getCord().getX()].setCellType(CellType.TUNNEL);
+                serviceState = res.getResult();
+                actionPointsForTurn = tempPoints;
+                Util.printMap();
+                return true;
             } else {
-                System.out.println("not build: --- " + answer.name());
-
-                return answer;
+                System.out.println(res.getResult());
+                return false;
             }
-        } else {
-            System.out.println("no points: --- " + answer.name());
 
-            return answer;
+        } else {
+            System.out.println("no points: --- ");
+
+            return false;
         }
     }
 
     public void explode(int unitID, WsDirection direction) {
-
+        System.out.println("EXPLOOOOOODE");
     }
 
 
