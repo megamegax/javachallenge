@@ -110,14 +110,18 @@ public class Util {
     }
 
     public static void printMap() {
-        String sMap = "      1     2     3     4     5     6     7     8     9    10    11    12    13    14    15    16    17    18    19\n";
-        sMap += "  1: ";
+        int axisY = Service.getInstance().initialGameState.getSize().getY();
+        String sMap = "";
+        sMap += " " + axisY + ": ";
         for (int y = 0; y < Service.getInstance().initialGameState.getSize().getY(); y++) {
             for (int x = 0; x < Service.getInstance().initialGameState.getSize().getX(); x++) {
                 sMap += Service.getInstance().map[y][x].toString();
             }
+            axisY--;
             if (y < Service.getInstance().initialGameState.getSize().getY() - 1)
-                sMap += "\n " + (y < 8 ? " " + (y + 2) : y + 2) + ": ";
+                sMap += "\n " + (axisY <= 9 ? " " + (axisY) : axisY) + ": ";
+            else
+                sMap += "\n      1     2     3     4     5     6     7     8     9    10    11    12    13    14    15    16    17    18    19";
         }
         System.out.println("---------------");
         System.out.println(sMap);
