@@ -8,9 +8,9 @@ import javax.xml.bind.annotation.XmlType;
 
 /**
  * <p>Java class for wsScore complex type.
- * 
+ * <p>
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ * <p>
  * <pre>
  * &lt;complexType name="wsScore">
  *   &lt;complexContent>
@@ -25,15 +25,13 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "wsScore", propOrder = {
-    "reward",
-    "bonus",
-    "penalty",
-    "total"
+        "reward",
+        "bonus",
+        "penalty",
+        "total"
 })
 public class WsScore {
 
@@ -44,7 +42,6 @@ public class WsScore {
 
     /**
      * Gets the value of the reward property.
-     * 
      */
     public long getReward() {
         return reward;
@@ -52,7 +49,6 @@ public class WsScore {
 
     /**
      * Sets the value of the reward property.
-     * 
      */
     public void setReward(long value) {
         this.reward = value;
@@ -60,7 +56,6 @@ public class WsScore {
 
     /**
      * Gets the value of the bonus property.
-     * 
      */
     public long getBonus() {
         return bonus;
@@ -68,7 +63,6 @@ public class WsScore {
 
     /**
      * Sets the value of the bonus property.
-     * 
      */
     public void setBonus(long value) {
         this.bonus = value;
@@ -76,7 +70,6 @@ public class WsScore {
 
     /**
      * Gets the value of the penalty property.
-     * 
      */
     public long getPenalty() {
         return penalty;
@@ -84,7 +77,6 @@ public class WsScore {
 
     /**
      * Sets the value of the penalty property.
-     * 
      */
     public void setPenalty(long value) {
         this.penalty = value;
@@ -92,7 +84,6 @@ public class WsScore {
 
     /**
      * Gets the value of the total property.
-     * 
      */
     public long getTotal() {
         return total;
@@ -100,7 +91,6 @@ public class WsScore {
 
     /**
      * Sets the value of the total property.
-     * 
      */
     public void setTotal(long value) {
         this.total = value;
@@ -114,5 +104,12 @@ public class WsScore {
                 ", penalty=" + penalty +
                 ", total=" + total +
                 '}';
+    }
+
+    public String toLog() {
+        return "Score:" + "reward=" + reward +
+                ", bonus=" + bonus +
+                ", penalty=" + penalty +
+                ", total=" + total;
     }
 }

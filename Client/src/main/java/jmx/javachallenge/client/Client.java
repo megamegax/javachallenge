@@ -2,6 +2,7 @@ package jmx.javachallenge.client;
 
 import eu.loxon.centralcontrol.WsCoordinate;
 import eu.loxon.centralcontrol.WsDirection;
+import jmx.javachallenge.helper.Logger;
 import jmx.javachallenge.helper.Step;
 import jmx.javachallenge.helper.Util;
 import jmx.javachallenge.service.Service;
@@ -34,18 +35,20 @@ public class Client {
     private void doJob(int unitID) {
         //  int unitID = chooseBuilder();
         if (isUnitInSpaceComp(unitID)) {
-            System.out.println(unitID + ", is in space comp");
+            Logger.log(unitID + ", is in space comp");
+            service.watch(unitID);
+
             if (unitID == 0) {
-                service.watch(unitID);
                 service.structureTunnel(unitID, moveOutFromSpaceComp());
             }
             service.moveUnit(unitID, moveOutFromSpaceComp());
             service.watch(unitID);
             //  doMove(unitID, moveOutFromSpaceComp());
         } else {
-            System.out.println(unitID + ", is NOT in space comp");
+            Logger.log(unitID + ", is NOT in space comp");
             //TODO építkezni, mozogni, nem visszalépni, figyelni mi merre van hajaj Marci alkoss valamit :D
             WsDirection direction = moveRandomly();
+            service.watch(unitID);
             if (doMove(unitID, direction)) {
                 doMove(unitID, direction);
             }
@@ -55,7 +58,7 @@ public class Client {
     private boolean doMove(int unitID, WsDirection direction) {
         WsCoordinate simulatedCoordinate = Util.simulateMove(service.builderUnits.get(unitID), direction);
         Step answer = Util.checkMovement(simulatedCoordinate);
-        System.out.println(answer);
+        Logger.log(answer);
         switch (answer) {
             case BUILD:
                 return service.structureTunnel(unitID, direction);
@@ -73,7 +76,7 @@ public class Client {
                 return doMove(unitID, moveRandomly());
 
             case NO_POINTS:
-                System.out.println("Elfogytak az elkölthető pontok");
+                Logger.log("Elfogytak az elkölthető pontok");
                 return false;
         }
         return false;

@@ -23,20 +23,20 @@ public class Util {
     }
 
     public static WsCoordinate simulateMove(WsBuilderunit builder, WsDirection direction) {
-        System.out.println("from: " + builder.getCord());
+        Logger.log("from: " + builder.getCord());
 
         switch (direction) {
             case LEFT:
-                System.out.println("to left: " + new WsCoordinate(builder.getCord().getX() - 1, builder.getCord().getY()));
+                Logger.log("to left: " + new WsCoordinate(builder.getCord().getX() - 1, builder.getCord().getY()));
                 return new WsCoordinate(builder.getCord().getX() - 1, builder.getCord().getY());
             case RIGHT:
-                System.out.println("to right: " + new WsCoordinate(builder.getCord().getX() + 1, builder.getCord().getY()));
+                Logger.log("to right: " + new WsCoordinate(builder.getCord().getX() + 1, builder.getCord().getY()));
                 return new WsCoordinate(builder.getCord().getX() + 1, builder.getCord().getY());
             case UP:
-                System.out.println("to up: " + new WsCoordinate(builder.getCord().getX(), builder.getCord().getY() + 1));
+                Logger.log("to up: " + new WsCoordinate(builder.getCord().getX(), builder.getCord().getY() + 1));
                 return new WsCoordinate(builder.getCord().getX(), builder.getCord().getY() + 1);
             case DOWN:
-                System.out.println("to down: " + new WsCoordinate(builder.getCord().getX(), builder.getCord().getY() - 1));
+                Logger.log("to down: " + new WsCoordinate(builder.getCord().getX(), builder.getCord().getY() - 1));
                 return new WsCoordinate(builder.getCord().getX(), builder.getCord().getY() - 1);
             default:
                 return builder.getCord();
@@ -91,7 +91,7 @@ public class Util {
                 Service.getInstance().builderUnits.get(unitID).setCord(new WsCoordinate(oldCoordinate.getX(), oldCoordinate.getY() - 1));
                 break;
         }
-        System.out.println("coordinates updated for unit: "+unitID+", "+Service.getInstance().builderUnits.get(unitID).getCord());
+        Logger.log("coordinates updated for unit: " + unitID + ", " + Service.getInstance().builderUnits.get(unitID).getCord());
         return Service.getInstance().builderUnits.get(unitID).getCord();
     }
 
@@ -107,6 +107,8 @@ public class Util {
                 return CellType.TUNNEL;
             case "GRANITE":
                 return CellType.GRANITE;
+            case "BUILDER_UNIT":
+                return CellType.TUNNEL;
             default:
                 return CellType.UNKNOWN;
         }
@@ -129,6 +131,7 @@ public class Util {
         System.out.println("---------------");
         System.out.println(sMap);
         System.out.println("---------------");
+        System.out.println(Service.getInstance().serviceState.getScore().toLog());
     }
 
     public static int convertCoordinateToMapCoordinate(int y) {

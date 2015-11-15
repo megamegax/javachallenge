@@ -1,10 +1,7 @@
 package jmx.javachallenge.service;
 
 import eu.loxon.centralcontrol.*;
-import jmx.javachallenge.helper.CellType;
-import jmx.javachallenge.helper.Tile;
-import jmx.javachallenge.helper.Step;
-import jmx.javachallenge.helper.Util;
+import jmx.javachallenge.helper.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -68,14 +65,15 @@ public class Service {
                 })
                 .average();
         if (average.isPresent()) {
-            System.out.println(average.getAsDouble());
+            Logger.log(average.getAsDouble());
         }
     }
 
     public StartGameResponse startGame() {
         StartGameResponse res = api.startGame(new StartGameRequest());
         initialGameState = res;
-        System.out.println(res.toString());
+        Logger.log(res.toString());
+        res.setSize(new WsCoordinate(res.getSize().getX() + 1, res.getSize().getY() + 1));
         map = new Tile[res.getSize().getY()][res.getSize().getX()];
         for (int y = 0; y < initialGameState.getSize().getY(); y++) {
             for (int x = 0; x < initialGameState.getSize().getX(); x++) {
@@ -107,7 +105,7 @@ public class Service {
         initialActionCost = res;
         printMessage(res.getResult());
         serviceState = res.getResult();
-        System.out.println(res.toString());
+        Logger.log(res.toString());
 
         return res;
     }
@@ -137,7 +135,7 @@ public class Service {
             GetSpaceShuttleExitPosResponse res = api.getSpaceShuttleExitPos(new GetSpaceShuttleExitPosRequest());
             printMessage(res.getResult());
             initialExitPos = res;
-            System.out.println(res.toString());
+            Logger.log(res.toString());
             return res;
         } else return initialExitPos;
     }
@@ -149,19 +147,21 @@ public class Service {
             WatchResponse res = api.watch(new WatchRequest(unitID));
             Util.wait(10);
             if (res.getResult().getType().equals(ResultType.DONE)) {
+                Logger.log(res.toString());
                 for (Scouting scout : res.getScout()) {
                     map[Util.convertCoordinateToMapCoordinate(scout.getCord().getY())][scout.getCord().getX()].setCellType(Util.stringToCellType(scout.getObject().name()));
                 }
-                System.out.println(res.getScout().get(0).getCord());
-                System.out.println(res.getScout().get(1).getCord());
-                System.out.println(res.getScout().get(2).getCord());
-                System.out.println(res.getScout().get(3).getCord());
+                Logger.log(res.getScout().get(0).getCord());
+                Logger.log(res.getScout().get(1).getCord());
+                Logger.log(res.getScout().get(2).getCord());
+                Logger.log(res.getScout().get(3).getCord());
                 builderUnits.get(unitID).setCord(new WsCoordinate(res.getScout().get(0).getCord().getX(), res.getScout().get(2).getCord().getY()));
                 Util.printMap();
                 actionPointsForTurn = tempPoints;
+
                 return true;
             } else {
-                System.out.println(res.getResult());
+                Logger.log(res.getResult());
 
                 return false;
             }
@@ -182,7 +182,7 @@ public class Service {
             req.setDirection(direction);
             MoveBuilderUnitResponse res = api.moveBuilderUnit(req);
             Util.wait(10);
-            System.out.println(res);
+            Logger.log(res);
             if (res.getResult().getType().equals(ResultType.DONE)) {
                 serviceState = res.getResult();
                 WsCoordinate oldCoordinate = builderUnits.get(unitID).getCord();
@@ -194,11 +194,11 @@ public class Service {
                 actionPointsForTurn = tempPoints;
                 return true;
             } else {
-                System.out.println(res.getResult());
+                Logger.log(res.getResult());
                 return false;
             }
         } else {
-            System.out.println("nincs elég pont mozogni");
+            Logger.log("nincs elég pont mozogni");
             return false;
         }
 
@@ -213,7 +213,7 @@ public class Service {
             req.getCord().addAll(coordinates);
             RadarResponse res = api.radar(req);
             if (res.getResult().getType().equals(ResultType.DONE)) {
-                System.out.println(res.toString());
+                Logger.log(res.toString());
                 for (Scouting scout : res.getScout()) {
                     map[Util.convertCoordinateToMapCoordinate(scout.getCord().getY())][scout.getCord().getX()].setCellType(Util.stringToCellType(scout.getObject().name()));
                 }
@@ -222,7 +222,7 @@ public class Service {
                 serviceState = res.getResult();
                 return true;
             } else {
-                System.out.println(res.getResult());
+                Logger.log(res.getResult());
 
                 return false;
             }
@@ -247,24 +247,24 @@ public class Service {
                 Util.printMap();
                 return true;
             } else {
-                System.out.println(res.getResult());
+                Logger.log(res.getResult());
                 return false;
             }
 
         } else {
-            System.out.println("nincs elég pont építeni");
+            Logger.log("nincs elég pont építeni");
             return false;
         }
     }
 
     public boolean explode(int unitID, WsDirection direction) {
-        System.out.println("EXPLOOOOOODE");
+        Logger.log("EXPLOOOOOODE");
         return false;
     }
 
 
     public void startTurn(int i) {
-        System.out.println("kör:" + i);
+        Logger.log("kör:" + i);
         builderUnits.get(serviceState.getBuilderUnit()).getCord();
 
     }
