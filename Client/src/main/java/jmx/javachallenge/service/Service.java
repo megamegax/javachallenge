@@ -123,7 +123,7 @@ public class Service {
             builderUnits.get(2).setCord(res.getCord());
             builderUnits.get(3).setCord(res.getCord());
             serviceState = res.getResult();
-            map[Util.convertCoordinateToMapCoordinate(res.getCord().getY()) + 1][res.getCord().getX() + 1].setCellType(CellType.SHUTTLE);
+            map[Util.convertCoordinateToMapCoordinate(res.getCord().getY())][res.getCord().getX()].setCellType(CellType.SHUTTLE);
             System.out.println("shuttle: " + res.getCord());
             Util.printMap();
             return res;
@@ -152,7 +152,7 @@ public class Service {
             Util.wait(10);
             if (res.getResult().getType().equals(ResultType.DONE)) {
                 for (Scouting scout : res.getScout()) {
-                    map[Util.convertCoordinateToMapCoordinate(scout.getCord().getY()) + 1][scout.getCord().getX() + 1].setCellType(Util.stringToCellType(scout.getObject().name()));
+                    map[Util.convertCoordinateToMapCoordinate(scout.getCord().getY())][scout.getCord().getX()].setCellType(Util.stringToCellType(scout.getObject().name()));
                 }
                 Util.printMap();
                 // System.out.println(res.toString());
@@ -185,8 +185,10 @@ public class Service {
                 Util.wait(10);
                 if (res.getResult().getType().equals(ResultType.DONE)) {
                     serviceState = res.getResult();
-                    Util.updateCoords(res.getResult().getBuilderUnit(), direction);
-                    // System.out.println(res.toString());
+                    WsCoordinate oldCoordinate = builderUnits.get(unitID).getCord();
+                    map[Util.convertCoordinateToMapCoordinate(oldCoordinate.getY())][oldCoordinate.getX()].setBuilder(unitID);
+                    WsCoordinate coordinate = Util.updateCoords(res.getResult().getBuilderUnit(), direction);
+                    map[Util.convertCoordinateToMapCoordinate(coordinate.getY())][coordinate.getX()].setBuilder(unitID);
 
                     actionPointsForTurn = tempPoints;
                     return answer;
@@ -210,7 +212,7 @@ public class Service {
             if (res.getResult().getType().equals(ResultType.DONE)) {
                 System.out.println(res.toString());
                 for (Scouting scout : res.getScout()) {
-                    map[Util.convertCoordinateToMapCoordinate(scout.getCord().getY()) + 1][scout.getCord().getX() + 1].setCellType(Util.stringToCellType(scout.getObject().name()));
+                    map[Util.convertCoordinateToMapCoordinate(scout.getCord().getY())][scout.getCord().getX()].setCellType(Util.stringToCellType(scout.getObject().name()));
                 }
                 Util.printMap();
                 actionPointsForTurn = tempPoints;
@@ -239,8 +241,7 @@ public class Service {
                 StructureTunnelResponse res = api.structureTunnel(req);
                 Util.wait(10);
                 if (res.getResult().getType().equals(ResultType.DONE)) {
-                    map[selectBuilder(unitID).getCord().getX() + 1][Util.convertCoordinateToMapCoordinate(selectBuilder(unitID).getCord().getY()) + 1].setCellType(CellType.TUNNEL);
-                    System.out.println(res.toString());
+                    map[Util.convertCoordinateToMapCoordinate(selectBuilder(unitID).getCord().getY())][selectBuilder(unitID).getCord().getX()].setCellType(CellType.TUNNEL);
                     serviceState = res.getResult();
                     actionPointsForTurn = tempPoints;
                     return Util.checkMovement(simulatedCoordinate);

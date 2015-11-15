@@ -74,7 +74,7 @@ public class Util {
         }
     }
 
-    public static void updateCoords(int unitID, WsDirection direction) {
+    public static WsCoordinate updateCoords(int unitID, WsDirection direction) {
         WsCoordinate oldCoordinate = Service.getInstance().builderUnits.get(unitID).getCord();
         switch (direction) {
             case LEFT:
@@ -90,6 +90,7 @@ public class Util {
                 Service.getInstance().builderUnits.get(unitID).setCord(new WsCoordinate(oldCoordinate.getX(), oldCoordinate.getY() - 1));
                 break;
         }
+        return Service.getInstance().builderUnits.get(unitID).getCord();
     }
 
     public static CellType stringToCellType(String object) {
@@ -129,6 +130,6 @@ public class Util {
     }
 
     public static int convertCoordinateToMapCoordinate(int y) {
-        return y;// Service.getInstance().initialGameState.getSize().getY() - (y);
+        return Service.getInstance().initialGameState.getSize().getY() - (y+1);
     }
 }
