@@ -185,7 +185,7 @@ public class Service {
                 if (res.getResult().getType().equals(ResultType.DONE)) {
                     serviceState = res.getResult();
                     WsCoordinate oldCoordinate = builderUnits.get(unitID).getCord();
-                    map[Util.convertCoordinateToMapCoordinate(oldCoordinate.getY())][oldCoordinate.getX()].setBuilder(unitID);
+                    map[Util.convertCoordinateToMapCoordinate(oldCoordinate.getY())][oldCoordinate.getX()].setBuilder(-1);
                     WsCoordinate coordinate = Util.updateCoords(res.getResult().getBuilderUnit(), direction);
                     map[Util.convertCoordinateToMapCoordinate(coordinate.getY())][coordinate.getX()].setBuilder(unitID);
 
@@ -248,7 +248,7 @@ public class Service {
                     return Util.checkMovement(simulatedCoordinate);
                 } else {
                     System.out.println(res.getResult());
-                    return Step.MOVE;
+                    return Step.WATCH;
                 }
             } else {
                 System.out.println("not build: --- " + answer.name());
