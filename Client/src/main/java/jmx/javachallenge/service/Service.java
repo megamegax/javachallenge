@@ -194,10 +194,13 @@ public class Service {
                 actionPointsForTurn = tempPoints;
                 return true;
             } else {
-                 System.out.println(res.getResult());
+                System.out.println(res.getResult());
                 return false;
             }
-        } else return false;
+        } else {
+            System.out.println("nincs elég pont mozogni");
+            return false;
+        }
 
     }
 
@@ -249,6 +252,7 @@ public class Service {
             }
 
         } else {
+            System.out.println("nincs elég pont építeni");
             return false;
         }
     }

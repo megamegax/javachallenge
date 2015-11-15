@@ -36,6 +36,7 @@ public class Client {
         if (isUnitInSpaceComp(unitID)) {
             System.out.println(unitID + ", is in space comp");
             if (unitID == 0) {
+                service.watch(unitID);
                 service.structureTunnel(unitID, moveOutFromSpaceComp());
             }
             service.moveUnit(unitID, moveOutFromSpaceComp());
@@ -44,9 +45,9 @@ public class Client {
         } else {
             System.out.println(unitID + ", is NOT in space comp");
             //TODO építkezni, mozogni, nem visszalépni, figyelni mi merre van hajaj Marci alkoss valamit :D
-
-            if (doMove(unitID, moveRandomly())) {
-                doMove(unitID, moveRandomly());
+            WsDirection direction = moveRandomly();
+            if (doMove(unitID, direction)) {
+                doMove(unitID, direction);
             }
         }
     }
