@@ -44,10 +44,8 @@ public class Util {
     }
 
     public static Step checkMovement(WsCoordinate simulatedCoordinate) {
-        System.out.println("simulated coords: "+simulatedCoordinate);
         if (simulatedCoordinate.getX() < Service.getInstance().initialGameState.getSize().getX() && simulatedCoordinate.getY() < Service.getInstance().initialGameState.getSize().getY()) {
             int celltype = Service.getInstance().map[Util.convertCoordinateToMapCoordinate(simulatedCoordinate.getY())][simulatedCoordinate.getX()].getCellType();
-            System.out.println("in simulate---->"+celltype);
             switch (celltype) {
                 case -1:
                     return Step.WATCH;

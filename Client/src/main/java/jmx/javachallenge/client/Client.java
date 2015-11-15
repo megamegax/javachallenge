@@ -23,15 +23,10 @@ public class Client {
         service.getSpaceShuttlePos();
         service.getSpaceShuttlePosExit();
         service.getActionCost();
-
-
-        System.out.println("űrkomp merre néz:" + Util.calculateDirection(service.getSpaceShuttlePos().getCord(), service.getSpaceShuttlePosExit().getCord()).name());
-        int i = 1;
         while (service.turnLeft != 0) {
             Util.wait(301);
             if (service.isMyTurn()) {
                 doJob(service.selectedBuilder);
-                i++;
             }
         }
     }
@@ -46,37 +41,41 @@ public class Client {
 
             //TODO építkezni, mozogni, nem visszalépni, figyelni mi merre van hajaj Marci alkoss valamit :D
 
-            doMove(unitID, moveRandomly());
+            if (doMove(unitID, moveRandomly())) {
+                doMove(unitID, moveRandomly());
+            }
 
         }
 
 
     }
 
-    private void doMove(int unitID, WsDirection direction) {
+    private boolean doMove(int unitID, WsDirection direction) {
         WsCoordinate simulatedCoordinate = Util.simulateMove(service.builderUnits.get(unitID), direction);
         Step answer = Util.checkMovement(simulatedCoordinate);
         System.out.println(answer);
         switch (answer) {
             case BUILD:
-                service.structureTunnel(unitID, direction);
-                break;
+                return service.structureTunnel(unitID, direction);
+
             case MOVE:
-                service.moveUnit(unitID, direction);
-                break;
+                return service.moveUnit(unitID, direction);
+
             case WATCH:
-                service.watch(unitID);
-                break;
+                return service.watch(unitID);
+
             case EXPLODE:
-                service.explode(unitID, direction);
-                break;
+                return service.explode(unitID, direction);
+
             case STAY:
-                doMove(unitID, moveRandomly());
-                break;
+                return doMove(unitID, moveRandomly());
+
             case NO_POINTS:
                 System.out.println("Elfogytak az elkölthető pontok");
-                break;
+                return false;
+
         }
+        return false;
     }
 
     private WsDirection moveRandomly() {
@@ -108,7 +107,6 @@ public class Client {
     }
 
     private boolean isUnitInSpaceComp(int unitID) {
-        System.out.println("getting unit: " + unitID);
         return service.builderUnits.get(unitID).getCord() == service.initialPos.getCord();
     }
 

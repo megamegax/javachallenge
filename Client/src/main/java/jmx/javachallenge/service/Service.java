@@ -88,7 +88,6 @@ public class Service {
     public boolean isMyTurn() {
         IsMyTurnResponse res = api.isMyTurn(new IsMyTurnRequest());
         serviceState = res.getResult();
-        System.out.println("isMyTurn:" + res.toString());
 
         if (res.isIsYourTurn()) {
             selectedBuilder = res.getResult().getBuilderUnit();
@@ -124,7 +123,6 @@ public class Service {
             builderUnits.get(3).setCord(res.getCord());
             serviceState = res.getResult();
             map[Util.convertCoordinateToMapCoordinate(res.getCord().getY())][res.getCord().getX()].setCellType(CellType.SHUTTLE);
-            System.out.println("shuttle: " + res.getCord());
             Util.printMap();
             return res;
         } else return initialPos;
@@ -154,6 +152,11 @@ public class Service {
                 for (Scouting scout : res.getScout()) {
                     map[Util.convertCoordinateToMapCoordinate(scout.getCord().getY())][scout.getCord().getX()].setCellType(Util.stringToCellType(scout.getObject().name()));
                 }
+                System.out.println(res.getScout().get(0).getCord());
+                System.out.println(res.getScout().get(1).getCord());
+                System.out.println(res.getScout().get(2).getCord());
+                System.out.println(res.getScout().get(3).getCord());
+                builderUnits.get(unitID).setCord(new WsCoordinate(res.getScout().get(0).getCord().getX(), res.getScout().get(0).getCord().getY() - 1));
                 Util.printMap();
                 actionPointsForTurn = tempPoints;
                 return true;
@@ -245,14 +248,13 @@ public class Service {
             }
 
         } else {
-            System.out.println("no points: --- ");
-
             return false;
         }
     }
 
-    public void explode(int unitID, WsDirection direction) {
+    public boolean explode(int unitID, WsDirection direction) {
         System.out.println("EXPLOOOOOODE");
+        return false;
     }
 
 
