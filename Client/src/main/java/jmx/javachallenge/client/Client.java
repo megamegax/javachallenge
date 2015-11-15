@@ -2,6 +2,7 @@ package jmx.javachallenge.client;
 
 import eu.loxon.centralcontrol.WsCoordinate;
 import eu.loxon.centralcontrol.WsDirection;
+import jmx.javachallenge.helper.Step;
 import jmx.javachallenge.helper.Util;
 import jmx.javachallenge.service.Service;
 
@@ -35,32 +36,51 @@ public class Client {
         }
     }
 
-    private void doJob(int unit) {
-        //  int unit = chooseBuilder();
-        if (isUnitInSpaceComp(unit)) {
-            System.out.println(unit + ", is in space comp");
-            service.structureTunnel(unit, moveOutFromSpaceComp());
-            service.moveUnit(unit, moveOutFromSpaceComp());
-            service.watch(unit);
+    private void doJob(int unitID) {
+        //  int unitID = chooseBuilder();
+        if (isUnitInSpaceComp(unitID)) {
+            System.out.println(unitID + ", is in space comp");
+            System.out.println(service.structureTunnel(unitID, moveOutFromSpaceComp()).name());
+            System.out.println(service.moveUnit(unitID, moveOutFromSpaceComp()).name());
+            service.watch(unitID);
             int repeat = 4;
             while (repeat >= 0 && service.serviceState.getActionPointsLeft() > 0) {
                 repeat--;
                 WsDirection direction = moveRandomly();
-                service.structureTunnel(unit, direction);
-                service.moveUnit(unit, direction);
+                service.structureTunnel(unitID, direction);
+                service.moveUnit(unitID, direction);
             }
         } else {
-            System.out.println(unit + ", is NOT in space comp");
+            System.out.println(unitID + ", is NOT in space comp");
 
             //TODO építkezni, mozogni, nem visszalépni, figyelni mi merre van hajaj Marci alkoss valamit :D
-            int repeat = 4;
-            while (repeat >= 0 && service.serviceState.getActionPointsLeft() > 0) {
-                repeat--;
-                WsDirection direction = moveRandomly();
-                if (service.structureTunnel(unit, direction))
-                    if (service.moveUnit(unit, direction))
-                        service.watch(unit);
-            }
+
+            doMove(unitID, moveRandomly());
+
+        }
+
+
+    }
+
+    private void doMove(int unit, WsDirection direction) {
+        switch (service.structureTunnel(unit, direction)) {
+            case BUILD:
+                break;
+            case MOVE:
+                service.moveUnit(unit, direction);
+                break;
+            case WATCH:
+                service.watch(unit);
+                break;
+            case EXPLODE:
+                service.explode(unit, direction);
+                break;
+            case STAY:
+                doMove(unit, moveRandomly());
+                break;
+            case NO_POINTS:
+                System.out.println("Elfogytak az elkölthető pontok");
+                break;
         }
     }
 

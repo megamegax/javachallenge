@@ -57,7 +57,6 @@ public class Util {
                 default:
                     return Step.STAY;
             }
-
         } else return Step.STAY;
     }
 

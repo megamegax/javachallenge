@@ -2,6 +2,7 @@ package jmx.javachallenge.service;
 
 import eu.loxon.centralcontrol.*;
 import jmx.javachallenge.helper.CellType;
+import jmx.javachallenge.helper.Step;
 import jmx.javachallenge.helper.Util;
 
 import java.awt.*;
@@ -155,7 +156,7 @@ public class Service {
                     map[scout.getCord().getX()][Util.convertCoordinateToMapCoordinate(scout.getCord().getY())] = Util.stringToCellType(scout.getObject().name()).getValue();
                 }
                 Util.printMap();
-               // System.out.println(res.toString());
+                // System.out.println(res.toString());
                 actionPointsForTurn = tempPoints;
                 return true;
             } else {
@@ -171,30 +172,32 @@ public class Service {
         return builderUnits.get(unitID);
     }
 
-    public boolean moveUnit(int unitID, WsDirection direction) {
+    public Step moveUnit(int unitID, WsDirection direction) {
         int tempPoints = actionPointsForTurn;
         tempPoints -= initialActionCost.getMove();
+        Step answer = Step.NO_POINTS;
         if (tempPoints > 0) {
             MoveBuilderUnitRequest req = new MoveBuilderUnitRequest();
             req.setUnit(unitID);
             req.setDirection(direction);
-            if (Util.checkMovement(Util.simulateMove(selectBuilder(unitID), direction))) {
+            answer = Util.checkMovement(Util.simulateMove(selectBuilder(unitID), direction));
+            if (answer == Step.MOVE) {
                 MoveBuilderUnitResponse res = api.moveBuilderUnit(req);
                 Util.wait(10);
                 if (res.getResult().getType().equals(ResultType.DONE)) {
                     serviceState = res.getResult();
                     Util.updateCoords(res.getResult().getBuilderUnit(), direction);
-                   // System.out.println(res.toString());
+                    // System.out.println(res.toString());
 
                     actionPointsForTurn = tempPoints;
-                    return true;
+                    return answer;
                 } else {
-                  //  System.out.println(res.getResult());
-                    return false;
+                    //  System.out.println(res.getResult());
+                    return answer;
                 }
-            } else return false;
+            } else return answer;
         } else
-            return false;
+            return answer;
     }
 
     public boolean radar(int unitID, List<WsCoordinate> coordinates) {
@@ -223,12 +226,14 @@ public class Service {
             return false;
     }
 
-    public boolean structureTunnel(int unitID, WsDirection direction) {
+    public Step structureTunnel(int unitID, WsDirection direction) {
         int tempPoints = actionPointsForTurn;
         tempPoints -= initialActionCost.getDrill();
+        Step answer = Step.NO_POINTS;
         if (tempPoints > 0) {
             WsCoordinate simulatedCoordinate = Util.simulateMove(builderUnits.get(unitID), direction);
-            if (Util.checkMovement(simulatedCoordinate)) {
+            answer = Util.checkMovement(simulatedCoordinate);
+            if (answer == Step.BUILD) {
                 StructureTunnelRequest req = new StructureTunnelRequest();
                 req.setUnit(unitID);
                 req.setDirection(direction);
@@ -239,17 +244,19 @@ public class Service {
                     System.out.println(res.toString());
                     serviceState = res.getResult();
                     actionPointsForTurn = tempPoints;
-                    return true;
+                    return Util.checkMovement(simulatedCoordinate);
                 } else {
                     System.out.println(res.getResult());
-                    return false;
+                    return answer;
                 }
-            } else {
-                System.out.println("ide nem lehet lépni:" + direction.name());
-            }
-            return false;
+            } else
+                return answer;
         } else
-            return false;
+            return answer;
+    }
+
+    public void explode(int unitID, WsDirection direction) {
+
     }
 
 
