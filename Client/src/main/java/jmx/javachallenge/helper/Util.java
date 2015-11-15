@@ -45,7 +45,7 @@ public class Util {
 
     public static Step checkMovement(WsCoordinate simulatedCoordinate) {
         if (simulatedCoordinate.getX() < Service.getInstance().initialGameState.getSize().getX() && simulatedCoordinate.getY() < Service.getInstance().initialGameState.getSize().getY()) {
-            switch (Service.getInstance().map[simulatedCoordinate.getX()][simulatedCoordinate.getY()]) {
+            switch (Service.getInstance().map[simulatedCoordinate.getX()][simulatedCoordinate.getY()].getCellType()) {
                 case -1:
                     return Step.WATCH;
                 case 0:
@@ -110,11 +110,11 @@ public class Util {
     }
 
     public static void printMap() {
-        String sMap ="      1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19\n";
+        String sMap = "      1     2     3     4     5     6     7     8     9    10    11    12    13    14    15    16    17    18    19\n";
         sMap += "  1: ";
         for (int y = 0; y < Service.getInstance().initialGameState.getSize().getY(); y++) {
             for (int x = 0; x < Service.getInstance().initialGameState.getSize().getX(); x++) {
-                sMap += (Service.getInstance().map[y][x] >= 0) ? " " + Service.getInstance().map[y][x] + " " : Service.getInstance().map[y][x] + " ";
+                sMap += Service.getInstance().map[y][x].toString();
             }
             if (y < Service.getInstance().initialGameState.getSize().getY() - 1)
                 sMap += "\n " + (y < 8 ? " " + (y + 2) : y + 2) + ": ";

@@ -2,11 +2,10 @@ package jmx.javachallenge.service;
 
 import eu.loxon.centralcontrol.*;
 import jmx.javachallenge.helper.CellType;
+import jmx.javachallenge.helper.Tile;
 import jmx.javachallenge.helper.Step;
 import jmx.javachallenge.helper.Util;
 
-import java.awt.*;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.OptionalDouble;
@@ -32,7 +31,7 @@ public class Service {
     public int actionPointsForTurn = 14;
     public GetSpaceShuttlePosResponse initialPos;
     public HashMap<Integer, WsBuilderunit> builderUnits = new HashMap<>();
-    public int[][] map; // -1:unknown;0:shuttle;1:rock;2:obsidian;
+    public Tile[][] map; // -1:unknown;0:shuttle;1:rock;2:obsidian;
 
     public int turnLeft = 71;
     private GetSpaceShuttleExitPosResponse initialExitPos;
@@ -77,10 +76,10 @@ public class Service {
         StartGameResponse res = api.startGame(new StartGameRequest());
         initialGameState = res;
         System.out.println(res.toString());
-        map = new int[res.getSize().getX()][res.getSize().getY()];
-        for (int x = 0; x < initialGameState.getSize().getX(); x++) {
-            for (int y = 0; y < initialGameState.getSize().getY(); y++) {
-                map[x][y] = -1;
+        map = new Tile[res.getSize().getY()][res.getSize().getX()];
+        for (int y = 0; y < initialGameState.getSize().getY(); y++) {
+            for (int x = 0; x < initialGameState.getSize().getX(); x++) {
+                map[y][x] = new Tile();
             }
         }
         return res;
@@ -124,8 +123,8 @@ public class Service {
             builderUnits.get(2).setCord(res.getCord());
             builderUnits.get(3).setCord(res.getCord());
             serviceState = res.getResult();
-            map[res.getCord().getX() + 1][Util.convertCoordinateToMapCoordinate(res.getCord().getY()) + 1] = CellType.SHUTTLE.getValue();
-
+            map[Util.convertCoordinateToMapCoordinate(res.getCord().getY()) + 1][res.getCord().getX() + 1].setCellType(CellType.SHUTTLE);
+            System.out.println("shuttle: " + res.getCord());
             Util.printMap();
             return res;
         } else return initialPos;
@@ -153,7 +152,7 @@ public class Service {
             Util.wait(10);
             if (res.getResult().getType().equals(ResultType.DONE)) {
                 for (Scouting scout : res.getScout()) {
-                    map[scout.getCord().getX() + 1][Util.convertCoordinateToMapCoordinate(scout.getCord().getY() )+ 1] = Util.stringToCellType(scout.getObject().name()).getValue();
+                    map[Util.convertCoordinateToMapCoordinate(scout.getCord().getY()) + 1][scout.getCord().getX() + 1].setCellType(Util.stringToCellType(scout.getObject().name()));
                 }
                 Util.printMap();
                 // System.out.println(res.toString());
@@ -211,7 +210,7 @@ public class Service {
             if (res.getResult().getType().equals(ResultType.DONE)) {
                 System.out.println(res.toString());
                 for (Scouting scout : res.getScout()) {
-                    map[scout.getCord().getX() + 1][Util.convertCoordinateToMapCoordinate(scout.getCord().getY() ) + 1] = Util.stringToCellType(scout.getObject().name()).getValue();
+                    map[Util.convertCoordinateToMapCoordinate(scout.getCord().getY()) + 1][scout.getCord().getX() + 1].setCellType(Util.stringToCellType(scout.getObject().name()));
                 }
                 Util.printMap();
                 actionPointsForTurn = tempPoints;
@@ -240,7 +239,7 @@ public class Service {
                 StructureTunnelResponse res = api.structureTunnel(req);
                 Util.wait(10);
                 if (res.getResult().getType().equals(ResultType.DONE)) {
-                    map[selectBuilder(unitID).getCord().getX() + 1][Util.convertCoordinateToMapCoordinate(selectBuilder(unitID).getCord().getY()) + 1] = 3;
+                    map[selectBuilder(unitID).getCord().getX() + 1][Util.convertCoordinateToMapCoordinate(selectBuilder(unitID).getCord().getY()) + 1].setCellType(CellType.TUNNEL);
                     System.out.println(res.toString());
                     serviceState = res.getResult();
                     actionPointsForTurn = tempPoints;
