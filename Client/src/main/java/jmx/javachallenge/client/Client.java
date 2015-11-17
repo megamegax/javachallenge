@@ -57,9 +57,9 @@ public class Client {
 
     private boolean doMove(int unitID, WsDirection direction) {
         WsCoordinate simulatedCoordinate = Util.simulateMove(service.builderUnits.get(unitID), direction);
-        Step answer = Util.checkMovement(simulatedCoordinate);
-        Logger.log(answer);
-        switch (answer) {
+        Step step = Util.checkMovement(simulatedCoordinate);
+        Logger.log(step);
+        switch (step) {
             case BUILD:
                 return service.structureTunnel(unitID, direction);
 

@@ -120,7 +120,7 @@ public class Service {
             builderUnits.get(2).setCord(res.getCord());
             builderUnits.get(3).setCord(res.getCord());
             serviceState = res.getResult();
-            map[Util.convertCoordinateToMapCoordinate(res.getCord().getY())][res.getCord().getX()].setCellType(CellType.SHUTTLE);
+            map[Util.convertCoordinateToMapCoordinate(res.getCord().getY())][res.getCord().getX()].setTileType(TileType.SHUTTLE);
             Util.printMap();
             return res;
         } else return initialPos;
@@ -145,11 +145,11 @@ public class Service {
         tempPoints -= initialActionCost.getWatch();
         if (tempPoints > 0) {
             WatchResponse res = api.watch(new WatchRequest(unitID));
-            Util.wait(10);
+            //  Util.wait(10);
             if (res.getResult().getType().equals(ResultType.DONE)) {
                 Logger.log(res.toString());
                 for (Scouting scout : res.getScout()) {
-                    map[Util.convertCoordinateToMapCoordinate(scout.getCord().getY())][scout.getCord().getX()].setCellType(Util.stringToCellType(scout.getObject().name()));
+                    map[Util.convertCoordinateToMapCoordinate(scout.getCord().getY())][scout.getCord().getX()].setTileType(Util.stringToCellType(scout.getObject().name()));
                 }
                 Logger.log(res.getScout().get(0).getCord());
                 Logger.log(res.getScout().get(1).getCord());
@@ -181,7 +181,7 @@ public class Service {
             req.setUnit(unitID);
             req.setDirection(direction);
             MoveBuilderUnitResponse res = api.moveBuilderUnit(req);
-            Util.wait(10);
+            //Util.wait(10);
             Logger.log(res);
             if (res.getResult().getType().equals(ResultType.DONE)) {
                 serviceState = res.getResult();
@@ -215,7 +215,7 @@ public class Service {
             if (res.getResult().getType().equals(ResultType.DONE)) {
                 Logger.log(res.toString());
                 for (Scouting scout : res.getScout()) {
-                    map[Util.convertCoordinateToMapCoordinate(scout.getCord().getY())][scout.getCord().getX()].setCellType(Util.stringToCellType(scout.getObject().name()));
+                    map[Util.convertCoordinateToMapCoordinate(scout.getCord().getY())][scout.getCord().getX()].setTileType(Util.stringToCellType(scout.getObject().name()));
                 }
                 Util.printMap();
                 actionPointsForTurn = tempPoints;
@@ -239,9 +239,9 @@ public class Service {
             req.setUnit(unitID);
             req.setDirection(direction);
             StructureTunnelResponse res = api.structureTunnel(req);
-            Util.wait(10);
+            // Util.wait(10);
             if (res.getResult().getType().equals(ResultType.DONE)) {
-                map[Util.convertCoordinateToMapCoordinate(selectBuilder(unitID).getCord().getY())][selectBuilder(unitID).getCord().getX()].setCellType(CellType.TUNNEL);
+                map[Util.convertCoordinateToMapCoordinate(selectBuilder(unitID).getCord().getY())][selectBuilder(unitID).getCord().getX()].setTileType(TileType.TUNNEL);
                 serviceState = res.getResult();
                 actionPointsForTurn = tempPoints;
                 Util.printMap();
@@ -265,7 +265,7 @@ public class Service {
 
     public void startTurn(int i) {
         Logger.log("kör:" + i);
-        builderUnits.get(serviceState.getBuilderUnit()).getCord();
+        // builderUnits.get(serviceState.getBuilderUnit()).getCord();
 
     }
 }

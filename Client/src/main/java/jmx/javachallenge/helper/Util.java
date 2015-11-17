@@ -9,6 +9,7 @@ import jmx.javachallenge.service.Service;
  * Created by MegaX on 2015. 11. 13..
  */
 public class Util {
+   private static Service service =  Service.getInstance();
 
     public static WsDirection calculateDirection(WsCoordinate source, WsCoordinate target) {
         if (source.getX() < target.getX())
@@ -44,26 +45,9 @@ public class Util {
     }
 
     public static Step checkMovement(WsCoordinate simulatedCoordinate) {
-        if (simulatedCoordinate.getX() < Service.getInstance().initialGameState.getSize().getX() && simulatedCoordinate.getY() < Service.getInstance().initialGameState.getSize().getY()) {
-            int celltype = Service.getInstance().map[Util.convertCoordinateToMapCoordinate(simulatedCoordinate.getY())][simulatedCoordinate.getX()].getCellType();
-            switch (celltype) {
-                case -1:
-                    return Step.WATCH;
-                case 0:
-                    return Step.STAY;
-                case 1:
-                    return Step.BUILD;
-                case 2:
-                    return Step.STAY;
-                case 3:
-                    return Step.MOVE;
-                case 4:
-                    return Step.STAY;
-                case 5:
-                    return Step.EXPLODE;
-                default:
-                    return Step.STAY;
-            }
+        if (simulatedCoordinate.getX() < service.initialGameState.getSize().getX() && simulatedCoordinate.getY() < service.initialGameState.getSize().getY()) {
+            int tileType = service.map[Util.convertCoordinateToMapCoordinate(simulatedCoordinate.getY())][simulatedCoordinate.getX()].getTileType();
+            return Step.getStep(tileType);
         } else return Step.STAY;
     }
 
@@ -76,7 +60,8 @@ public class Util {
     }
 
     public static WsCoordinate updateCoords(int unitID, WsDirection direction) {
-        WsCoordinate oldCoordinate = Service.getInstance().builderUnits.get(unitID).getCord();
+
+        WsCoordinate oldCoordinate = service.builderUnits.get(unitID).getCord();
         switch (direction) {
             case LEFT:
                 Service.getInstance().builderUnits.get(unitID).setCord(new WsCoordinate(oldCoordinate.getX() - 1, oldCoordinate.getY()));
@@ -95,22 +80,22 @@ public class Util {
         return Service.getInstance().builderUnits.get(unitID).getCord();
     }
 
-    public static CellType stringToCellType(String object) {
+    public static TileType stringToCellType(String object) {
         switch (object) {
             case "ROCK":
-                return CellType.ROCK;
+                return TileType.ROCK;
             case "SHUTTLE":
-                return CellType.SHUTTLE;
+                return TileType.SHUTTLE;
             case "OBSIDIAN":
-                return CellType.OBSIDIAN;
+                return TileType.OBSIDIAN;
             case "TUNNEL":
-                return CellType.TUNNEL;
+                return TileType.TUNNEL;
             case "GRANITE":
-                return CellType.GRANITE;
+                return TileType.GRANITE;
             case "BUILDER_UNIT":
-                return CellType.TUNNEL;
+                return TileType.TUNNEL;
             default:
-                return CellType.UNKNOWN;
+                return TileType.UNKNOWN;
         }
     }
 

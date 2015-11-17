@@ -1,21 +1,19 @@
 package jmx.javachallenge.helper;
 
-import javafx.scene.control.Cell;
-
 /**
  * Created by megam on 2015. 11. 15..
  */
 public class Tile {
     int unitID;
-    CellType cellType;
+    TileType tileType;
 
     public Tile() {
         this.unitID = -1;
-        cellType = CellType.UNKNOWN;
+        tileType = TileType.UNKNOWN;
     }
 
-    public void setCellType(CellType cellType) {
-        this.cellType = cellType;
+    public void setTileType(TileType tileType) {
+        this.tileType = tileType;
     }
 
     public void setBuilder(int unitID) {
@@ -23,10 +21,10 @@ public class Tile {
     }
 
     public String toString() {
-        return String.valueOf((cellType.getValue() >= 0 ? " " + cellType.getValue() : cellType.getValue())) + (unitID == -1 ? "[ ] " : "[" + unitID + "] ");
+        return String.valueOf((tileType.getValue() >= 0 ? " " + tileType.getValue() : tileType.getValue())) + (unitID == -1 ? "[ ] " : "[" + unitID + "] ");
     }
 
-    public int getCellType() {
-        return cellType.getValue();
+    public int getTileType() {
+        return tileType.getValue();
     }
 }
