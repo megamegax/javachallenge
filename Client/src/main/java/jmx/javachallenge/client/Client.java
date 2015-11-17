@@ -84,7 +84,7 @@ public class Client {
 
     private WsDirection moveRandomly() {
         Random random = new Random();
-        int r = random.nextInt(5) + 1;
+        int r = random.nextInt(6) + 1;
         if (r == 1) {
             return WsDirection.RIGHT;
         } else if (r == 5) {
@@ -93,6 +93,8 @@ public class Client {
             return WsDirection.LEFT;
         } else if (r == 3) {
             return WsDirection.UP;
+        } else if (r == 6) {
+            return WsDirection.DOWN;
         } else return WsDirection.DOWN;
     }
 
