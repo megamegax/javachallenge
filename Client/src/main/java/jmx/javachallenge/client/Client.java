@@ -18,14 +18,16 @@ public class Client {
     public void run() {
         System.out.println("Hello JMX");
         service = Service.getInstance();
-        service.startGame();
-        service.getSpaceShuttlePos();
-        service.getSpaceShuttlePosExit();
-        service.getActionCost();
-        while (service.turnLeft != 0) {
-            Util.wait(301);
-            if (service.isMyTurn()) {
-                doJob();
+        if (service != null) {
+            service.startGame();
+            service.getSpaceShuttlePos();
+            service.getSpaceShuttlePosExit();
+            service.getActionCost();
+            while (service.turnLeft != 0) {
+                Util.wait(301);
+                if (service.isMyTurn()) {
+                    doJob();
+                }
             }
         }
     }
