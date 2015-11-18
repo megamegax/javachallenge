@@ -2,6 +2,7 @@ package jmx.javachallenge.service;
 
 import eu.loxon.centralcontrol.*;
 import jmx.javachallenge.helper.*;
+import jmx.javachallenge.logger.Logger;
 
 import java.util.HashMap;
 import java.util.List;
@@ -27,22 +28,22 @@ public class Service {
     public CommonResp serviceState;
     public int actionPointsForTurn = 14;
     public GetSpaceShuttlePosResponse initialPos;
-    public HashMap<Integer, WsBuilderunit> builderUnits = new HashMap<>();
+    public HashMap<Integer, JMXBuilder> builderUnits = new HashMap<>();
     public Tile[][] map; // -1:unknown;0:shuttle;1:rock;2:obsidian;
 
     public int turnLeft = 71;
     private GetSpaceShuttleExitPosResponse initialExitPos;
     private ActionCostResponse initialActionCost;
     public StartGameResponse initialGameState;
-    public WsBuilderunit selectedBuilder;
+    public JMXBuilder selectedBuilder;
 
     private Service() {
         CentralControlServiceService service = new CentralControlServiceService();
         api = service.getCentralControlPort();
-        builderUnits.put(0, new WsBuilderunit());
-        builderUnits.put(1, new WsBuilderunit());
-        builderUnits.put(2, new WsBuilderunit());
-        builderUnits.put(3, new WsBuilderunit());
+        builderUnits.put(0, new JMXBuilder());
+        builderUnits.put(1, new JMXBuilder());
+        builderUnits.put(2, new JMXBuilder());
+        builderUnits.put(3, new JMXBuilder());
 
         /** jociFaktor(); **/
         Service.service = this;
@@ -70,6 +71,7 @@ public class Service {
     }
 
     public StartGameResponse startGame() {
+        Logger.log("mehet");
         StartGameResponse res = api.startGame(new StartGameRequest());
         initialGameState = res;
         Logger.log(res.toString());
@@ -169,7 +171,7 @@ public class Service {
             return false;
     }
 
-    public WsBuilderunit selectBuilder(int unitID) {
+    public JMXBuilder selectBuilder(int unitID) {
         return builderUnits.get(unitID);
     }
 

@@ -3,6 +3,7 @@ package jmx.javachallenge.helper;
 import eu.loxon.centralcontrol.WsBuilderunit;
 import eu.loxon.centralcontrol.WsCoordinate;
 import eu.loxon.centralcontrol.WsDirection;
+import jmx.javachallenge.logger.Logger;
 import jmx.javachallenge.service.Service;
 
 /**

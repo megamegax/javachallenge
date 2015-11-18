@@ -1,4 +1,4 @@
-package jmx.javachallenge.helper;
+package jmx.javachallenge.logger;
 
 import com.google.gson.Gson;
 
@@ -6,7 +6,7 @@ import com.google.gson.Gson;
  * Created by megam on 2015. 11. 15..
  */
 public class Logger {
-    private static boolean enabled = false;
+    private static boolean enabled = true;
     private static Gson gson = new Gson();
 
     public static void log(String message) {
@@ -14,6 +14,9 @@ public class Logger {
     }
 
     public static void log(Object message) {
+        if (Logger.enabled) System.out.println("##START##" + gson.toJson(message) + "##END##");
+    }
+    public static void log(LogLevels logLevels, Object message) {
         if (Logger.enabled) System.out.println("##START##" + gson.toJson(message) + "##END##");
     }
 

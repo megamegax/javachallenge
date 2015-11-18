@@ -1,16 +1,13 @@
 package jmx.javachallenge.client;
 
-import eu.loxon.centralcontrol.WsBuilderunit;
 import eu.loxon.centralcontrol.WsCoordinate;
 import eu.loxon.centralcontrol.WsDirection;
-import jmx.javachallenge.helper.Logger;
-import jmx.javachallenge.helper.Step;
+import jmx.javachallenge.helper.JMXBuilder;
 import jmx.javachallenge.helper.Util;
 import jmx.javachallenge.service.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 /**
  * Created by Marton on 2015. 11. 12..
@@ -34,7 +31,7 @@ public class Client {
     }
 
     private void doJob() {
-        WsBuilderunit builder = service.selectedBuilder;
+        JMXBuilder builder = service.selectedBuilder;
         int unitID = builder.getUnitid();
         //  int unitID = chooseBuilder();
         if (builder.hasOwnWill()) {
