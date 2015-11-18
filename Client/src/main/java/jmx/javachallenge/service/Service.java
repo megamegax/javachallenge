@@ -39,20 +39,22 @@ public class Service {
 
     private Service() {
         Logger.log("service constructor");
-        CentralControlServiceService service = new CentralControlServiceService();
-        api = service.getCentralControlPort();
+        CentralControlServiceService centralControlServiceService = new CentralControlServiceService();
+        api = centralControlServiceService.getCentralControlPort();
+    }
+
+    public void init() {
         builderUnits.put(0, new JMXBuilder());
         builderUnits.put(1, new JMXBuilder());
         builderUnits.put(2, new JMXBuilder());
         builderUnits.put(3, new JMXBuilder());
 
         /** jociFaktor(); **/
-        Service.service = this;
     }
 
     public static Service getInstance() {
         if (service == null) {
-            return new Service();
+            service = new Service();
         }
         return service;
     }
