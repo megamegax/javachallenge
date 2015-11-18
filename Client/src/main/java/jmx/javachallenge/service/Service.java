@@ -34,7 +34,7 @@ public class Service {
     private GetSpaceShuttleExitPosResponse initialExitPos;
     private ActionCostResponse initialActionCost;
     public StartGameResponse initialGameState;
-    public int selectedBuilder;
+    public WsBuilderunit selectedBuilder;
 
     private Service() {
         CentralControlServiceService service = new CentralControlServiceService();
@@ -88,7 +88,7 @@ public class Service {
         serviceState = res.getResult();
 
         if (res.isIsYourTurn()) {
-            selectedBuilder = res.getResult().getBuilderUnit();
+            selectedBuilder = selectBuilder(res.getResult().getBuilderUnit());
             actionPointsForTurn = res.getResult().getActionPointsLeft();
             if (turnLeft > res.getResult().getTurnsLeft()) {
                 turnLeft = res.getResult().getTurnsLeft();

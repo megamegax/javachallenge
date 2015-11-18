@@ -1,5 +1,6 @@
 package jmx.javachallenge.client;
 
+import eu.loxon.centralcontrol.WsBuilderunit;
 import eu.loxon.centralcontrol.WsCoordinate;
 import eu.loxon.centralcontrol.WsDirection;
 import jmx.javachallenge.helper.Logger;
@@ -27,12 +28,14 @@ public class Client {
         while (service.turnLeft != 0) {
             Util.wait(301);
             if (service.isMyTurn()) {
-                doJob(service.selectedBuilder);
+                doJob();
             }
         }
     }
 
-    private void doJob(int unitID) {
+    private void doJob() {
+        WsBuilderunit builder = service.selectedBuilder;
+        int unitID = builder.getUnitid();
         //  int unitID = chooseBuilder();
         if (isUnitInSpaceComp(unitID)) {
             Logger.log(unitID + ", is in space comp");
