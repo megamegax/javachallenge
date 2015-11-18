@@ -38,6 +38,7 @@ public class Service {
     public JMXBuilder selectedBuilder;
 
     private Service() {
+        Logger.log("service constructor");
         CentralControlServiceService service = new CentralControlServiceService();
         api = service.getCentralControlPort();
         builderUnits.put(0, new JMXBuilder());

@@ -70,8 +70,6 @@ public class Client {
     }
 
 
-
-
     private List<WsCoordinate> radarAround(int unitID) {
         List<WsCoordinate> coordinates = new ArrayList<>();
         coordinates.add(new WsCoordinate(service.selectBuilder(unitID).getCord().getX() + 1, service.selectBuilder(unitID).getCord().getY()));
