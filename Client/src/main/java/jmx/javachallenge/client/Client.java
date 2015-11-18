@@ -18,6 +18,7 @@ public class Client {
     public void run() {
         System.out.println("Hello JMX");
         service = Service.getInstance();
+        service.init();
         service.startGame();
         service.getSpaceShuttlePos();
         service.getSpaceShuttlePosExit();
