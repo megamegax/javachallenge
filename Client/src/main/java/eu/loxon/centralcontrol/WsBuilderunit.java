@@ -1,6 +1,8 @@
 
 package eu.loxon.centralcontrol;
 
+import jmx.javachallenge.service.Service;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -37,7 +39,12 @@ public class WsBuilderunit {
     @XmlElement(required = true)
     protected WsCoordinate cord;
     protected int unitid;
+    protected boolean ownWill;
+    private Service service;
 
+    public WsBuilderunit(){
+        this.service = Service.getInstance();
+    }
     /**
      * Gets the value of the cord property.
      * 
@@ -84,5 +91,14 @@ public class WsBuilderunit {
                 "cord=" + cord +
                 ", unitid=" + unitid +
                 '}';
+    }
+    public boolean hasOwnWill(){
+        return ownWill;
+    }
+    public void setOwnWill(boolean will){
+        this.ownWill = will;
+    }
+
+    public void step(){
     }
 }
