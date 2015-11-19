@@ -35,8 +35,6 @@ public class Service {
     public Tile[][] map; // -1:unknown;0:shuttle;1:rock;2:obsidian;
 
     public int turnLeft = 51;
-    public GetSpaceShuttleExitPosResponse initialExitPos;
-    private ActionCostResponse initialActionCost;
     public StartGameResponse initialGameState;
     public JMXBuilder selectedBuilder;
     private GetSpaceShuttleExitPosResponse initialExitPos;
