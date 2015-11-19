@@ -26,9 +26,10 @@ public class Client {
         service.startGame();
         service.getSpaceShuttlePos();
         service.getSpaceShuttlePosExit();
+        service.init();
         service.getActionCost();
         while (service.turnLeft != 0) {
-            Util.wait(301);
+            Util.wait(300);
             if (service.isMyTurn()) {
                 doJob();
             }

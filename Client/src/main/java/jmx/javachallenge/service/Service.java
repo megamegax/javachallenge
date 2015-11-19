@@ -97,7 +97,7 @@ public class Service {
             actionPointsForTurn = res.getResult().getActionPointsLeft();
             if (turnLeft > res.getResult().getTurnsLeft()) {
                 turnLeft = res.getResult().getTurnsLeft();
-                this.startTurn(70 - turnLeft);
+                this.startTurn(50 - turnLeft);
             }
             return true;
         }
