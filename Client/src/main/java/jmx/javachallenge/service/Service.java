@@ -51,7 +51,10 @@ public class Service {
         builderUnits.put(1, new JMXBuilder(new ExplorerStrategy()));
         builderUnits.put(2, new JMXBuilder(new ExplorerStrategy()));
         builderUnits.put(3, new JMXBuilder(new ExplorerStrategy()));
-
+        builderUnits.get(0).setCord(initialPos.getCord());
+        builderUnits.get(1).setCord(initialPos.getCord());
+        builderUnits.get(2).setCord(initialPos.getCord());
+        builderUnits.get(3).setCord(initialPos.getCord());
         /** jociFaktor(); **/
     }
 
@@ -123,10 +126,7 @@ public class Service {
             GetSpaceShuttlePosResponse res = api.getSpaceShuttlePos(new GetSpaceShuttlePosRequest());
             printMessage(res.getResult());
             initialPos = res;
-            builderUnits.get(0).setCord(res.getCord());
-            builderUnits.get(1).setCord(res.getCord());
-            builderUnits.get(2).setCord(res.getCord());
-            builderUnits.get(3).setCord(res.getCord());
+
             serviceState = res.getResult();
             map[Util.convertCoordinateToMapCoordinate(res.getCord().getY())][res.getCord().getX()].setTileType(TileType.SHUTTLE);
             Util.printMap();
