@@ -4,6 +4,8 @@ import eu.loxon.centralcontrol.WsCoordinate;
 import eu.loxon.centralcontrol.WsDirection;
 import jmx.javachallenge.helper.JMXBuilder;
 import jmx.javachallenge.helper.Util;
+import jmx.javachallenge.logger.LogLevels;
+import jmx.javachallenge.logger.Logger;
 import jmx.javachallenge.service.Service;
 
 import java.util.ArrayList;
@@ -17,8 +19,10 @@ public class Client {
 
     public void run() {
         System.out.println("Hello JMX");
+        Logger.init(new LogLevels[]{LogLevels.DEBUG,LogLevels.MAP});
         service = Service.getInstance();
         service.init();
+
         service.startGame();
         service.getSpaceShuttlePos();
         service.getSpaceShuttlePosExit();
