@@ -6,18 +6,31 @@ import com.google.gson.Gson;
  * Created by megam on 2015. 11. 15..
  */
 public class Logger {
-    private static boolean enabled = true;
+    private static LogLevels[] enabled;
     private static Gson gson = new Gson();
 
-    public static void log(String message) {
-        if (Logger.enabled) log(new Message(message));
+    public static void init(LogLevels[] levels){
+        enabled = levels;
+    }
+    public static void log( String message) {
+        log(LogLevels.DEBUG,new Message(message));
+    }
+    public static void log(LogLevels level, String message) {
+        log(level,new Message(message));
     }
 
     public static void log(Object message) {
-        if (Logger.enabled) System.out.println("##START##" + gson.toJson(message) + "##END##");
+        log("##START##" + gson.toJson(message) + "##END##");
     }
-    public static void log(LogLevels logLevels, Object message) {
-        if (Logger.enabled) System.out.println("##START##" + gson.toJson(message) + "##END##");
+    public static void log(LogLevels level, Object message) {
+        for(LogLevels logLevel : enabled){
+            if(level.equals(logLevel)){
+                System.out.println("##START##"
+                        +"##STARTLEVEL##"+ level.name() + "##ENDLEVEL##"
+                        +"##STARTMESSAGE##"+ gson.toJson(message) + "##ENDMESSAGE##"
+                        +"##END##");
+            }
+        }
     }
 
     private static class Message {
