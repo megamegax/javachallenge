@@ -1,6 +1,9 @@
 package jmx.javachallenge.service;
 
 import eu.loxon.centralcontrol.*;
+import jmx.javachallenge.builder.DefensiveStrategy;
+import jmx.javachallenge.builder.ExplorerStrategy;
+import jmx.javachallenge.builder.JMXBuilder;
 import jmx.javachallenge.helper.*;
 import jmx.javachallenge.logger.Logger;
 
@@ -32,7 +35,7 @@ public class Service {
     public Tile[][] map; // -1:unknown;0:shuttle;1:rock;2:obsidian;
 
     public int turnLeft = 71;
-    private GetSpaceShuttleExitPosResponse initialExitPos;
+    public GetSpaceShuttleExitPosResponse initialExitPos;
     private ActionCostResponse initialActionCost;
     public StartGameResponse initialGameState;
     public JMXBuilder selectedBuilder;
@@ -44,10 +47,10 @@ public class Service {
     }
 
     public void init() {
-        builderUnits.put(0, new JMXBuilder());
-        builderUnits.put(1, new JMXBuilder());
-        builderUnits.put(2, new JMXBuilder());
-        builderUnits.put(3, new JMXBuilder());
+        builderUnits.put(0, new JMXBuilder(new DefensiveStrategy()));
+        builderUnits.put(1, new JMXBuilder(new ExplorerStrategy()));
+        builderUnits.put(2, new JMXBuilder(new ExplorerStrategy()));
+        builderUnits.put(3, new JMXBuilder(new ExplorerStrategy()));
 
         /** jociFaktor(); **/
     }

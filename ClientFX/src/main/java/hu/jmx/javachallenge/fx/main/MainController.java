@@ -12,7 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class MainController implements Initializable{
+public class MainController implements Initializable {
     @FXML
     private AnchorPane canvasContainer;
     private final SimplePixelCanvas canvas;
@@ -21,7 +21,7 @@ public class MainController implements Initializable{
 
     {
         canvas = new SimplePixelCanvas(545, 406, 3, 3);
-        indices = new int[][]{{0,0,1}, {1,2,1}, {1, 0, 0}};
+        indices = new int[][]{{0, 0, 1}, {1, 2, 1}, {1, 0, 0}};
         colors = Arrays.asList(Color.BLACK, Color.RED, Color.BLUE);
     }
 
