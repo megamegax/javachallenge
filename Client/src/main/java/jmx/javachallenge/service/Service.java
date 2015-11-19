@@ -1,10 +1,7 @@
 package jmx.javachallenge.service;
 
 import eu.loxon.centralcontrol.*;
-import jmx.javachallenge.helper.JMXBuilder;
-import jmx.javachallenge.helper.Tile;
-import jmx.javachallenge.helper.TileType;
-import jmx.javachallenge.helper.Util;
+import jmx.javachallenge.helper.*;
 import jmx.javachallenge.logger.Logger;
 
 import java.util.HashMap;
@@ -34,7 +31,7 @@ public class Service {
     public HashMap<Integer, JMXBuilder> builderUnits = new HashMap<>();
     public Tile[][] map; // -1:unknown;0:shuttle;1:rock;2:obsidian;
 
-    public int turnLeft = 71;
+    public int turnLeft = 51;
     public StartGameResponse initialGameState;
     public JMXBuilder selectedBuilder;
     private GetSpaceShuttleExitPosResponse initialExitPos;
