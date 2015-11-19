@@ -21,7 +21,6 @@ public class Client {
         System.out.println("Hello JMX");
         Logger.init(new LogLevels[]{LogLevels.DEBUG,LogLevels.MAP});
         service = Service.getInstance();
-        service.init();
 
         service.startGame();
         service.getSpaceShuttlePos();
@@ -29,51 +28,44 @@ public class Client {
         service.init();
         service.getActionCost();
         while (service.turnLeft != 0) {
-            Util.wait(300);
+            Util.wait(301);
             if (service.isMyTurn()) {
-                doJob();
-            }
-        }
-    }
-
-    private void doJob() {
-        JMXBuilder builder = service.selectedBuilder;
-        int unitID = builder.getUnitid();
-        //  int unitID = chooseBuilder();
-
-        if (builder.hasOwnWill()) {
-            builder.step();
-        } else {
-            if (unitID == 0) {
-                service.watch(unitID);
-                service.structureTunnel(unitID, moveOutFromSpaceComp());
-                builder.setOwnWill(true);
-
-                //TODO maradék pontból radarozni?
-            } else if (unitID == 1) {
-                service.moveUnit(unitID, moveOutFromSpaceComp());
-                WsDirection direction = WsDirection.DOWN;
-                service.structureTunnel(unitID, direction);
-                service.moveUnit(unitID, direction);
-                service.watch(unitID);
-                builder.setOwnWill(true);
-            } else if (unitID == 2) {
-                service.moveUnit(unitID, moveOutFromSpaceComp());
-                WsDirection direction = WsDirection.UP;
-                service.structureTunnel(unitID, direction);
-                service.moveUnit(unitID, direction);
-                service.watch(unitID);
-                builder.setOwnWill(true);
-            } else if (unitID == 3) {
-                service.moveUnit(unitID, moveOutFromSpaceComp());
-                WsDirection direction = WsDirection.RIGHT;
-                service.structureTunnel(unitID, direction);
-                service.moveUnit(unitID, direction);
-                service.watch(unitID);
-                builder.setOwnWill(true);
-            } else if (unitID == 0) {
-                service.moveUnit(unitID, moveOutFromSpaceComp());
-                builder.setOwnWill(true);
+                //TODO move logic to strategy objects
+                JMXBuilder builder = service.selectedBuilder;
+                int unitID = builder.getUnitid();
+                /*if (builder.hasOwnWill()) {
+                    builder.step();
+                } else {
+                    if (unitID == 0 && service.turnLeft == 70) {
+                        service.watch(unitID);
+                        service.structureTunnel(unitID, moveOutFromSpaceComp());
+                        //TODO maradék pontból radarozni?
+                    } else if (unitID == 1 && service.turnLeft == 70) {
+                        service.moveUnit(unitID, moveOutFromSpaceComp());
+                        WsDirection direction = WsDirection.DOWN;
+                        service.structureTunnel(unitID, direction);
+                        service.moveUnit(unitID, direction);
+                        service.watch(unitID);
+                        builder.setOwnWill(true);
+                    } else if (unitID == 2 && service.turnLeft == 70) {
+                        service.moveUnit(unitID, moveOutFromSpaceComp());
+                        WsDirection direction = WsDirection.UP;
+                        service.structureTunnel(unitID, direction);
+                        service.moveUnit(unitID, direction);
+                        service.watch(unitID);
+                        builder.setOwnWill(true);
+                    } else if (unitID == 3 && service.turnLeft == 70) {
+                        service.moveUnit(unitID, moveOutFromSpaceComp());
+                        WsDirection direction = WsDirection.RIGHT;
+                        service.structureTunnel(unitID, direction);
+                        service.moveUnit(unitID, direction);
+                        service.watch(unitID);
+                        builder.setOwnWill(true);
+                    } else if (unitID == 0 && service.turnLeft == 69) {
+                        service.moveUnit(unitID, moveOutFromSpaceComp());
+                        builder.setOwnWill(true);
+                    }
+                }*/
             }
         }
     }

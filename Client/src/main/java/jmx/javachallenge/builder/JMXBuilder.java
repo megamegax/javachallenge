@@ -1,36 +1,48 @@
-package jmx.javachallenge.helper;
+package jmx.javachallenge.builder;
 
 import eu.loxon.centralcontrol.WsBuilderunit;
 import eu.loxon.centralcontrol.WsCoordinate;
 import eu.loxon.centralcontrol.WsDirection;
+import jmx.javachallenge.helper.Step;
+import jmx.javachallenge.helper.Util;
 import jmx.javachallenge.logger.Logger;
 import jmx.javachallenge.service.Service;
 
+import java.util.HashSet;
 import java.util.Random;
+import java.util.Set;
 
 /**
  * Created by megam on 2015. 11. 18..
  */
 public class JMXBuilder extends WsBuilderunit {
-    private boolean ownWill = false;
     private Service service;
+    private Strategy strategy;
+    private Set<WsCoordinate> tabooCoordinates;
 
-    public JMXBuilder() {
+    public JMXBuilder(Strategy strategy) {
         super();
         this.service = Service.getInstance();
-    }
-
-    public boolean hasOwnWill() {
-        return ownWill;
-    }
-
-    public void setOwnWill(boolean will) {
-        this.ownWill = will;
+        this.strategy = strategy;
+        tabooCoordinates = new HashSet<>();
     }
 
     public void step() {
         Logger.log(unitid + ", has own will");
-        //TODO építkezni, mozogni, nem visszalépni, figyelni mi merre van hajaj Marci alkoss valamit :D
+
+        //TODO lekérni a strategy objektumtól a következő mezőt és a watch alapján eldönteni h mit akarunk
+        //TODO már bejárt koordináták megjegyzése h ne lépjünk vissza rájuk
+        //TODO megnézni, h a tabuhalmaz miatt nem ragadnak-e be a builderek
+        //TODO ha a radarozás kiderítené h a kövi koordináta obszidián, felvenni a tabu listába és kikerülni
+        //amíg el nem érjük a kövi célt, vagy ki nem derül róla, h obszidián, addig közelítünk hozzá
+        //különben új koordinátát kérünk
+        //az ExplorerStrategy null-t visszaadhat kövi koordinátaként,
+        //ez azt jelenti, hogy stratégiát kell a buildernek váltania
+        //(abban a távoli pontban indítana egy defenzív algoritmust?)
+
+        //a Client.javaból át lehet emelni a logikát, ami eldönti, hogy lépünk, fúrunk, vagy mit csinálunk
+
+
         WsDirection direction = moveRandomly();
         service.watch(unitid);
         if (doMove(unitid, direction)) {
