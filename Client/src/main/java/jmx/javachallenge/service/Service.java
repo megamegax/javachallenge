@@ -1,7 +1,10 @@
 package jmx.javachallenge.service;
 
 import eu.loxon.centralcontrol.*;
-import jmx.javachallenge.helper.*;
+import jmx.javachallenge.helper.JMXBuilder;
+import jmx.javachallenge.helper.Tile;
+import jmx.javachallenge.helper.TileType;
+import jmx.javachallenge.helper.Util;
 import jmx.javachallenge.logger.Logger;
 
 import java.util.HashMap;
@@ -32,15 +35,22 @@ public class Service {
     public Tile[][] map; // -1:unknown;0:shuttle;1:rock;2:obsidian;
 
     public int turnLeft = 71;
-    private GetSpaceShuttleExitPosResponse initialExitPos;
-    private ActionCostResponse initialActionCost;
     public StartGameResponse initialGameState;
     public JMXBuilder selectedBuilder;
+    private GetSpaceShuttleExitPosResponse initialExitPos;
+    private ActionCostResponse initialActionCost;
 
     private Service() {
         Logger.log("service constructor");
         CentralControlServiceService centralControlServiceService = new CentralControlServiceService();
         api = centralControlServiceService.getCentralControlPort();
+    }
+
+    public static Service getInstance() {
+        if (service == null) {
+            service = new Service();
+        }
+        return service;
     }
 
     public void init() {
@@ -50,13 +60,6 @@ public class Service {
         builderUnits.put(3, new JMXBuilder());
 
         /** jociFaktor(); **/
-    }
-
-    public static Service getInstance() {
-        if (service == null) {
-            service = new Service();
-        }
-        return service;
     }
 
     private void jociFaktor() {
@@ -91,7 +94,7 @@ public class Service {
     public boolean isMyTurn() {
         IsMyTurnResponse res = api.isMyTurn(new IsMyTurnRequest());
         serviceState = res.getResult();
-
+        Logger.log(res.isIsYourTurn() + " " + res.getResult().getBuilderUnit());
         if (res.isIsYourTurn()) {
             selectedBuilder = selectBuilder(res.getResult().getBuilderUnit());
             actionPointsForTurn = res.getResult().getActionPointsLeft();
