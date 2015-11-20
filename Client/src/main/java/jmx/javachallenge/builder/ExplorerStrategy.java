@@ -42,7 +42,7 @@ public class ExplorerStrategy implements Strategy {
             List<WsCoordinate> coordinates = new ArrayList<>();
 
             if (currentCoordinate == exitPoint) {
-                //coordinates.add(exitPoint);
+                coordinates.add(exitPoint);
             }
             int maxX = service.initialGameState.getSize().getX();
             int maxY = service.initialGameState.getSize().getY();
@@ -64,11 +64,6 @@ public class ExplorerStrategy implements Strategy {
                     }
                 }
             }
-           /* for(int i = 0;i < y; i++){
-                for (int j = 0;j<x;j++){
-                    coordinates.add(new WsCoordinate(j,i));
-                }
-            }*/
             return coordinates;
         }
 
