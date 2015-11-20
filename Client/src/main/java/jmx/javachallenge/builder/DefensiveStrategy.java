@@ -72,6 +72,12 @@ public class DefensiveStrategy implements Strategy {
         return true;
     }
 
+    @Override
+    public void clear() {
+        coordinates.clear();
+        coordinates.addAll(generator.get());
+    }
+
 
     private boolean isNeighbor(WsCoordinate c) {
         if (previous == null) {

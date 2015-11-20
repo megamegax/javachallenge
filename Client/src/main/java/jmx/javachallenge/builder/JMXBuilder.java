@@ -56,7 +56,7 @@ public class JMXBuilder extends WsBuilderunit {
     private boolean doMove(WsDirection direction) {
         WsCoordinate simulatedCoordinate = Util.simulateMove(service.builderUnits.get(unitid), direction);
         Step step = Util.checkMovement(simulatedCoordinate);
-        //Logger.log(step);
+        Logger.log(step);
         switch (step) {
             case BUILD:
                 if (service.structureTunnel(unitid, direction)) {
@@ -80,6 +80,7 @@ public class JMXBuilder extends WsBuilderunit {
                 //if (doMove(moveRandomly())) {
                 // return true;//service.builderUnits.get(unitID).strategy.done();
                 //}
+                strategy.clear();
                 return false;
 
             case NO_POINTS:

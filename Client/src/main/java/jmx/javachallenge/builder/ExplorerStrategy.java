@@ -58,23 +58,26 @@ public class ExplorerStrategy implements Strategy {
             int x = r.nextInt(maxX) + 1;
             int y = r.nextInt(maxY) + 1;
             int tx = currentCoordinate.getX();
+            if (x == 17 || x == 16) {
+                x = 1;
+            }
             int ty = currentCoordinate.getY();
             for (int i = 0; i < (x + y) * 2; i++) {
                 if (i % 2 != 0) {
                     if (tx <= x) {
                         coordinates.add(new WsCoordinate(tx, ty));
                         if (x < tx)
-                            tx++;
-                        else
                             tx--;
+                        else
+                            tx++;
                     }
                 } else {
                     if (ty <= y) {
                         coordinates.add(new WsCoordinate(tx, ty));
                         if (y < ty)
-                            ty++;
-                        else
                             ty--;
+                        else
+                            ty++;
                     }
                 }
             }
@@ -88,6 +91,11 @@ public class ExplorerStrategy implements Strategy {
     public ExplorerStrategy(int unitID) {
         this.unitID = unitID;
         this.coordinates = generator.get();
+    }
+
+    public void clear() {
+        coordinates.clear();
+        coordinates.addAll(generator.get());
     }
 
     @Override

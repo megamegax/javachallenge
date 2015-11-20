@@ -12,6 +12,7 @@ public enum Step {
                 return Step.WATCH;
             case 0: //SPACE SHUTTLE
                 return Step.STAY;
+
             case 1: //ROCK
                 return Step.BUILD;
             case 2: //OBSIDIAN
@@ -22,6 +23,12 @@ public enum Step {
                 return Step.STAY;
             case 5: //GRANITE
                 return Step.EXPLODE;
+            case 10: //ENEMY SPACE SHUTTLE
+                return Step.STAY;
+            case 13: //ENEMY TUNNEL
+                return Step.EXPLODE;
+            case 14: //ENEMY BUILDER
+                return Step.STAY;
             default:
                 return Step.STAY;
         }

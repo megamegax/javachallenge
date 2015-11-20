@@ -11,4 +11,6 @@ public interface Strategy {
     WsCoordinate nextCoordinate();
 
     boolean done();
+
+    void clear();
 }
