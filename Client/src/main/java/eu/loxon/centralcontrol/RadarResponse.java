@@ -96,7 +96,6 @@ public class RadarResponse {
     public String toString() {
         return "RadarResponse{" +
                 "scout=" + scout +
-                ", result=" + result +
                 '}';
     }
 }

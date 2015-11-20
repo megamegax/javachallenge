@@ -54,7 +54,6 @@ public class MoveBuilderUnitResponse {
     @Override
     public String toString() {
         return "MoveBuilderUnitResponse{" +
-                "result=" + result +
                 '}';
     }
 }

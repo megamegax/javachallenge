@@ -144,6 +144,7 @@ public class Service {
     public ActionCostResponse getActionCost() {
         ActionCostResponse res = api.getActionCost(new ActionCostRequest());
         initialActionCost = res;
+        Logger.log(initialActionCost.toString());
         processResult(res.getResult());
         return res;
     }

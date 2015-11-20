@@ -112,7 +112,6 @@ public class StartGameResponse {
     public String toString() {
         return "StartGameResponse{" +
                 "size=" + size +
-                ", result=" + result +
                 ", units=" + units +
                 '}';
     }

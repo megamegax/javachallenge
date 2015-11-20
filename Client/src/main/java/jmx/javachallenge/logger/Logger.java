@@ -13,7 +13,8 @@ public class Logger {
         enabled = levels;
     }
     public static void log( String message) {
-        log(LogLevels.DEBUG,new Message(message));
+        //FIXME log(LogLevels.DEBUG,new Message(message));
+        System.out.println(message);
     }
     public static void log(LogLevels level, String message) {
         log(level,new Message(message));

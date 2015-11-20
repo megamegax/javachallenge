@@ -200,7 +200,6 @@ public class ActionCostResponse {
                 ", watch=" + watch +
                 ", availableActionPoints=" + availableActionPoints +
                 ", availableExplosives=" + availableExplosives +
-                ", result=" + result +
                 '}';
     }
 }

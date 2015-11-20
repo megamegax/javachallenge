@@ -54,7 +54,6 @@ public class StructureTunnelResponse {
     @Override
     public String toString() {
         return "StructureTunnelResponse{" +
-                "result=" + result +
                 '}';
     }
 }

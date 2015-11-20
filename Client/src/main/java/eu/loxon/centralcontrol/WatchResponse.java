@@ -96,7 +96,6 @@ public class WatchResponse {
     public String toString() {
         return "WatchResponse{" +
                 "scout=" + scout +
-                ", result=" + result +
                 '}';
     }
 }

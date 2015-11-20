@@ -89,7 +89,6 @@ public class GetSpaceShuttleExitPosResponse {
     public String toString() {
         return "GetSpaceShuttleExitPosResponse{" +
                 "cord=" + cord +
-                ", result=" + result +
                 '}';
     }
 }

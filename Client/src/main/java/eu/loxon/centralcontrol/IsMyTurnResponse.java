@@ -80,7 +80,6 @@ public class IsMyTurnResponse {
     public String toString() {
         return "IsMyTurnResponse{" +
                 "isYourTurn=" + isYourTurn +
-                ", result=" + result +
                 '}';
     }
 }
