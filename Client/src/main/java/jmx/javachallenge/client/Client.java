@@ -29,7 +29,6 @@ public class Client {
         service.getActionCost();
         service.init();
 
-        Logger.log(moveOutFromSpaceComp());
         int i = 0;
         while (service.turnLeft != 0) {
             i++;
@@ -60,9 +59,6 @@ public class Client {
         return direction;
     }
 
-    private boolean isUnitInSpaceComp(int unitID) {
-        return service.builderUnits.get(unitID).getCord() == service.initialPos.getCord();
-    }
 
 
 }

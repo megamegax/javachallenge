@@ -87,14 +87,19 @@ public class Service {
     }
 
     public void init() {
-        builderUnits.put(0, new JMXBuilder(0, new ExplorerStrategy(0)));
-        builderUnits.put(1, new JMXBuilder(1, new ExplorerStrategy(1)));
-        builderUnits.put(2, new JMXBuilder(2, new ExplorerStrategy(2)));
-        builderUnits.put(3, new JMXBuilder(3, new ExplorerStrategy(3)));
+        builderUnits.put(0, new JMXBuilder(0));
+        builderUnits.put(1, new JMXBuilder(1));
+        builderUnits.put(2, new JMXBuilder(2));
+        builderUnits.put(3, new JMXBuilder(3));
         builderUnits.get(0).setCord(initialPos.getCord());
         builderUnits.get(1).setCord(initialPos.getCord());
         builderUnits.get(2).setCord(initialPos.getCord());
         builderUnits.get(3).setCord(initialPos.getCord());
+
+        builderUnits.get(0).setStrategy(new ExplorerStrategy(0));
+        builderUnits.get(1).setStrategy(new ExplorerStrategy(1));
+        builderUnits.get(2).setStrategy(new ExplorerStrategy(2));
+        builderUnits.get(3).setStrategy(new ExplorerStrategy(3));
 
         /** jociFaktor(); **/
     }

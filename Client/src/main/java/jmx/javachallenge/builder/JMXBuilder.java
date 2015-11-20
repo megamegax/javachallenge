@@ -22,12 +22,15 @@ public class JMXBuilder extends WsBuilderunit {
     private Set<WsCoordinate> tabooCoordinates;
     private WsCoordinate coordinate;
 
-    public JMXBuilder(int unitid, Strategy strategy) {
+    public JMXBuilder(int unitid) {
         super();
         this.service = Service.getInstance();
-        this.strategy = strategy;
         this.unitid = unitid;
         tabooCoordinates = new HashSet<>();
+    }
+
+    public void setStrategy(Strategy strategy) {
+        this.strategy = strategy;
     }
 
     public void step() {

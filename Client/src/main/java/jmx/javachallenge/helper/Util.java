@@ -11,7 +11,7 @@ import jmx.javachallenge.service.Service;
  * Created by MegaX on 2015. 11. 13..
  */
 public class Util {
-   private static Service service =  Service.getInstance();
+    private static Service service = Service.getInstance();
 
     public static WsDirection calculateDirection(WsCoordinate source, WsCoordinate target) {
         if (source.getX() < target.getX())
@@ -26,6 +26,7 @@ public class Util {
     }
 
     public static WsDirection calculateDirection(int unitID, WsCoordinate target) {
+        System.out.println(target);
         WsCoordinate source = service.builderUnits.get(unitID).getCord();
         if (source.getX() < target.getX())
             return WsDirection.RIGHT;
@@ -127,15 +128,15 @@ public class Util {
         }
         System.out.println();
         System.out.println((char) 27 + "[30m    -----------------------------------------");
-        for (int y = Service.getInstance().initialGameState.getSize().getY()-1; y >= 0; y--) {
+        for (int y = Service.getInstance().initialGameState.getSize().getY() - 1; y >= 0; y--) {
             String rowString = "";
             System.out.print((char) 27 + "[30m" + (y <= 9 ? " " + (y) : y) + "| ");
             for (int x = 0; x < Service.getInstance().initialGameState.getSize().getX(); x++) {
                 Tile tile = Service.getInstance().getMapTile(x, y);
                 if (tile.getUnitId() >= 0) {
-                    rowString += Integer.toString(tile.getUnitId()) + " ";
+                    rowString += (char) 27 + "[32m" + Integer.toString(tile.getUnitId()) + " ";
                 } else {
-                    rowString += getTileTypeChar(tile.getTileType()) + " ";
+                    rowString += (char) 27 + "[30m" + getTileTypeChar(tile.getTileType()) + " ";
                 }
             }
             System.out.println((char) 27 + "[30m" + rowString);
@@ -143,7 +144,7 @@ public class Util {
         System.out.println((char) 27 + "[30m    -----------------------------------------");
         System.out.print((char) 27 + "[30m    ");
         for (int x = 0; x < Service.getInstance().initialGameState.getSize().getX(); x++) {
-            System.out.print(x%10 + " ");
+            System.out.print(x % 10 + " ");
         }
         System.out.println();
         System.out.println(Service.getInstance().serviceState.getScore().toLog());
@@ -154,7 +155,7 @@ public class Util {
             case UNKNOWN:
                 return (char) 27 + "[30m ";
             case ROCK:
-                return (char) 27 + "[30m.";
+                return (char) 27 + "[30m●";
             case GRANITE:
                 return (char) 27 + "[30m;";
             case OBSIDIAN:

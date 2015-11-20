@@ -20,8 +20,8 @@ import java.util.function.Supplier;
 //és az új célpontokat úgy kéne kikalkulálni, hogy az előző pontokhoz
 // képest a távolságuk maximális legyen
 public class ExplorerStrategy implements Strategy {
-
     private final int unitID;
+    private int current = 0;
     private List<WsCoordinate> coordinates;
     private WsCoordinate exitPoint;
     //generátor ami mindig az egyre távolabbi szomszédokat adja vissza
@@ -32,54 +32,56 @@ public class ExplorerStrategy implements Strategy {
         @Override
         public List<WsCoordinate> get() {
             System.out.println("GETBE JUT A GENERÁTOR");
-            WsCoordinate currentCoordinate;
-            exitPoint = service.initialExitPos.getCord();
-            if (service.builderUnits.get(unitID) == null) {
-                currentCoordinate = service.initialPos.getCord();
-            } else {
-                if (service.builderUnits.get(unitID).getCord() != null)
-                    currentCoordinate = service.builderUnits.get(unitID).getCord();
-                else
-                    currentCoordinate = service.initialPos.getCord();
-            }
             List<WsCoordinate> coordinates = new ArrayList<>();
-
-            if (currentCoordinate == service.initialPos.getCord()) {
+            WsCoordinate currentCoordinate = service.builderUnits.get(unitID).getCord();
+            if (isUnitInSpaceComp(unitID)) {
+                exitPoint = service.getSpaceShuttlePosExit().getCord();
                 Logger.log("!! még a kompban");
+                System.out.println(exitPoint);
                 coordinates.add(exitPoint);
                 coordinates.add(exitPoint);
 
                 return coordinates;
                 // coordinates.add(exitPoint);
-            }
-            int maxX = service.initialGameState.getSize().getX();
-            int maxY = service.initialGameState.getSize().getY();
-            Random r = new Random();
-            int x = r.nextInt(maxX) + 1;
-            int y = r.nextInt(maxY) + 1;
-            int tx = currentCoordinate.getX();
 
-            int ty = currentCoordinate.getY();
-            for (int i = 0; i < (x + y) * 2; i++) {
-                if (i % 2 != 0) {
-                    if (tx <= x) {
-                        coordinates.add(new WsCoordinate(tx, ty));
-                        if (x < tx)
-                            tx--;
-                        else
-                            tx++;
-                    }
-                } else {
-                    if (ty <= y) {
-                        coordinates.add(new WsCoordinate(tx, ty));
-                        if (y < ty)
-                            ty--;
-                        else
-                            ty++;
+            } else {
+
+
+                int maxX = service.initialGameState.getSize().getX();
+                int maxY = service.initialGameState.getSize().getY();
+                Random r = new Random();
+                int x = r.nextInt(maxX) + 1;
+                int y = r.nextInt(maxY) + 1;
+                for (int i = 0; i < 5; i++) {
+                    x = r.nextInt(maxX) + 1;
+                    y = r.nextInt(maxY) + 1;
+                }
+                System.out.println("---------");
+                System.out.println(x);
+                System.out.println(y);
+                int tx = currentCoordinate.getX();
+                int ty = currentCoordinate.getY();
+                for (int i = 0; i < (x + y) * 2; i++) {
+                    if (i % 2 == 0) {
+                        if (tx <= x) {
+                            coordinates.add(new WsCoordinate(tx, ty));
+                            if (x < tx)
+                                tx--;
+                            else
+                                tx++;
+                        }
+                    } else {
+                        if (ty <= y) {
+                            coordinates.add(new WsCoordinate(tx, ty));
+                            if (y < ty)
+                                ty--;
+                            else
+                                ty++;
+                        }
                     }
                 }
+                Logger.log(unitID + " -» útvonal:" + coordinates);
             }
-            Logger.log(unitID + " -« útvonal:" + coordinates);
             return coordinates;
         }
 
@@ -93,23 +95,32 @@ public class ExplorerStrategy implements Strategy {
 
     public void clear() {
         coordinates.clear();
+        current = 0;
         coordinates.addAll(generator.get());
     }
 
     @Override
     public WsCoordinate nextCoordinate() {
-
-        if (coordinates.size() <= 2) {//ha már csak 1 elem maradna, akkor feltöltjük a listát az eggyel távolabbi szomszédokkal
-            coordinates.addAll(generator.get());
+        if (coordinates.isEmpty()) {
+            clear();
+        }
+        WsCoordinate c = coordinates.get(current);
+        if (current + 1 >= coordinates.size()) {//ha már csak 1 elem maradna, akkor feltöltjük a listát az eggyel távolabbi szomszédokkal
+            clear();// coordinates.addAll(generator.get());
         }
 
-        return coordinates.get(0);
+        return c;
 
+    }
+
+    private boolean isUnitInSpaceComp(int unitID) {
+        return service.builderUnits.get(unitID).getCord() == service.initialPos.getCord();
     }
 
     @Override
     public boolean done() {
-        coordinates.remove((0));
+        current++;
+        //coordinates.remove((0));
         return true;
     }
 
