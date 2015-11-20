@@ -78,41 +78,20 @@ public class ExplorerStrategy implements Strategy {
 
     @Override
     public WsCoordinate nextCoordinate() {
-        if (coordinates.contains(exitPoint)) {//első lépés
-            // coordinates.remove(exitPoint);
-            previous = exitPoint;
-            return exitPoint;
-        } else {
-            //megkeressük az előző koordináta egyik szomszédját
-            WsCoordinate next =
-                    coordinates
-                            .stream()
-                            .filter(this::isNeighbor)
-                            .findFirst()
-                            .get();
-            //coordinates.remove(next);
+
             if (coordinates.size() == 1) {//ha már csak 1 elem maradna, akkor feltöltjük a listát az eggyel távolabbi szomszédokkal
                 coordinates.addAll(generator.get());
             }
-            previous = next;
-            return next;
-        }
+
+        return coordinates.get(0);
+
     }
 
     @Override
     public boolean done() {
-        return false;
+        coordinates.remove((0));
+        return true;
     }
 
-    private boolean isNeighbor(WsCoordinate c) {
-        if (previous == null) {
-            previous = coordinates.get(1);
-        }
-        int x1 = previous.getX();
-        int y1 = previous.getY();
-        int x2 = c.getX();
-        int y2 = c.getY();
-        //megegyezik az egyik koordinátájuk és a másik különbsége 1, azaz szomszédok
-        return (x1 - x2 == 0 && Math.abs(y1 - y2) == 1) || (y1 - y2 == 0 && Math.abs(x1 - x2) == 1);
-    }
+
 }
