@@ -77,9 +77,9 @@ public class JMXBuilder extends WsBuilderunit {
                 return service.explode(unitid, direction);
 
             case STAY:
-                if (doMove(moveRandomly())) {
-                    return true;//service.builderUnits.get(unitID).strategy.done();
-                }
+                //if (doMove(moveRandomly())) {
+                // return true;//service.builderUnits.get(unitID).strategy.done();
+                //}
                 return false;
 
             case NO_POINTS:

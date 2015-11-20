@@ -39,6 +39,7 @@ public class Client {
                 //TODO move logic to strategy objects
                 JMXBuilder builder = service.selectedBuilder;
                 int unitID = builder.getUnitid();
+                service.watch(unitID);
                 builder.step();
             }
         }
