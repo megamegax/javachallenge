@@ -4,7 +4,9 @@ import eu.loxon.centralcontrol.*;
 import jmx.javachallenge.builder.DefensiveStrategy;
 import jmx.javachallenge.builder.ExplorerStrategy;
 import jmx.javachallenge.builder.JMXBuilder;
-import jmx.javachallenge.helper.*;
+import jmx.javachallenge.helper.Tile;
+import jmx.javachallenge.helper.TileType;
+import jmx.javachallenge.helper.Util;
 import jmx.javachallenge.logger.Logger;
 
 import java.util.HashMap;
@@ -37,7 +39,7 @@ public class Service {
     public int turnLeft = 51;
     public StartGameResponse initialGameState;
     public JMXBuilder selectedBuilder;
-    private GetSpaceShuttleExitPosResponse initialExitPos;
+    public GetSpaceShuttleExitPosResponse initialExitPos;
     private ActionCostResponse initialActionCost;
 
     private Service() {
