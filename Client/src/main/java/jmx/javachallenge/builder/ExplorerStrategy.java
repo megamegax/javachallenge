@@ -34,7 +34,10 @@ public class ExplorerStrategy implements Strategy {
             if (service.builderUnits.get(unitID) == null) {
                 currentCoordinate = service.initialPos.getCord();
             } else {
-                currentCoordinate = service.builderUnits.get(unitID).getCord();
+                if (service.builderUnits.get(unitID).getCord() != null)
+                    currentCoordinate = service.builderUnits.get(unitID).getCord();
+                else
+                    currentCoordinate = service.initialPos.getCord();
             }
             List<WsCoordinate> coordinates = new ArrayList<>();
 

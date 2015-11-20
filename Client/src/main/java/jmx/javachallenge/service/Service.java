@@ -56,10 +56,10 @@ public class Service {
     }
 
     public void init() {
-        builderUnits.put(0, new JMXBuilder(new DefensiveStrategy()));
-        builderUnits.put(1, new JMXBuilder(new ExplorerStrategy(1)));
-        builderUnits.put(2, new JMXBuilder(new ExplorerStrategy(2)));
-        builderUnits.put(3, new JMXBuilder(new ExplorerStrategy(3)));
+        builderUnits.put(0, new JMXBuilder(0, new DefensiveStrategy()));
+        builderUnits.put(1, new JMXBuilder(1, new ExplorerStrategy(1)));
+        builderUnits.put(2, new JMXBuilder(2, new ExplorerStrategy(2)));
+        builderUnits.put(3, new JMXBuilder(3, new ExplorerStrategy(3)));
         builderUnits.get(0).setCord(initialPos.getCord());
         /** jociFaktor(); **/
     }
@@ -99,6 +99,7 @@ public class Service {
         Logger.log(res.isIsYourTurn() + " " + res.getResult().getBuilderUnit());
         if (res.isIsYourTurn()) {
             selectedBuilder = selectBuilder(res.getResult().getBuilderUnit());
+            Logger.log(selectedBuilder.getUnitid());
             actionPointsForTurn = res.getResult().getActionPointsLeft();
             if (turnLeft > res.getResult().getTurnsLeft()) {
                 turnLeft = res.getResult().getTurnsLeft();

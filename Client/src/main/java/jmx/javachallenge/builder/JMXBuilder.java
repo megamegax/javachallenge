@@ -20,10 +20,11 @@ public class JMXBuilder extends WsBuilderunit {
     private Strategy strategy;
     private Set<WsCoordinate> tabooCoordinates;
 
-    public JMXBuilder(Strategy strategy) {
+    public JMXBuilder(int unitid, Strategy strategy) {
         super();
         this.service = Service.getInstance();
         this.strategy = strategy;
+        this.unitid = unitid;
         tabooCoordinates = new HashSet<>();
     }
 
