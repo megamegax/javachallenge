@@ -46,7 +46,7 @@ public class DefensiveStrategy implements Strategy {
     @Override
     public WsCoordinate nextCoordinate() {
         if (coordinates.contains(exitPoint)) {//első lépés
-            coordinates.remove(exitPoint);
+            //coordinates.remove(exitPoint);
             previous = exitPoint;
             return exitPoint;
         } else {
@@ -57,7 +57,7 @@ public class DefensiveStrategy implements Strategy {
                             .filter(this::isNeighbor)
                             .findFirst()
                             .get();
-            coordinates.remove(next);
+            //coordinates.remove(next);
             if(coordinates.size()==1){//ha már csak 1 elem maradna, akkor feltöltjük a listát az eggyel távolabbi szomszédokkal
                 coordinates.addAll(generator.get());
             }
@@ -65,6 +65,13 @@ public class DefensiveStrategy implements Strategy {
             return next;
         }
     }
+
+    @Override
+    public boolean done() {
+        coordinates.remove((previous));
+        return true;
+    }
+
 
     private boolean isNeighbor(WsCoordinate c) {
         if (previous == null) {

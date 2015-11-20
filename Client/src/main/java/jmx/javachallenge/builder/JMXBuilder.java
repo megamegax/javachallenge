@@ -61,10 +61,16 @@ public class JMXBuilder extends WsBuilderunit {
         Logger.log(step);
         switch (step) {
             case BUILD:
-                return service.structureTunnel(unitID, direction);
+                if (service.structureTunnel(unitID, direction)) {
+                    return service.builderUnits.get(unitID).strategy.done();
+                }
+                return false;
 
             case MOVE:
-                return service.moveUnit(unitID, direction);
+                if (service.moveUnit(unitID, direction)) {
+                    return service.builderUnits.get(unitID).strategy.done();
+                }
+                return false;
 
             case WATCH:
                 return service.watch(unitID);
@@ -73,7 +79,10 @@ public class JMXBuilder extends WsBuilderunit {
                 return service.explode(unitID, direction);
 
             case STAY:
-                return doMove(unitID, moveRandomly());
+                if (doMove(unitID, moveRandomly())) {
+                    return true;//service.builderUnits.get(unitID).strategy.done();
+                }
+                return false;
 
             case NO_POINTS:
                 Logger.log("Elfogytak az elkölthető pontok");

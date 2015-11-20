@@ -84,7 +84,7 @@ public class ExplorerStrategy implements Strategy {
     @Override
     public WsCoordinate nextCoordinate() {
         if (coordinates.contains(exitPoint)) {//első lépés
-            coordinates.remove(exitPoint);
+            // coordinates.remove(exitPoint);
             previous = exitPoint;
             return exitPoint;
         } else {
@@ -95,13 +95,18 @@ public class ExplorerStrategy implements Strategy {
                             .filter(this::isNeighbor)
                             .findFirst()
                             .get();
-            coordinates.remove(next);
+            //coordinates.remove(next);
             if (coordinates.size() == 1) {//ha már csak 1 elem maradna, akkor feltöltjük a listát az eggyel távolabbi szomszédokkal
                 coordinates.addAll(generator.get());
             }
             previous = next;
             return next;
         }
+    }
+
+    @Override
+    public boolean done() {
+        return false;
     }
 
     private boolean isNeighbor(WsCoordinate c) {
