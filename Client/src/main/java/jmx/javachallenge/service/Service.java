@@ -34,13 +34,48 @@ public class Service {
     public int actionPointsForTurn = 14;
     public GetSpaceShuttlePosResponse initialPos;
     public HashMap<Integer, JMXBuilder> builderUnits = new HashMap<>();
-    public Tile[][] map; // -1:unknown;0:shuttle;1:rock;2:obsidian;
+    private Tile[][] myMap;
 
     public int turnLeft = 51;
     public StartGameResponse initialGameState;
     public JMXBuilder selectedBuilder;
     public GetSpaceShuttleExitPosResponse initialExitPos;
     private ActionCostResponse initialActionCost;
+
+    /**
+     * Visszaadja az adott mezőt, a szerver által használt koordináta rendszerben.
+     * @param x
+     *      Vízszintes koordináta, bal oldalon 0, jobbra növekszik
+     * @param y
+     *      Függőleges koordináta, lent 0, felfelé növekszik
+     * @return
+     *      A Tile objektum
+     */
+    public Tile getMapTile(int x, int y) {
+        if (x >= initialGameState.getSize().getX() || y >= initialGameState.getSize().getY() ||
+                x < 0 || y < 0) {
+            Tile tile = new Tile();
+            tile.setTileType(TileType.OBSIDIAN);
+            return tile;
+        }
+        return myMap[x][y];
+    }
+
+    /**
+     * Újracsinálja a térképet, üres infókkal
+     * @param xSize
+     *      Vízszintes méret
+     * @param ySize
+     *      Függőleges méret
+     */
+    private void initMap(int xSize, int ySize) {
+        myMap = new Tile[xSize][ySize];
+        for (int y = 0; y < ySize; y++) {
+            for (int x = 0; x < xSize; x++) {
+                myMap[x][y] = new Tile();
+            }
+        }
+    }
 
     private Service() {
         Logger.log("service constructor");
@@ -79,30 +114,30 @@ public class Service {
     }
 
     public StartGameResponse startGame() {
-        Logger.log("mehet");
         StartGameResponse res = api.startGame(new StartGameRequest());
+        Logger.log("StartGame: " + res.toString());
         initialGameState = res;
-        Logger.log(res.toString());
-        res.setSize(new WsCoordinate(res.getSize().getX() + 1, res.getSize().getY() + 1));
-        map = new Tile[res.getSize().getY()][res.getSize().getX()];
-        for (int y = 0; y < initialGameState.getSize().getY(); y++) {
-            for (int x = 0; x < initialGameState.getSize().getX(); x++) {
-                map[y][x] = new Tile();
-            }
-        }
+        processResult(res.getResult());
+        // +1 cella keret mindenhová
+        initMap(res.getSize().getX(), res.getSize().getY());
         return res;
+    }
+
+    private void processResult(CommonResp result) {
+        // TODO: tároljuk le az infókat ezekből az adatokból, minden dolog után friss infónk legyen mindenről
+        serviceState = result;
+        actionPointsForTurn = result.getActionPointsLeft();
+        selectedBuilder = selectBuilder(result.getBuilderUnit());
+        turnLeft = result.getTurnsLeft();
+        Util.printResult(result);
     }
 
     public boolean isMyTurn() {
         IsMyTurnResponse res = api.isMyTurn(new IsMyTurnRequest());
-        serviceState = res.getResult();
+        processResult(res.getResult());
         Logger.log(res.isIsYourTurn() + " " + res.getResult().getBuilderUnit());
         if (res.isIsYourTurn()) {
-            selectedBuilder = selectBuilder(res.getResult().getBuilderUnit());
-            Logger.log(selectedBuilder.getUnitid());
-            actionPointsForTurn = res.getResult().getActionPointsLeft();
             if (turnLeft > res.getResult().getTurnsLeft()) {
-                turnLeft = res.getResult().getTurnsLeft();
                 this.startTurn(50 - turnLeft);
             }
             return true;
@@ -128,7 +163,7 @@ public class Service {
             initialPos = res;
 
             serviceState = res.getResult();
-            map[Util.convertCoordinateToMapCoordinate(res.getCord().getY())][res.getCord().getX()].setTileType(TileType.SHUTTLE);
+            getMapTile(res.getCord().getX(), res.getCord().getY()).setTileType(TileType.SHUTTLE);
             Util.printMap();
             return res;
         } else return initialPos;
@@ -157,7 +192,7 @@ public class Service {
             if (res.getResult().getType().equals(ResultType.DONE)) {
                 Logger.log(res.toString());
                 for (Scouting scout : res.getScout()) {
-                    map[Util.convertCoordinateToMapCoordinate(scout.getCord().getY())][scout.getCord().getX()].setTileType(Util.stringToCellType(scout.getObject().name()));
+                    getMapTile(scout.getCord().getX(), scout.getCord().getY()).setTileType(Util.stringToCellType(scout.getObject().name()));
                 }
                 Logger.log(res.getScout().get(0).getCord());
                 Logger.log(res.getScout().get(1).getCord());
@@ -194,9 +229,9 @@ public class Service {
             if (res.getResult().getType().equals(ResultType.DONE)) {
                 serviceState = res.getResult();
                 WsCoordinate oldCoordinate = builderUnits.get(unitID).getCord();
-                map[Util.convertCoordinateToMapCoordinate(oldCoordinate.getY())][oldCoordinate.getX()].setBuilder(-1);
+                getMapTile(oldCoordinate.getX(), oldCoordinate.getY()).setBuilder(-1);
                 WsCoordinate coordinate = Util.updateCoords(unitID, direction);
-                map[Util.convertCoordinateToMapCoordinate(coordinate.getY())][coordinate.getX()].setBuilder(unitID);
+                getMapTile(coordinate.getX(), coordinate.getY()).setBuilder(unitID);
                 Util.printMap();
 
                 actionPointsForTurn = tempPoints;
@@ -223,7 +258,7 @@ public class Service {
             if (res.getResult().getType().equals(ResultType.DONE)) {
                 Logger.log(res.toString());
                 for (Scouting scout : res.getScout()) {
-                    map[Util.convertCoordinateToMapCoordinate(scout.getCord().getY())][scout.getCord().getX()].setTileType(Util.stringToCellType(scout.getObject().name()));
+                    getMapTile(scout.getCord().getX(), scout.getCord().getY()).setTileType(Util.stringToCellType(scout.getObject().name()));
                 }
                 Util.printMap();
                 actionPointsForTurn = tempPoints;
@@ -249,7 +284,7 @@ public class Service {
             StructureTunnelResponse res = api.structureTunnel(req);
             // Util.wait(10);
             if (res.getResult().getType().equals(ResultType.DONE)) {
-                map[Util.convertCoordinateToMapCoordinate(selectBuilder(unitID).getCord().getY())][selectBuilder(unitID).getCord().getX()].setTileType(TileType.TUNNEL);
+                getMapTile(selectBuilder(unitID).getCord().getX(), selectBuilder(unitID).getCord().getY()).setTileType(TileType.TUNNEL);
                 serviceState = res.getResult();
                 actionPointsForTurn = tempPoints;
                 Util.printMap();

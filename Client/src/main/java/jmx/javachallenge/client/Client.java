@@ -20,6 +20,7 @@ public class Client {
     public void run() {
         System.out.println("Hello JMX");
         Logger.init(new LogLevels[]{LogLevels.DEBUG,LogLevels.MAP});
+//        Logger.init(new LogLevels[]{});
         service = Service.getInstance();
 
         service.startGame();
