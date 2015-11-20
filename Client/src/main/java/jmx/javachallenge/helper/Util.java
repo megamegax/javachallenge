@@ -60,7 +60,7 @@ public class Util {
 
     public static Step checkMovement(WsCoordinate simulatedCoordinate) {
         if (simulatedCoordinate.getX() < service.initialGameState.getSize().getX() && simulatedCoordinate.getY() < service.initialGameState.getSize().getY()) {
-            int tileType = service.map[Util.convertCoordinateToMapCoordinate(simulatedCoordinate.getY())][simulatedCoordinate.getX()].getTileType();
+            int tileType = service.map[Util.convertCoordinateToMapCoordinate(simulatedCoordinate.getY())][simulatedCoordinate.getX()].getTileTypeIndex();
             return Step.getStep(tileType);
         } else return Step.STAY;
     }
@@ -119,20 +119,50 @@ public class Util {
         sMap += " " + axisY + "| ";
         for (int y = 0; y < Service.getInstance().initialGameState.getSize().getY(); y++) {
             for (int x = 0; x < Service.getInstance().initialGameState.getSize().getX(); x++) {
-                sMap += Service.getInstance().map[y][x].toString();
+                Tile tile = Service.getInstance().map[y][x];
+                if (tile.getUnitId() >= 0) {
+                    sMap += Integer.toString(tile.getUnitId()) + " ";
+                } else {
+                    sMap += getTileTypeChar(tile.getTileType()) + " ";
+                }
             }
             axisY--;
-            if (y < Service.getInstance().initialGameState.getSize().getY() - 1)
+            if (y < Service.getInstance().initialGameState.getSize().getY() - 1) {
                 sMap += "\n " + (axisY <= 9 ? " " + (axisY) : axisY) + "| ";
-            else{
-                sMap += "\n   -------------------------------------------------------------------------------------------------------------------------";
-                sMap += "\n      0     1     2     3     4     5     6     7     8     9    10    11    12    13    14    15    16    17    18    19";
             }
         }
-        System.out.println("---------------");
+        System.out.println("     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 ");
+        System.out.println("    -----------------------------------------");
         System.out.println(sMap);
-        System.out.println("---------------");
+        System.out.println("    -----------------------------------------");
+        System.out.println("     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 ");
         System.out.println(Service.getInstance().serviceState.getScore().toLog());
+    }
+
+    private static String getTileTypeChar(TileType tileType) {
+        switch (tileType) {
+            case UNKNOWN:
+                return " ";
+            case ROCK:
+                return ".";
+            case GRANITE:
+                return ";";
+            case OBSIDIAN:
+                return "#";
+            case SHUTTLE:
+                return "@";
+            case ENEMY_SHUTTLE:
+                return "!";
+            case TUNNEL:
+                return "+";
+            case ENEMY_TUNNEL:
+                return "-";
+            case BUILDER:
+                return "5";
+            case ENEMY_BUILDER:
+                return "B";
+        }
+        return "?";
     }
 
     public static int convertCoordinateToMapCoordinate(int y) {

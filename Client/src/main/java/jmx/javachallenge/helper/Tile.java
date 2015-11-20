@@ -20,11 +20,15 @@ public class Tile {
         this.unitID = unitID;
     }
 
-    public String toString() {
-        return String.valueOf((tileType.getValue() >= 0 ? " " + tileType.getValue() : tileType.getValue())) + (unitID == -1 ? "[ ] " : "[" + unitID + "] ");
+    public int getTileTypeIndex() {
+        return tileType.getValue();
     }
 
-    public int getTileType() {
-        return tileType.getValue();
+    public TileType getTileType() {
+        return tileType;
+    }
+
+    public int getUnitId() {
+        return unitID;
     }
 }
