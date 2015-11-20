@@ -18,6 +18,7 @@ import java.util.stream.Stream;
  * Created by MegaX on 2015. 11. 12..
  */
 public class Service {
+    public static final String MY_TEAM_NAME = "jmx";
     private static Service service = null;
 
     static {
@@ -178,7 +179,7 @@ public class Service {
             if (res.getResult().getType().equals(ResultType.DONE)) {
                 Logger.log(res.toString());
                 for (Scouting scout : res.getScout()) {
-                    getMapTile(scout.getCord().getX(), scout.getCord().getY()).setTileType(Util.stringToCellType(scout.getObject().name()));
+                    getMapTile(scout.getCord().getX(), scout.getCord().getY()).setTileType(Util.stringToCellType(scout.getObject().name(), MY_TEAM_NAME.equalsIgnoreCase(scout.getTeam())));
                 }
                 Logger.log(res.getScout().get(0).getCord());
                 Logger.log(res.getScout().get(1).getCord());
@@ -235,7 +236,7 @@ public class Service {
             if (res.getResult().getType().equals(ResultType.DONE)) {
                 Logger.log(res.toString());
                 for (Scouting scout : res.getScout()) {
-                    getMapTile(scout.getCord().getX(), scout.getCord().getY()).setTileType(Util.stringToCellType(scout.getObject().name()));
+                    getMapTile(scout.getCord().getX(), scout.getCord().getY()).setTileType(Util.stringToCellType(scout.getObject().name(), scout.getTeam().equalsIgnoreCase(MY_TEAM_NAME)));
                 }
                 Util.printMap();
                 return true;

@@ -95,20 +95,32 @@ public class Util {
         return Service.getInstance().builderUnits.get(unitID).getCord();
     }
 
-    public static TileType stringToCellType(String object) {
+    public static TileType stringToCellType(String object, boolean myTeam) {
         switch (object) {
             case "ROCK":
                 return TileType.ROCK;
             case "SHUTTLE":
-                return TileType.SHUTTLE;
+                if (myTeam) { // FIXME: Rossz értéket kapunk
+                    return TileType.SHUTTLE;
+                } else {
+                    return TileType.ENEMY_SHUTTLE;
+                }
             case "OBSIDIAN":
                 return TileType.OBSIDIAN;
             case "TUNNEL":
-                return TileType.TUNNEL;
+                if (myTeam) {
+                    return TileType.TUNNEL;
+                } else {
+                    return TileType.ENEMY_TUNNEL;
+                }
             case "GRANITE":
                 return TileType.GRANITE;
             case "BUILDER_UNIT":
-                return TileType.TUNNEL;
+                if (myTeam) {
+                    return TileType.BUILDER;
+                } else {
+                    return TileType.ENEMY_BUILDER;
+                }
             default:
                 return TileType.UNKNOWN;
         }
