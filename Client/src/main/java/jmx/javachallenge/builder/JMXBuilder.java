@@ -43,11 +43,15 @@ public class JMXBuilder extends WsBuilderunit {
         //a Client.javaból át lehet emelni a logikát, ami eldönti, hogy lépünk, fúrunk, vagy mit csinálunk
 
 
-        WsDirection direction = moveRandomly();
+        // WsDirection direction = moveRandomly();
         service.watch(unitid);
-        if (doMove(unitid, direction)) {
-            doMove(unitid, direction);
+        WsCoordinate newCoordinate = strategy.nextCoordinate();
+        if (doMove(unitid, Util.calculateDirection(unitid, newCoordinate))) {
+
         }
+        // if (doMove(unitid, direction)) {
+        //     doMove(unitid, direction);
+        // }
     }
 
     private boolean doMove(int unitID, WsDirection direction) {
@@ -92,4 +96,5 @@ public class JMXBuilder extends WsBuilderunit {
             return WsDirection.DOWN;
         } else return WsDirection.DOWN;
     }
+
 }

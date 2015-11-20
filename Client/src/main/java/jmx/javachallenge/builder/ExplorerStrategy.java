@@ -4,6 +4,7 @@ import eu.loxon.centralcontrol.WsCoordinate;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.function.Supplier;
 
 /**
@@ -29,10 +30,42 @@ public class ExplorerStrategy implements Strategy {
 
         @Override
         public List<WsCoordinate> get() {
+            WsCoordinate currentCoordinate;
+            if (service.builderUnits.get(unitID) == null) {
+                currentCoordinate = service.initialPos.getCord();
+            } else {
+                currentCoordinate = service.builderUnits.get(unitID).getCord();
+            }
             List<WsCoordinate> coordinates = new ArrayList<>();
-            coordinates.add(exitPoint);
-            WsCoordinate currentCoordinate = service.builderUnits.get(unitID).getCord();
 
+            if (currentCoordinate == exitPoint) {
+                //coordinates.add(exitPoint);
+            }
+            int maxX = service.initialGameState.getSize().getX();
+            int maxY = service.initialGameState.getSize().getY();
+            Random r = new Random();
+            int x = r.nextInt(maxX) + 1;
+            int y = r.nextInt(maxY) + 1;
+            int tx = currentCoordinate.getX();
+            int ty = currentCoordinate.getY();
+            for (int i = 0; i < (x + y) * 2; i++) {
+                if (i % 2 == 0) {
+                    if (tx <= x) {
+                        coordinates.add(new WsCoordinate(tx, ty));
+                        tx++;
+                    }
+                } else {
+                    if (ty <= y) {
+                        coordinates.add(new WsCoordinate(tx, ty));
+                        ty++;
+                    }
+                }
+            }
+           /* for(int i = 0;i < y; i++){
+                for (int j = 0;j<x;j++){
+                    coordinates.add(new WsCoordinate(j,i));
+                }
+            }*/
             return coordinates;
         }
 
@@ -69,6 +102,9 @@ public class ExplorerStrategy implements Strategy {
     }
 
     private boolean isNeighbor(WsCoordinate c) {
+        if (previous == null) {
+            previous = coordinates.get(1);
+        }
         int x1 = previous.getX();
         int y1 = previous.getY();
         int x2 = c.getX();

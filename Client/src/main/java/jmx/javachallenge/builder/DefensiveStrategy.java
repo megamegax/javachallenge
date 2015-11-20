@@ -4,7 +4,6 @@ import eu.loxon.centralcontrol.WsCoordinate;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Supplier;
 
 /**
@@ -12,10 +11,6 @@ import java.util.function.Supplier;
  * Ez a strategy a középpont körül kezd el körkörösen építkezni, ilyen koordinátákat ad vissza a buildernek.
  */
 public class DefensiveStrategy implements Strategy {
-    private List<WsCoordinate> coordinates;
-    private WsCoordinate exitPoint = service.initialExitPos.getCord();
-    private WsCoordinate previous;
-
     //generátor ami mindig az egyre távolabbi szomszédokat adja vissza
     //először az 1 távolságra lévőket, aztán a 2, 3, 4, stb.
     private final Supplier<List<WsCoordinate>> generator = new Supplier<List<WsCoordinate>>() {
@@ -40,6 +35,9 @@ public class DefensiveStrategy implements Strategy {
             return i == -radius || i == radius || j == -radius || j == radius;
         }
     };
+    private List<WsCoordinate> coordinates;
+    private WsCoordinate exitPoint = service.initialExitPos.getCord();
+    private WsCoordinate previous;
 
     public DefensiveStrategy() {
         this.coordinates = generator.get();
@@ -69,6 +67,9 @@ public class DefensiveStrategy implements Strategy {
     }
 
     private boolean isNeighbor(WsCoordinate c) {
+        if (previous == null) {
+            previous = coordinates.get(1);
+        }
         int x1 = previous.getX();
         int y1 = previous.getY();
         int x2 = c.getX();

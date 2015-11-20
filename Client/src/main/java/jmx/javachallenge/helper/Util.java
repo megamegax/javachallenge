@@ -24,6 +24,19 @@ public class Util {
         else return WsDirection.RIGHT;
     }
 
+    public static WsDirection calculateDirection(int unitID, WsCoordinate target) {
+        WsCoordinate source = service.builderUnits.get(unitID).getCord();
+        if (source.getX() < target.getX())
+            return WsDirection.RIGHT;
+        else if (source.getX() > target.getX())
+            return WsDirection.LEFT;
+        else if (source.getY() < target.getY())
+            return WsDirection.UP;
+        else if (source.getY() > target.getY())
+            return WsDirection.DOWN;
+        else return WsDirection.RIGHT;
+    }
+
     public static WsCoordinate simulateMove(WsBuilderunit builder, WsDirection direction) {
         Logger.log("from: " + builder.getCord());
 

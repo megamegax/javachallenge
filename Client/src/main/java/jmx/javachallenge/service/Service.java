@@ -57,13 +57,10 @@ public class Service {
 
     public void init() {
         builderUnits.put(0, new JMXBuilder(new DefensiveStrategy()));
-        builderUnits.put(1, new JMXBuilder(new ExplorerStrategy()));
-        builderUnits.put(2, new JMXBuilder(new ExplorerStrategy()));
-        builderUnits.put(3, new JMXBuilder(new ExplorerStrategy()));
+        builderUnits.put(1, new JMXBuilder(new ExplorerStrategy(1)));
+        builderUnits.put(2, new JMXBuilder(new ExplorerStrategy(2)));
+        builderUnits.put(3, new JMXBuilder(new ExplorerStrategy(3)));
         builderUnits.get(0).setCord(initialPos.getCord());
-        builderUnits.get(1).setCord(initialPos.getCord());
-        builderUnits.get(2).setCord(initialPos.getCord());
-        builderUnits.get(3).setCord(initialPos.getCord());
         /** jociFaktor(); **/
     }
 

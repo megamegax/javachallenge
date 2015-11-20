@@ -2,7 +2,7 @@ package jmx.javachallenge.client;
 
 import eu.loxon.centralcontrol.WsCoordinate;
 import eu.loxon.centralcontrol.WsDirection;
-import jmx.javachallenge.helper.JMXBuilder;
+import jmx.javachallenge.builder.JMXBuilder;
 import jmx.javachallenge.helper.Util;
 import jmx.javachallenge.logger.LogLevels;
 import jmx.javachallenge.logger.Logger;
@@ -25,47 +25,16 @@ public class Client {
         service.startGame();
         service.getSpaceShuttlePos();
         service.getSpaceShuttlePosExit();
-        service.init();
         service.getActionCost();
+        service.init();
+
         while (service.turnLeft != 0) {
             Util.wait(301);
             if (service.isMyTurn()) {
                 //TODO move logic to strategy objects
                 JMXBuilder builder = service.selectedBuilder;
                 int unitID = builder.getUnitid();
-                /*if (builder.hasOwnWill()) {
-                    builder.step();
-                } else {
-                    if (unitID == 0 && service.turnLeft == 70) {
-                        service.watch(unitID);
-                        service.structureTunnel(unitID, moveOutFromSpaceComp());
-                        //TODO maradék pontból radarozni?
-                    } else if (unitID == 1 && service.turnLeft == 70) {
-                        service.moveUnit(unitID, moveOutFromSpaceComp());
-                        WsDirection direction = WsDirection.DOWN;
-                        service.structureTunnel(unitID, direction);
-                        service.moveUnit(unitID, direction);
-                        service.watch(unitID);
-                        builder.setOwnWill(true);
-                    } else if (unitID == 2 && service.turnLeft == 70) {
-                        service.moveUnit(unitID, moveOutFromSpaceComp());
-                        WsDirection direction = WsDirection.UP;
-                        service.structureTunnel(unitID, direction);
-                        service.moveUnit(unitID, direction);
-                        service.watch(unitID);
-                        builder.setOwnWill(true);
-                    } else if (unitID == 3 && service.turnLeft == 70) {
-                        service.moveUnit(unitID, moveOutFromSpaceComp());
-                        WsDirection direction = WsDirection.RIGHT;
-                        service.structureTunnel(unitID, direction);
-                        service.moveUnit(unitID, direction);
-                        service.watch(unitID);
-                        builder.setOwnWill(true);
-                    } else if (unitID == 0 && service.turnLeft == 69) {
-                        service.moveUnit(unitID, moveOutFromSpaceComp());
-                        builder.setOwnWill(true);
-                    }
-                }*/
+                builder.step();
             }
         }
     }
