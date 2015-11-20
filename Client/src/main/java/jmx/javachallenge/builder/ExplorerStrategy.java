@@ -69,7 +69,6 @@ public class ExplorerStrategy implements Strategy {
 
 
     };
-    private WsCoordinate previous;
 
     public ExplorerStrategy(int unitID) {
         this.unitID = unitID;
@@ -79,7 +78,7 @@ public class ExplorerStrategy implements Strategy {
     @Override
     public WsCoordinate nextCoordinate() {
 
-            if (coordinates.size() == 1) {//ha már csak 1 elem maradna, akkor feltöltjük a listát az eggyel távolabbi szomszédokkal
+        if (coordinates.size() <= 1) {//ha már csak 1 elem maradna, akkor feltöltjük a listát az eggyel távolabbi szomszédokkal
                 coordinates.addAll(generator.get());
             }
 

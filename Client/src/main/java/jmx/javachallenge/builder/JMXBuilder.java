@@ -19,6 +19,7 @@ public class JMXBuilder extends WsBuilderunit {
     private Service service;
     private Strategy strategy;
     private Set<WsCoordinate> tabooCoordinates;
+    private WsCoordinate coordinate;
 
     public JMXBuilder(int unitid, Strategy strategy) {
         super();
@@ -43,43 +44,39 @@ public class JMXBuilder extends WsBuilderunit {
 
         //a Client.javaból át lehet emelni a logikát, ami eldönti, hogy lépünk, fúrunk, vagy mit csinálunk
 
-
-        // WsDirection direction = moveRandomly();
         service.watch(unitid);
-        WsCoordinate newCoordinate = strategy.nextCoordinate();
-        if (doMove(unitid, Util.calculateDirection(unitid, newCoordinate))) {
+        coordinate = strategy.nextCoordinate();
+        if (doMove(Util.calculateDirection(unitid, coordinate))) {
 
         }
-        // if (doMove(unitid, direction)) {
-        //     doMove(unitid, direction);
-        // }
+
     }
 
-    private boolean doMove(int unitID, WsDirection direction) {
-        WsCoordinate simulatedCoordinate = Util.simulateMove(service.builderUnits.get(unitID), direction);
+    private boolean doMove(WsDirection direction) {
+        WsCoordinate simulatedCoordinate = Util.simulateMove(service.builderUnits.get(unitid), direction);
         Step step = Util.checkMovement(simulatedCoordinate);
         Logger.log(step);
         switch (step) {
             case BUILD:
-                if (service.structureTunnel(unitID, direction)) {
-                    return service.builderUnits.get(unitID).strategy.done();
+                if (service.structureTunnel(unitid, direction)) {
+                    return service.builderUnits.get(unitid).strategy.done();
                 }
                 return false;
 
             case MOVE:
-                if (service.moveUnit(unitID, direction)) {
-                    return service.builderUnits.get(unitID).strategy.done();
+                if (service.moveUnit(unitid, direction)) {
+                    return service.builderUnits.get(unitid).strategy.done();
                 }
                 return false;
 
             case WATCH:
-                return service.watch(unitID);
+                return service.watch(unitid);
 
             case EXPLODE:
-                return service.explode(unitID, direction);
+                return service.explode(unitid, direction);
 
             case STAY:
-                if (doMove(unitID, moveRandomly())) {
+                if (doMove(moveRandomly())) {
                     return true;//service.builderUnits.get(unitID).strategy.done();
                 }
                 return false;

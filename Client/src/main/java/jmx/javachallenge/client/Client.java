@@ -18,7 +18,7 @@ public class Client {
     private Service service;
 
     public void run() {
-        System.out.println("Hello JMX");
+        System.out.println((char) 27 + "[30mHello JMX");
         Logger.init(new LogLevels[]{LogLevels.DEBUG,LogLevels.MAP});
 //        Logger.init(new LogLevels[]{});
         service = Service.getInstance();
@@ -28,9 +28,11 @@ public class Client {
         service.getSpaceShuttlePosExit();
         service.getActionCost();
         service.init();
-
+        int i = 0;
         while (service.turnLeft != 0) {
-            Util.wait(301);
+            i++;
+            Logger.log(i);
+            Util.wait(300);
             if (service.isMyTurn()) {
                 //TODO move logic to strategy objects
                 JMXBuilder builder = service.selectedBuilder;

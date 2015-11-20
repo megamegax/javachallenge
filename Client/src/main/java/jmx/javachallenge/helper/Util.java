@@ -4,7 +4,6 @@ import eu.loxon.centralcontrol.CommonResp;
 import eu.loxon.centralcontrol.WsBuilderunit;
 import eu.loxon.centralcontrol.WsCoordinate;
 import eu.loxon.centralcontrol.WsDirection;
-import jmx.javachallenge.logger.Logger;
 import jmx.javachallenge.service.Service;
 
 /**
@@ -39,20 +38,14 @@ public class Util {
     }
 
     public static WsCoordinate simulateMove(WsBuilderunit builder, WsDirection direction) {
-        Logger.log("from: " + builder.getCord());
-
         switch (direction) {
             case LEFT:
-                Logger.log("to left: " + new WsCoordinate(builder.getCord().getX() - 1, builder.getCord().getY()));
                 return new WsCoordinate(builder.getCord().getX() - 1, builder.getCord().getY());
             case RIGHT:
-                Logger.log("to right: " + new WsCoordinate(builder.getCord().getX() + 1, builder.getCord().getY()));
                 return new WsCoordinate(builder.getCord().getX() + 1, builder.getCord().getY());
             case UP:
-                Logger.log("to up: " + new WsCoordinate(builder.getCord().getX(), builder.getCord().getY() + 1));
                 return new WsCoordinate(builder.getCord().getX(), builder.getCord().getY() + 1);
             case DOWN:
-                Logger.log("to down: " + new WsCoordinate(builder.getCord().getX(), builder.getCord().getY() - 1));
                 return new WsCoordinate(builder.getCord().getX(), builder.getCord().getY() - 1);
             default:
                 return builder.getCord();
@@ -91,7 +84,6 @@ public class Util {
                 Service.getInstance().builderUnits.get(unitID).setCord(new WsCoordinate(oldCoordinate.getX(), oldCoordinate.getY() - 1));
                 break;
         }
-        Logger.log("coordinates updated for unit: " + unitID + ", " + Service.getInstance().builderUnits.get(unitID).getCord());
         return Service.getInstance().builderUnits.get(unitID).getCord();
     }
 
@@ -100,7 +92,7 @@ public class Util {
             case "ROCK":
                 return TileType.ROCK;
             case "SHUTTLE":
-                if (myTeam) { // FIXME: Rossz értéket kapunk
+                if (myTeam) { // FIXME: Rossz ï¿½rtï¿½ket kapunk
                     return TileType.SHUTTLE;
                 } else {
                     return TileType.ENEMY_SHUTTLE;
@@ -158,27 +150,27 @@ public class Util {
     private static String getTileTypeChar(TileType tileType) {
         switch (tileType) {
             case UNKNOWN:
-                return " ";
+                return (char) 27 + "[30m ";
             case ROCK:
-                return ".";
+                return (char) 27 + "[30m.";
             case GRANITE:
-                return ";";
+                return (char) 27 + "[30m;";
             case OBSIDIAN:
-                return "#";
+                return (char) 27 + "[30m#";
             case SHUTTLE:
-                return "@";
+                return (char) 27 + "[32m@";
             case ENEMY_SHUTTLE:
-                return "!";
+                return (char) 27 + "[31m!";
             case TUNNEL:
-                return "+";
+                return (char) 27 + "[32m+";
             case ENEMY_TUNNEL:
-                return "-";
+                return (char) 27 + "[31m-";
             case BUILDER:
-                return "5";
+                return (char) 27 + "[32m5";
             case ENEMY_BUILDER:
-                return "B";
+                return (char) 27 + "[31mB";
         }
-        return "?";
+        return (char) 27 + "[30m?";
     }
 
     public static int convertCoordinateToMapCoordinate(int y) {

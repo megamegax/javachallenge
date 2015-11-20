@@ -35,13 +35,25 @@ public class Service {
     public int actionPointsForTurn = 14;
     public GetSpaceShuttlePosResponse initialPos;
     public HashMap<Integer, JMXBuilder> builderUnits = new HashMap<>();
-    private Tile[][] myMap;
-
     public int turnLeft = 51;
     public StartGameResponse initialGameState;
     public JMXBuilder selectedBuilder;
     public GetSpaceShuttleExitPosResponse initialExitPos;
+    private Tile[][] myMap;
     private ActionCostResponse initialActionCost;
+
+    private Service() {
+        Logger.log("service constructor");
+        CentralControlServiceService centralControlServiceService = new CentralControlServiceService();
+        api = centralControlServiceService.getCentralControlPort();
+    }
+
+    public static Service getInstance() {
+        if (service == null) {
+            service = new Service();
+        }
+        return service;
+    }
 
     /**
      * Visszaadja az adott mezőt, a szerver által használt koordináta rendszerben.
@@ -64,10 +76,9 @@ public class Service {
 
     /**
      * Újracsinálja a térképet, üres infókkal
-     * @param xSize
-     *      Vízszintes méret
-     * @param ySize
-     *      Függőleges méret
+     *
+     * @param xSize Vízszintes méret
+     * @param ySize Függőleges méret
      */
     private void initMap(int xSize, int ySize) {
         myMap = new Tile[xSize][ySize];
@@ -76,19 +87,6 @@ public class Service {
                 myMap[x][y] = new Tile();
             }
         }
-    }
-
-    private Service() {
-        Logger.log("service constructor");
-        CentralControlServiceService centralControlServiceService = new CentralControlServiceService();
-        api = centralControlServiceService.getCentralControlPort();
-    }
-
-    public static Service getInstance() {
-        if (service == null) {
-            service = new Service();
-        }
-        return service;
     }
 
     public void init() {
@@ -181,10 +179,6 @@ public class Service {
                 for (Scouting scout : res.getScout()) {
                     getMapTile(scout.getCord().getX(), scout.getCord().getY()).setTileType(Util.stringToCellType(scout.getObject().name(), MY_TEAM_NAME.equalsIgnoreCase(scout.getTeam())));
                 }
-                Logger.log(res.getScout().get(0).getCord());
-                Logger.log(res.getScout().get(1).getCord());
-                Logger.log(res.getScout().get(2).getCord());
-                Logger.log(res.getScout().get(3).getCord());
                 builderUnits.get(unitID).setCord(new WsCoordinate(res.getScout().get(0).getCord().getX(), res.getScout().get(2).getCord().getY()));
                 Util.printMap();
 
@@ -263,7 +257,7 @@ public class Service {
                 return false;
             }
         } else {
-            Logger.log("nincs elég pont építeni");
+            Logger.log(actionPointsForTurn + " - nincs elég pont építeni");
             return false;
         }
     }
