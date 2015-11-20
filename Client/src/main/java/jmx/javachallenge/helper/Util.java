@@ -4,6 +4,7 @@ import eu.loxon.centralcontrol.CommonResp;
 import eu.loxon.centralcontrol.WsBuilderunit;
 import eu.loxon.centralcontrol.WsCoordinate;
 import eu.loxon.centralcontrol.WsDirection;
+import jmx.javachallenge.logger.Logger;
 import jmx.javachallenge.service.Service;
 
 /**
@@ -55,6 +56,7 @@ public class Util {
     public static Step checkMovement(WsCoordinate simulatedCoordinate) {
         if (simulatedCoordinate.getX() < service.initialGameState.getSize().getX() && simulatedCoordinate.getY() < service.initialGameState.getSize().getY()) {
             int tileType = service.getMapTile(simulatedCoordinate.getX(), simulatedCoordinate.getY()).getTileTypeIndex();
+            Logger.log("Lépés ellenörzés:::::::" + tileType);
             return Step.getStep(tileType);
         } else return Step.STAY;
     }
@@ -121,13 +123,13 @@ public class Util {
     public static void printMap() {
         System.out.print("    ");
         for (int x = 0; x < Service.getInstance().initialGameState.getSize().getX(); x++) {
-            System.out.print(x%10 + " ");
+            System.out.print((char) 27 + "[30m" + x % 10 + " ");
         }
         System.out.println();
-        System.out.println("    -----------------------------------------");
+        System.out.println((char) 27 + "[30m    -----------------------------------------");
         for (int y = Service.getInstance().initialGameState.getSize().getY()-1; y >= 0; y--) {
             String rowString = "";
-            System.out.print((y <= 9 ? " " + (y) : y) + "| ");
+            System.out.print((char) 27 + "[30m" + (y <= 9 ? " " + (y) : y) + "| ");
             for (int x = 0; x < Service.getInstance().initialGameState.getSize().getX(); x++) {
                 Tile tile = Service.getInstance().getMapTile(x, y);
                 if (tile.getUnitId() >= 0) {
@@ -136,10 +138,10 @@ public class Util {
                     rowString += getTileTypeChar(tile.getTileType()) + " ";
                 }
             }
-            System.out.println(rowString);
+            System.out.println((char) 27 + "[30m" + rowString);
         }
-        System.out.println("    -----------------------------------------");
-        System.out.print("    ");
+        System.out.println((char) 27 + "[30m    -----------------------------------------");
+        System.out.print((char) 27 + "[30m    ");
         for (int x = 0; x < Service.getInstance().initialGameState.getSize().getX(); x++) {
             System.out.print(x%10 + " ");
         }

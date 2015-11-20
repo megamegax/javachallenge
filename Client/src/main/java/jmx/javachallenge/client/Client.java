@@ -28,6 +28,8 @@ public class Client {
         service.getSpaceShuttlePosExit();
         service.getActionCost();
         service.init();
+
+        Logger.log(moveOutFromSpaceComp());
         int i = 0;
         while (service.turnLeft != 0) {
             i++;

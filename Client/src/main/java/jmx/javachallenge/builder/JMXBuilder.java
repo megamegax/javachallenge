@@ -16,6 +16,7 @@ import java.util.Set;
  * Created by megam on 2015. 11. 18..
  */
 public class JMXBuilder extends WsBuilderunit {
+    Random random = new Random();
     private Service service;
     private Strategy strategy;
     private Set<WsCoordinate> tabooCoordinates;
@@ -44,7 +45,7 @@ public class JMXBuilder extends WsBuilderunit {
 
         //a Client.javaból át lehet emelni a logikát, ami eldönti, hogy lépünk, fúrunk, vagy mit csinálunk
 
-        service.watch(unitid);
+        // service.watch(unitid);
         coordinate = strategy.nextCoordinate();
         if (doMove(Util.calculateDirection(unitid, coordinate))) {
 
@@ -55,7 +56,7 @@ public class JMXBuilder extends WsBuilderunit {
     private boolean doMove(WsDirection direction) {
         WsCoordinate simulatedCoordinate = Util.simulateMove(service.builderUnits.get(unitid), direction);
         Step step = Util.checkMovement(simulatedCoordinate);
-        Logger.log(step);
+        //Logger.log(step);
         switch (step) {
             case BUILD:
                 if (service.structureTunnel(unitid, direction)) {
@@ -89,7 +90,6 @@ public class JMXBuilder extends WsBuilderunit {
     }
 
     private WsDirection moveRandomly() {
-        Random random = new Random();
         int r = random.nextInt(6) + 1;
         if (r == 1) {
             return WsDirection.RIGHT;

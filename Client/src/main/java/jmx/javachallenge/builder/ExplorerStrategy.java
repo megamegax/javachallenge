@@ -22,7 +22,7 @@ public class ExplorerStrategy implements Strategy {
 
     private final int unitID;
     private List<WsCoordinate> coordinates;
-    private WsCoordinate exitPoint = service.initialExitPos.getCord();
+    private WsCoordinate exitPoint;
     //generátor ami mindig az egyre távolabbi szomszédokat adja vissza
     //először az 1 távolságra lévőket, aztán a 2, 3, 4, stb.
     private final Supplier<List<WsCoordinate>> generator = new Supplier<List<WsCoordinate>>() {
@@ -31,6 +31,7 @@ public class ExplorerStrategy implements Strategy {
         @Override
         public List<WsCoordinate> get() {
             WsCoordinate currentCoordinate;
+            exitPoint = service.initialExitPos.getCord();
             if (service.builderUnits.get(unitID) == null) {
                 currentCoordinate = service.initialPos.getCord();
             } else {
@@ -41,8 +42,10 @@ public class ExplorerStrategy implements Strategy {
             }
             List<WsCoordinate> coordinates = new ArrayList<>();
 
-            if (currentCoordinate == exitPoint) {
+            if (currentCoordinate == service.initialPos.getCord()) {
                 coordinates.add(exitPoint);
+                return coordinates;
+                // coordinates.add(exitPoint);
             }
             int maxX = service.initialGameState.getSize().getX();
             int maxY = service.initialGameState.getSize().getY();

@@ -1,7 +1,6 @@
 package jmx.javachallenge.service;
 
 import eu.loxon.centralcontrol.*;
-import jmx.javachallenge.builder.DefensiveStrategy;
 import jmx.javachallenge.builder.ExplorerStrategy;
 import jmx.javachallenge.builder.JMXBuilder;
 import jmx.javachallenge.helper.Tile;
@@ -57,12 +56,10 @@ public class Service {
 
     /**
      * Visszaadja az adott mezőt, a szerver által használt koordináta rendszerben.
-     * @param x
-     *      Vízszintes koordináta, bal oldalon 0, jobbra növekszik
-     * @param y
-     *      Függőleges koordináta, lent 0, felfelé növekszik
-     * @return
-     *      A Tile objektum
+     *
+     * @param x Vízszintes koordináta, bal oldalon 0, jobbra növekszik
+     * @param y Függőleges koordináta, lent 0, felfelé növekszik
+     * @return A Tile objektum
      */
     public Tile getMapTile(int x, int y) {
         if (x >= initialGameState.getSize().getX() || y >= initialGameState.getSize().getY() ||
@@ -90,11 +87,15 @@ public class Service {
     }
 
     public void init() {
-        builderUnits.put(0, new JMXBuilder(0, new DefensiveStrategy()));
+        builderUnits.put(0, new JMXBuilder(0, new ExplorerStrategy(0)));
         builderUnits.put(1, new JMXBuilder(1, new ExplorerStrategy(1)));
         builderUnits.put(2, new JMXBuilder(2, new ExplorerStrategy(2)));
         builderUnits.put(3, new JMXBuilder(3, new ExplorerStrategy(3)));
         builderUnits.get(0).setCord(initialPos.getCord());
+        builderUnits.get(1).setCord(initialPos.getCord());
+        builderUnits.get(2).setCord(initialPos.getCord());
+        builderUnits.get(3).setCord(initialPos.getCord());
+
         /** jociFaktor(); **/
     }
 
@@ -201,8 +202,9 @@ public class Service {
             req.setDirection(direction);
             MoveBuilderUnitResponse res = api.moveBuilderUnit(req);
             processResult(res.getResult());
-            Logger.log(res);
+            Logger.log("próbálom : mozgatni");
             if (res.getResult().getType().equals(ResultType.DONE)) {
+                Logger.log(res);
                 WsCoordinate oldCoordinate = builderUnits.get(unitID).getCord();
                 getMapTile(oldCoordinate.getX(), oldCoordinate.getY()).setBuilder(-1);
                 WsCoordinate coordinate = Util.updateCoords(unitID, direction);
@@ -249,8 +251,10 @@ public class Service {
             req.setDirection(direction);
             StructureTunnelResponse res = api.structureTunnel(req);
             processResult(res.getResult());
+            Logger.log("próbálom : építeni --»" + unitID + "--»»" + direction);
             if (res.getResult().getType().equals(ResultType.DONE)) {
-                getMapTile(selectBuilder(unitID).getCord().getX(), selectBuilder(unitID).getCord().getY()).setTileType(TileType.TUNNEL);
+                Logger.log("build - done");
+                getMapTile(selectBuilder(unitID).getCord().getX() - 1, selectBuilder(unitID).getCord().getY()).setTileType(TileType.TUNNEL);
                 Util.printMap();
                 return true;
             } else {
