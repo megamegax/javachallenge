@@ -181,6 +181,9 @@ public class Service {
                     getMapTile(scout.getCord().getX(), scout.getCord().getY()).setTileType(Util.stringToCellType(scout.getObject().name(), MY_TEAM_NAME.equalsIgnoreCase(scout.getTeam())));
                 }
                 builderUnits.get(unitID).setCord(new WsCoordinate(res.getScout().get(0).getCord().getX(), res.getScout().get(2).getCord().getY()));
+                if (!builderUnits.get(unitID).getCord().equals(service.initialPos)) {
+                    getMapTile(builderUnits.get(unitID).getCord().getX(), builderUnits.get(unitID).getCord().getY()).setBuilder(unitID);
+                }
                 Util.printMap();
 
                 return true;
@@ -254,7 +257,7 @@ public class Service {
             Logger.log("próbálom : építeni --»" + unitID + "--»»" + direction);
             if (res.getResult().getType().equals(ResultType.DONE)) {
                 Logger.log("build - done");
-                getMapTile(selectBuilder(unitID).getCord().getX() - 1, selectBuilder(unitID).getCord().getY()).setTileType(TileType.TUNNEL);
+                getMapTile(selectBuilder(unitID).getCord().getX(), selectBuilder(unitID).getCord().getY()).setTileType(TileType.TUNNEL);
                 Util.printMap();
                 return true;
             } else {

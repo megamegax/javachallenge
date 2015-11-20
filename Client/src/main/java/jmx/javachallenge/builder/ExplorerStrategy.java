@@ -1,6 +1,7 @@
 package jmx.javachallenge.builder;
 
 import eu.loxon.centralcontrol.WsCoordinate;
+import jmx.javachallenge.logger.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +31,7 @@ public class ExplorerStrategy implements Strategy {
 
         @Override
         public List<WsCoordinate> get() {
+            System.out.println("GETBE JUT A GENERÁTOR");
             WsCoordinate currentCoordinate;
             exitPoint = service.initialExitPos.getCord();
             if (service.builderUnits.get(unitID) == null) {
@@ -43,7 +45,10 @@ public class ExplorerStrategy implements Strategy {
             List<WsCoordinate> coordinates = new ArrayList<>();
 
             if (currentCoordinate == service.initialPos.getCord()) {
+                Logger.log("!! még a kompban");
                 coordinates.add(exitPoint);
+                coordinates.add(exitPoint);
+
                 return coordinates;
                 // coordinates.add(exitPoint);
             }
@@ -55,18 +60,25 @@ public class ExplorerStrategy implements Strategy {
             int tx = currentCoordinate.getX();
             int ty = currentCoordinate.getY();
             for (int i = 0; i < (x + y) * 2; i++) {
-                if (i % 2 == 0) {
+                if (i % 2 != 0) {
                     if (tx <= x) {
                         coordinates.add(new WsCoordinate(tx, ty));
-                        tx++;
+                        if (x < tx)
+                            tx++;
+                        else
+                            tx--;
                     }
                 } else {
                     if (ty <= y) {
                         coordinates.add(new WsCoordinate(tx, ty));
-                        ty++;
+                        if (y < ty)
+                            ty++;
+                        else
+                            ty--;
                     }
                 }
             }
+            Logger.log(unitID + " -« útvonal:" + coordinates);
             return coordinates;
         }
 
@@ -82,8 +94,8 @@ public class ExplorerStrategy implements Strategy {
     public WsCoordinate nextCoordinate() {
 
         if (coordinates.size() <= 1) {//ha már csak 1 elem maradna, akkor feltöltjük a listát az eggyel távolabbi szomszédokkal
-                coordinates.addAll(generator.get());
-            }
+            coordinates.addAll(generator.get());
+        }
 
         return coordinates.get(0);
 

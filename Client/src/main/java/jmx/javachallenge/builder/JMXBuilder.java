@@ -31,7 +31,7 @@ public class JMXBuilder extends WsBuilderunit {
     }
 
     public void step() {
-        Logger.log(unitid + ", has own will");
+        Logger.log(unitid + "'s building turn");
 
         //TODO lekérni a strategy objektumtól a következő mezőt és a watch alapján eldönteni h mit akarunk
         //TODO már bejárt koordináták megjegyzése h ne lépjünk vissza rájuk
@@ -48,7 +48,7 @@ public class JMXBuilder extends WsBuilderunit {
         // service.watch(unitid);
         coordinate = strategy.nextCoordinate();
         if (doMove(Util.calculateDirection(unitid, coordinate))) {
-
+            service.builderUnits.get(unitid).strategy.done();
         }
 
     }
@@ -60,13 +60,13 @@ public class JMXBuilder extends WsBuilderunit {
         switch (step) {
             case BUILD:
                 if (service.structureTunnel(unitid, direction)) {
-                    return service.builderUnits.get(unitid).strategy.done();
+                    return true;
                 }
                 return false;
 
             case MOVE:
                 if (service.moveUnit(unitid, direction)) {
-                    return service.builderUnits.get(unitid).strategy.done();
+                    return true;
                 }
                 return false;
 
