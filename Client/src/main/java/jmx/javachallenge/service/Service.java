@@ -160,10 +160,6 @@ public class Service {
         } else return initialPos;
     }
 
-    public void printMessage(CommonResp res) {
-        actionPointsForTurn = res.getActionPointsLeft();
-    }
-
     public GetSpaceShuttleExitPosResponse getSpaceShuttlePosExit() {
         if (initialExitPos == null) {
             GetSpaceShuttleExitPosResponse res = api.getSpaceShuttleExitPos(new GetSpaceShuttleExitPosRequest());
