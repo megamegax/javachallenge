@@ -58,9 +58,7 @@ public class ExplorerStrategy implements Strategy {
             int x = r.nextInt(maxX) + 1;
             int y = r.nextInt(maxY) + 1;
             int tx = currentCoordinate.getX();
-            if (x == 17 || x == 16) {
-                x = 1;
-            }
+
             int ty = currentCoordinate.getY();
             for (int i = 0; i < (x + y) * 2; i++) {
                 if (i % 2 != 0) {
@@ -101,7 +99,7 @@ public class ExplorerStrategy implements Strategy {
     @Override
     public WsCoordinate nextCoordinate() {
 
-        if (coordinates.size() <= 1) {//ha már csak 1 elem maradna, akkor feltöltjük a listát az eggyel távolabbi szomszédokkal
+        if (coordinates.size() <= 2) {//ha már csak 1 elem maradna, akkor feltöltjük a listát az eggyel távolabbi szomszédokkal
             coordinates.addAll(generator.get());
         }
 
