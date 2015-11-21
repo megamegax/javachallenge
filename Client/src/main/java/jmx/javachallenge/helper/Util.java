@@ -57,7 +57,7 @@ public class Util {
     public static Step checkMovement(WsCoordinate simulatedCoordinate) {
         if (simulatedCoordinate.getX() < service.initialGameState.getSize().getX() && simulatedCoordinate.getY() < service.initialGameState.getSize().getY()) {
             int tileType = service.getMapTile(simulatedCoordinate.getX(), simulatedCoordinate.getY()).getTileTypeIndex();
-            Logger.log("Lépés ellenörzés:::::::" + tileType);
+            Logger.log("Lépés ellenőrzés:::::::" + tileType);
             return Step.getStep(tileType);
         } else return Step.STAY;
     }
@@ -95,7 +95,7 @@ public class Util {
             case "ROCK":
                 return TileType.ROCK;
             case "SHUTTLE":
-                if (myTeam) { // FIXME: Rossz �rt�ket kapunk
+                if (myTeam) { // FIXME: Rossz értéket kapunk
                     return TileType.SHUTTLE;
                 } else {
                     return TileType.ENEMY_SHUTTLE;
@@ -155,7 +155,7 @@ public class Util {
             case UNKNOWN:
                 return (char) 27 + "[30m ";
             case ROCK:
-                return (char) 27 + "[30m●";
+                return (char) 27 + "[30m.";
             case GRANITE:
                 return (char) 27 + "[30m;";
             case OBSIDIAN:
@@ -174,10 +174,6 @@ public class Util {
                 return (char) 27 + "[31mB";
         }
         return (char) 27 + "[30m?";
-    }
-
-    public static int convertCoordinateToMapCoordinate(int y) {
-        return Service.getInstance().initialGameState.getSize().getY() - (y + 1);
     }
 
     public static void printResult(CommonResp result) {

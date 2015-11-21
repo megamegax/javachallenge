@@ -186,7 +186,7 @@ public class Service {
                     getMapTile(scout.getCord().getX(), scout.getCord().getY()).setTileType(Util.stringToCellType(scout.getObject().name(), MY_TEAM_NAME.equalsIgnoreCase(scout.getTeam())));
                 }
                 builderUnits.get(unitID).setCord(new WsCoordinate(res.getScout().get(0).getCord().getX(), res.getScout().get(2).getCord().getY()));
-                if (!builderUnits.get(unitID).getCord().equals(service.initialPos)) {
+                if (!builderUnits.get(unitID).getCord().equals(service.initialPos.getCord())) {
                     getMapTile(builderUnits.get(unitID).getCord().getX(), builderUnits.get(unitID).getCord().getY()).setBuilder(unitID);
                 }
                 Util.printMap();
