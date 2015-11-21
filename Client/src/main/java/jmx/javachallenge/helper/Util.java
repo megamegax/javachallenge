@@ -88,12 +88,12 @@ public class Util {
         return oldCoordinate;
     }
 
-    public static TileType stringToCellType(String object, boolean myTeam) {
+    public static TileType stringToCellType(String object, boolean myTeam, WsCoordinate coord) {
         switch (object) {
             case "ROCK":
                 return TileType.ROCK;
             case "SHUTTLE":
-                if (myTeam) { // FIXME: Rossz értéket kapunk
+                if (coord.equals(service.getSpaceShuttleCoord())) {
                     return TileType.SHUTTLE;
                 } else {
                     return TileType.ENEMY_SHUTTLE;
@@ -166,9 +166,9 @@ public class Util {
             case ENEMY_TUNNEL:
                 return (char) 27 + "[31m-";
             case BUILDER:
-                return (char) 27 + "[32m5";
+                return (char) 27 + "[32mB";
             case ENEMY_BUILDER:
-                return (char) 27 + "[31mB";
+                return (char) 27 + "[31mE";
         }
         return (char) 27 + "[30m?";
     }

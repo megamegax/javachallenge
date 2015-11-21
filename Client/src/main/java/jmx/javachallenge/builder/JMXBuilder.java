@@ -5,6 +5,8 @@ import eu.loxon.centralcontrol.WsBuilderunit;
 import eu.loxon.centralcontrol.WsCoordinate;
 import eu.loxon.centralcontrol.WsDirection;
 import jmx.javachallenge.helper.Step;
+import jmx.javachallenge.helper.Tile;
+import jmx.javachallenge.helper.TileType;
 import jmx.javachallenge.helper.Util;
 import jmx.javachallenge.logger.Logger;
 import jmx.javachallenge.service.GameMap;
@@ -31,6 +33,10 @@ public class JMXBuilder extends WsBuilderunit {
         this.strategy = strategy;
     }
 
+    /**
+     * Egy játékos teljes körét lejátssza, elkölti az összes akciópontját, egyszer hívódik meg körönként, max akcióponttal
+     * @param map
+     */
     public void step(GameMap map) {
         Logger.log(unitid + "'s building turn");
 
@@ -46,6 +52,7 @@ public class JMXBuilder extends WsBuilderunit {
 
         //a Client.javaból át lehet emelni a logikát, ami eldönti, hogy lépünk, fúrunk, vagy mit csinálunk
 
+        service.watch(unitid);
         // service.watch(unitid);
         WsCoordinate coordinate = strategy.nextCoordinate();
         if (doMove(map, Util.calculateDirection(unitid, coordinate))) {
@@ -109,11 +116,15 @@ public class JMXBuilder extends WsBuilderunit {
     @Override
     public void setCord(@NotNull WsCoordinate coordinate) {
         if (getCord() != null && !getCord().equals(service.getSpaceShuttleCoord())) {
-            service.getCurrentMap().getMapTile(getCord()).setBuilder(-1);
+            Tile oldTile = service.getCurrentMap().getMapTile(getCord());
+            oldTile.setBuilder(-1);
+            oldTile.setTileType(TileType.TUNNEL);
         }
         super.setCord(coordinate);
         if (!getCord().equals(service.getSpaceShuttleCoord())) {
-            service.getCurrentMap().getMapTile(getCord()).setBuilder(unitid);
+            Tile newTile = service.getCurrentMap().getMapTile(getCord());
+            newTile.setBuilder(unitid);
+            newTile.setTileType(TileType.BUILDER);
         }
     }
 }

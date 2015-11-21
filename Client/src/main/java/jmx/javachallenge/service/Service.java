@@ -33,7 +33,7 @@ public class Service {
     public HashMap<Integer, JMXBuilder> builderUnits = new HashMap<>();
     public int turnLeft = 51;
     public StartGameResponse initialGameState;
-    public JMXBuilder selectedBuilder;
+    public JMXBuilder currentBuilder;
     private WsCoordinate spaceShuttleExitPos;
     private ActionCostResponse actionCosts;
     private GameMap currentMap;
@@ -75,7 +75,7 @@ public class Service {
         // TODO: tároljuk le az infókat ezekből az adatokból, minden dolog után friss infónk legyen mindenről
         serviceState = result;
         actionPointsForTurn = result.getActionPointsLeft();
-        selectedBuilder = selectBuilder(result.getBuilderUnit());
+        currentBuilder = selectBuilder(result.getBuilderUnit());
         if (turnLeft > result.getTurnsLeft()) {
             this.newTurnFound(50 - turnLeft);
         }
@@ -135,7 +135,7 @@ public class Service {
             processResult(res.getResult());
             if (res.getResult().getType().equals(ResultType.DONE)) {
                 for (Scouting scout : res.getScout()) {
-                    currentMap.getMapTile(scout.getCord()).setTileType(Util.stringToCellType(scout.getObject().name(), MY_TEAM_NAME.equalsIgnoreCase(scout.getTeam())));
+                    currentMap.getMapTile(scout.getCord()).setTileType(Util.stringToCellType(scout.getObject().name(), MY_TEAM_NAME.equalsIgnoreCase(scout.getTeam()), scout.getCord()));
                 }
                 // Saját koordináta meghatározása a szomszédos mezők koordinátáiból
                 builderUnits.get(unitID).setCord(new WsCoordinate(res.getScout().get(0).getCord().getX(), res.getScout().get(2).getCord().getY()));
@@ -193,7 +193,7 @@ public class Service {
             processResult(res.getResult());
             if (res.getResult().getType().equals(ResultType.DONE)) {
                 for (Scouting scout : res.getScout()) {
-                    currentMap.getMapTile(scout.getCord().getX(), scout.getCord().getY()).setTileType(Util.stringToCellType(scout.getObject().name(), scout.getTeam().equalsIgnoreCase(MY_TEAM_NAME)));
+                    currentMap.getMapTile(scout.getCord()).setTileType(Util.stringToCellType(scout.getObject().name(), MY_TEAM_NAME.equalsIgnoreCase(scout.getTeam()), scout.getCord()));
                 }
                 Util.printMap(currentMap);
                 return true;
@@ -217,11 +217,11 @@ public class Service {
             Logger.log("Answer: " + res.toString());
             processResult(res.getResult());
             if (res.getResult().getType().equals(ResultType.DONE)) {
-                Logger.log("build - done");
-                currentMap.getMapTile(selectBuilder(unitID).getCord().getX(), selectBuilder(unitID).getCord().getY()).setTileType(TileType.TUNNEL);
+                currentMap.getMapTile(Util.coordinateInDirection(selectBuilder(unitID).getCord(), direction)).setTileType(TileType.TUNNEL);
                 Util.printMap(currentMap);
                 return true;
             } else {
+                Logger.log("HIBA: Nem sikerült alagutat építeni");
                 return false;
             }
         } else {

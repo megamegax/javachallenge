@@ -28,18 +28,20 @@ public class Client {
         service.saveSpaceShuttlePosExit();
         service.saveActionCost();
         service.setStrategies();
-
-        int i = 0;
+        int lastTurnLeft = -1;
+        int lastBuilderId = -1;
         while (service.turnLeft != 0) {
-            i++;
-            Logger.log(i);
-            Util.wait(300);
+            Util.wait(310);
             if (service.isMyTurn()) {
-                //TODO move logic to strategy objects
-                JMXBuilder builder = service.selectedBuilder;
-                int unitID = builder.getUnitid();
-                service.watch(unitID);
-                builder.step(service.getCurrentMap());
+                if (service.turnLeft != lastTurnLeft || service.currentBuilder.getUnitid() != lastBuilderId) {
+                    service.currentBuilder.step(service.getCurrentMap());
+                    lastTurnLeft = service.turnLeft;
+                    lastBuilderId = service.currentBuilder.getUnitid();
+                } else {
+                    Logger.log("Ezzel az egységgel már léptünk ebben a körben.");
+                }
+            } else {
+                Logger.log("Nem a mi körünk");
             }
         }
     }
