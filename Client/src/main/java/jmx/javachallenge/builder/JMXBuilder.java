@@ -1,5 +1,6 @@
 package jmx.javachallenge.builder;
 
+import com.sun.istack.internal.NotNull;
 import eu.loxon.centralcontrol.WsBuilderunit;
 import eu.loxon.centralcontrol.WsCoordinate;
 import eu.loxon.centralcontrol.WsDirection;
@@ -9,10 +10,7 @@ import jmx.javachallenge.logger.Logger;
 import jmx.javachallenge.service.GameMap;
 import jmx.javachallenge.service.Service;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Random;
-import java.util.Set;
 
 /**
  * Created by megam on 2015. 11. 18..
@@ -21,14 +19,12 @@ public class JMXBuilder extends WsBuilderunit {
     Random random = new Random();
     private Service service;
     private Strategy strategy;
-    private Set<WsCoordinate> tabooCoordinates;
-    private WsCoordinate coordinate;
 
-    public JMXBuilder(int unitid) {
+    public JMXBuilder(WsBuilderunit builderUnit) {
         super();
         this.service = Service.getInstance();
-        this.unitid = unitid;
-        tabooCoordinates = new HashSet<>();
+        this.unitid = builderUnit.getUnitid();
+        this.cord = builderUnit.getCord();
     }
 
     public void setStrategy(Strategy strategy) {
@@ -51,7 +47,7 @@ public class JMXBuilder extends WsBuilderunit {
         //a Client.javaból át lehet emelni a logikát, ami eldönti, hogy lépünk, fúrunk, vagy mit csinálunk
 
         // service.watch(unitid);
-        coordinate = strategy.nextCoordinate();
+        WsCoordinate coordinate = strategy.nextCoordinate();
         if (doMove(map, Util.calculateDirection(unitid, coordinate))) {
             service.builderUnits.get(unitid).strategy.done();
         }
@@ -110,4 +106,14 @@ public class JMXBuilder extends WsBuilderunit {
         } else return WsDirection.DOWN;
     }
 
+    @Override
+    public void setCord(@NotNull WsCoordinate coordinate) {
+        if (getCord() != null && !getCord().equals(service.getSpaceShuttleCoord())) {
+            service.getCurrentMap().getMapTile(getCord()).setBuilder(-1);
+        }
+        super.setCord(coordinate);
+        if (!getCord().equals(service.getSpaceShuttleCoord())) {
+            service.getCurrentMap().getMapTile(getCord()).setBuilder(unitid);
+        }
+    }
 }

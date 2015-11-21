@@ -3,7 +3,6 @@ package jmx.javachallenge.service;
 import eu.loxon.centralcontrol.*;
 import jmx.javachallenge.builder.ExplorerStrategy;
 import jmx.javachallenge.builder.JMXBuilder;
-import jmx.javachallenge.helper.Tile;
 import jmx.javachallenge.helper.TileType;
 import jmx.javachallenge.helper.Util;
 import jmx.javachallenge.logger.Logger;
@@ -32,13 +31,13 @@ public class Service {
     public CentralControl api = null;
     public CommonResp serviceState;
     public int actionPointsForTurn = 14;
-    public GetSpaceShuttlePosResponse initialPos;
+    private WsCoordinate spaceShuttleCoord;
     public HashMap<Integer, JMXBuilder> builderUnits = new HashMap<>();
     public int turnLeft = 51;
     public StartGameResponse initialGameState;
     public JMXBuilder selectedBuilder;
     public GetSpaceShuttleExitPosResponse initialExitPos;
-    private ActionCostResponse initialActionCost;
+    private ActionCostResponse actionCosts;
     private GameMap currentMap;
 
     private Service() {
@@ -54,16 +53,7 @@ public class Service {
         return service;
     }
 
-    public void init() {
-        builderUnits.put(0, new JMXBuilder(0));
-        builderUnits.put(1, new JMXBuilder(1));
-        builderUnits.put(2, new JMXBuilder(2));
-        builderUnits.put(3, new JMXBuilder(3));
-        builderUnits.get(0).setCord(initialPos.getCord());
-        builderUnits.get(1).setCord(initialPos.getCord());
-        builderUnits.get(2).setCord(initialPos.getCord());
-        builderUnits.get(3).setCord(initialPos.getCord());
-
+    public void setStrategies() {
         builderUnits.get(0).setStrategy(new ExplorerStrategy(0));
         builderUnits.get(1).setStrategy(new ExplorerStrategy(1));
         builderUnits.get(2).setStrategy(new ExplorerStrategy(2));
@@ -86,13 +76,16 @@ public class Service {
         }
     }
 
-    public StartGameResponse startGame() {
+    public void startGame() {
         StartGameResponse res = api.startGame(new StartGameRequest());
         Logger.log("StartGame: " + res.toString());
         initialGameState = res;
+        for (WsBuilderunit builderunit : initialGameState.getUnits()) {
+            JMXBuilder jmxBuilder = new JMXBuilder(builderunit);
+            builderUnits.put(jmxBuilder.getUnitid(), jmxBuilder);
+        }
         processResult(res.getResult());
         currentMap = new GameMap(res.getSize().getX(), res.getSize().getY());
-        return res;
     }
 
     private void processResult(CommonResp result) {
@@ -114,24 +107,22 @@ public class Service {
         return res.isIsYourTurn();
     }
 
-    public ActionCostResponse getActionCost() {
+    public void saveActionCost() {
         ActionCostResponse res = api.getActionCost(new ActionCostRequest());
-        initialActionCost = res;
-        Logger.log(initialActionCost.toString());
+        actionCosts = res;
+        Logger.log(actionCosts.toString());
         processResult(res.getResult());
-        return res;
     }
 
-    public GetSpaceShuttlePosResponse getSpaceShuttlePos() {
-        if (initialPos == null) {
+    public void saveSpaceShuttlePos() {
+        if (spaceShuttleCoord == null) {
             GetSpaceShuttlePosResponse res = api.getSpaceShuttlePos(new GetSpaceShuttlePosRequest());
             processResult(res.getResult());
-            initialPos = res;
+            spaceShuttleCoord = res.getCord();
 
-            currentMap.getMapTile(res.getCord().getX(), res.getCord().getY()).setTileType(TileType.SHUTTLE);
+            currentMap.getMapTile(spaceShuttleCoord).setTileType(TileType.SHUTTLE);
             Util.printMap(currentMap);
-            return res;
-        } else return initialPos;
+        }
     }
 
     public GetSpaceShuttleExitPosResponse getSpaceShuttlePosExit() {
@@ -145,18 +136,17 @@ public class Service {
     }
 
     public boolean watch(int unitID) {
-        if (actionPointsForTurn - initialActionCost.getWatch() >= 0) {
+        if (actionPointsForTurn - actionCosts.getWatch() >= 0) {
             WatchResponse res = api.watch(new WatchRequest(unitID));
             processResult(res.getResult());
             if (res.getResult().getType().equals(ResultType.DONE)) {
                 Logger.log(res.toString());
                 for (Scouting scout : res.getScout()) {
-                    currentMap.getMapTile(scout.getCord().getX(), scout.getCord().getY()).setTileType(Util.stringToCellType(scout.getObject().name(), MY_TEAM_NAME.equalsIgnoreCase(scout.getTeam())));
+                    currentMap.getMapTile(scout.getCord()).setTileType(Util.stringToCellType(scout.getObject().name(), MY_TEAM_NAME.equalsIgnoreCase(scout.getTeam())));
                 }
+                // Saját koordináta meghatározása a szomszédos mezők koordinátáiból
                 builderUnits.get(unitID).setCord(new WsCoordinate(res.getScout().get(0).getCord().getX(), res.getScout().get(2).getCord().getY()));
-                if (!builderUnits.get(unitID).getCord().equals(service.initialPos.getCord())) {
-                    currentMap.getMapTile(builderUnits.get(unitID).getCord().getX(), builderUnits.get(unitID).getCord().getY()).setBuilder(unitID);
-                }
+
                 Util.printMap(currentMap);
 
                 return true;
@@ -172,7 +162,7 @@ public class Service {
     }
 
     public boolean moveUnit(int unitID, WsDirection direction) {
-        if (actionPointsForTurn - initialActionCost.getMove() >= 0) {
+        if (actionPointsForTurn - actionCosts.getMove() >= 0) {
             MoveBuilderUnitRequest req = new MoveBuilderUnitRequest();
             req.setUnit(unitID);
             req.setDirection(direction);
@@ -199,7 +189,7 @@ public class Service {
     }
 
     public boolean radar(int unitID, List<WsCoordinate> coordinates) {
-        if (actionPointsForTurn - initialActionCost.getRadar() * coordinates.size() > 0) {
+        if (actionPointsForTurn - actionCosts.getRadar() * coordinates.size() > 0) {
             RadarRequest req = new RadarRequest();
             req.setUnit(unitID);
             req.getCord().addAll(coordinates);
@@ -220,7 +210,7 @@ public class Service {
     }
 
     public boolean structureTunnel(int unitID, WsDirection direction) {
-        if (actionPointsForTurn - initialActionCost.getDrill() >= 0) {
+        if (actionPointsForTurn - actionCosts.getDrill() >= 0) {
 
             StructureTunnelRequest req = new StructureTunnelRequest();
             req.setUnit(unitID);
@@ -255,5 +245,13 @@ public class Service {
 
     public GameMap getCurrentMap() {
         return currentMap;
+    }
+
+    public WsCoordinate getSpaceShuttleCoord() {
+        return spaceShuttleCoord;
+    }
+
+    public ActionCostResponse getActionCosts() {
+        return actionCosts;
     }
 }

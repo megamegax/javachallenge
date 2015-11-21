@@ -18,6 +18,7 @@ public class Util {
     private static final int INFINITY = 1234567890;
     private static Service service = Service.getInstance();
 
+    @Nullable
     public static WsDirection calculateDirection(WsCoordinate source, WsCoordinate target) {
         if (source.getX() < target.getX())
             return WsDirection.RIGHT;
@@ -27,24 +28,19 @@ public class Util {
             return WsDirection.UP;
         else if (source.getY() > target.getY())
             return WsDirection.DOWN;
-        else return WsDirection.RIGHT;
+        else return null;
     }
 
+    @Nullable
     public static WsDirection calculateDirection(int unitID, WsCoordinate target) {
-        System.out.println(target);
         WsCoordinate source = service.builderUnits.get(unitID).getCord();
-        if (source.getX() < target.getX())
-            return WsDirection.RIGHT;
-        else if (source.getX() > target.getX())
-            return WsDirection.LEFT;
-        else if (source.getY() < target.getY())
-            return WsDirection.UP;
-        else if (source.getY() > target.getY())
-            return WsDirection.DOWN;
-        else return WsDirection.RIGHT;
+        return calculateDirection(source, target);
     }
 
-    public static WsCoordinate simulateMove(WsBuilderunit builder, WsDirection direction) {
+    public static WsCoordinate simulateMove(WsBuilderunit builder, @Nullable WsDirection direction) {
+        if (direction == null) {
+            return builder.getCord();
+        }
         switch (direction) {
             case LEFT:
                 return new WsCoordinate(builder.getCord().getX() - 1, builder.getCord().getY());

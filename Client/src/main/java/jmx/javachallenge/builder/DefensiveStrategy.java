@@ -15,7 +15,7 @@ public class DefensiveStrategy implements Strategy {
     //először az 1 távolságra lévőket, aztán a 2, 3, 4, stb.
     private final Supplier<List<WsCoordinate>> generator = new Supplier<List<WsCoordinate>>() {
         private int radius = 1;
-        private WsCoordinate center = service.initialPos.getCord();
+        private WsCoordinate center = service.getSpaceShuttleCoord();
 
         @Override
         public List<WsCoordinate> get() {

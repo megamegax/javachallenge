@@ -27,7 +27,7 @@ public class ExplorerStrategy implements Strategy {
     //generátor ami mindig az egyre távolabbi szomszédokat adja vissza
     //először az 1 távolságra lévőket, aztán a 2, 3, 4, stb.
     private final Supplier<List<WsCoordinate>> generator = new Supplier<List<WsCoordinate>>() {
-        private WsCoordinate center = service.initialPos.getCord();
+        private WsCoordinate center = service.getSpaceShuttleCoord();
 
         @Override
         public List<WsCoordinate> get() {
@@ -114,7 +114,7 @@ public class ExplorerStrategy implements Strategy {
     }
 
     private boolean isUnitInSpaceComp(int unitID) {
-        return service.builderUnits.get(unitID).getCord() == service.initialPos.getCord();
+        return service.builderUnits.get(unitID).getCord().equals(service.getSpaceShuttleCoord());
     }
 
     @Override
