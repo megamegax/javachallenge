@@ -25,7 +25,7 @@ public class Client {
 
         service.startGame();
         service.saveSpaceShuttlePos();
-        service.getSpaceShuttlePosExit();
+        service.saveSpaceShuttlePosExit();
         service.saveActionCost();
         service.setStrategies();
 
@@ -55,7 +55,7 @@ public class Client {
     }
 
     private WsDirection moveOutFromSpaceComp() {
-        return Util.calculateDirection(service.getSpaceShuttleCoord(), service.getSpaceShuttlePosExit().getCord());
+        return Util.calculateDirection(service.getSpaceShuttleCoord(), service.getSpaceShuttleExitPos());
     }
 
 

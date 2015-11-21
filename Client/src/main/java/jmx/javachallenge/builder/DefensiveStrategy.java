@@ -36,7 +36,7 @@ public class DefensiveStrategy implements Strategy {
         }
     };
     private List<WsCoordinate> coordinates;
-    private WsCoordinate exitPoint = service.initialExitPos.getCord();
+    private WsCoordinate exitPoint = service.getSpaceShuttleExitPos();
     private WsCoordinate previous;
 
     public DefensiveStrategy() {

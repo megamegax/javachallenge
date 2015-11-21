@@ -6,12 +6,9 @@ import jmx.javachallenge.builder.JMXBuilder;
 import jmx.javachallenge.helper.TileType;
 import jmx.javachallenge.helper.Util;
 import jmx.javachallenge.logger.Logger;
-import sun.rmi.runtime.Log;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.OptionalDouble;
-import java.util.stream.Stream;
 
 /**
  * Created by MegaX on 2015. 11. 12..
@@ -37,12 +34,11 @@ public class Service {
     public int turnLeft = 51;
     public StartGameResponse initialGameState;
     public JMXBuilder selectedBuilder;
-    public GetSpaceShuttleExitPosResponse initialExitPos;
+    private WsCoordinate spaceShuttleExitPos;
     private ActionCostResponse actionCosts;
     private GameMap currentMap;
 
     private Service() {
-        Logger.log("service constructor");
         CentralControlServiceService centralControlServiceService = new CentralControlServiceService();
         api = centralControlServiceService.getCentralControlPort();
     }
@@ -93,7 +89,6 @@ public class Service {
         Logger.log("Request sent: " + req.toString());
         Logger.log("Answer: " + res.toString());
         processResult(res.getResult());
-        Logger.log(res.isIsYourTurn() + " " + res.getResult().getBuilderUnit());
         return res.isIsYourTurn();
     }
 
@@ -103,7 +98,6 @@ public class Service {
         Logger.log("Request sent: " + req.toString());
         Logger.log("Answer: " + res.toString());
         actionCosts = res;
-        Logger.log(actionCosts.toString());
         processResult(res.getResult());
     }
 
@@ -121,17 +115,15 @@ public class Service {
         }
     }
 
-    public GetSpaceShuttleExitPosResponse getSpaceShuttlePosExit() {
-        if (initialExitPos == null) {
+    public void saveSpaceShuttlePosExit() {
+        if (spaceShuttleExitPos == null) {
             GetSpaceShuttleExitPosRequest req = new GetSpaceShuttleExitPosRequest();
             GetSpaceShuttleExitPosResponse res = api.getSpaceShuttleExitPos(req);
             Logger.log("Request sent: " + req.toString());
             Logger.log("Answer: " + res.toString());
             processResult(res.getResult());
-            initialExitPos = res;
-            Logger.log(res.toString());
-            return res;
-        } else return initialExitPos;
+            spaceShuttleExitPos = res.getCord();
+        }
     }
 
     public boolean watch(int unitID) {
@@ -142,7 +134,6 @@ public class Service {
             Logger.log("Answer: " + res.toString());
             processResult(res.getResult());
             if (res.getResult().getType().equals(ResultType.DONE)) {
-                Logger.log(res.toString());
                 for (Scouting scout : res.getScout()) {
                     currentMap.getMapTile(scout.getCord()).setTileType(Util.stringToCellType(scout.getObject().name(), MY_TEAM_NAME.equalsIgnoreCase(scout.getTeam())));
                 }
@@ -155,8 +146,10 @@ public class Service {
             } else {
                 return false;
             }
-        } else
+        } else {
+            Logger.log("HIBA: Nincs elég pont watcholni");
             return false;
+        }
     }
 
     public JMXBuilder selectBuilder(int unitID) {
@@ -173,7 +166,6 @@ public class Service {
             Logger.log("Answer: " + res.toString());
             processResult(res.getResult());
             if (res.getResult().getType().equals(ResultType.DONE)) {
-                Logger.log(res);
                 JMXBuilder builder = builderUnits.get(unitID);
                 WsCoordinate oldCoordinate = builder.getCord();
                 WsCoordinate newCoordinate = Util.coordinateInDirection(oldCoordinate, direction);
@@ -184,7 +176,7 @@ public class Service {
                 return false;
             }
         } else {
-            Logger.log("nincs elég pont mozogni");
+            Logger.log("HIBA: Nincs elég pont mozogni");
             return false;
         }
 
@@ -200,7 +192,6 @@ public class Service {
             Logger.log("Answer: " + res.toString());
             processResult(res.getResult());
             if (res.getResult().getType().equals(ResultType.DONE)) {
-                Logger.log(res.toString());
                 for (Scouting scout : res.getScout()) {
                     currentMap.getMapTile(scout.getCord().getX(), scout.getCord().getY()).setTileType(Util.stringToCellType(scout.getObject().name(), scout.getTeam().equalsIgnoreCase(MY_TEAM_NAME)));
                 }
@@ -209,8 +200,10 @@ public class Service {
             } else {
                 return false;
             }
-        } else
+        } else {
+            Logger.log("HIBA: Nincs elég pont radarozni");
             return false;
+        }
     }
 
     public boolean structureTunnel(int unitID, WsDirection direction) {
@@ -232,7 +225,7 @@ public class Service {
                 return false;
             }
         } else {
-            Logger.log(actionPointsForTurn + " - nincs elég pont építeni");
+            Logger.log("HIBA: Nincs elég pont építeni");
             return false;
         }
     }
@@ -244,7 +237,7 @@ public class Service {
 
 
     public void newTurnFound(int i) {
-        Logger.log("Kör: " + i);
+        Logger.log("ÚJ KÖR: " + i);
         // builderUnits.get(serviceState.getBuilderUnit()).getCord();
     }
 
@@ -258,5 +251,9 @@ public class Service {
 
     public ActionCostResponse getActionCosts() {
         return actionCosts;
+    }
+
+    public WsCoordinate getSpaceShuttleExitPos() {
+        return spaceShuttleExitPos;
     }
 }

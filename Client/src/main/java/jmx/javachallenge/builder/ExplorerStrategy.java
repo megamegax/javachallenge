@@ -35,7 +35,7 @@ public class ExplorerStrategy implements Strategy {
             List<WsCoordinate> coordinates = new ArrayList<>();
             WsCoordinate currentCoordinate = service.builderUnits.get(unitID).getCord();
             if (isUnitInSpaceComp(unitID)) {
-                exitPoint = service.getSpaceShuttlePosExit().getCord();
+                exitPoint = service.getSpaceShuttleExitPos();
                 Logger.log("!! még a kompban");
                 System.out.println(exitPoint);
                 coordinates.add(exitPoint);
