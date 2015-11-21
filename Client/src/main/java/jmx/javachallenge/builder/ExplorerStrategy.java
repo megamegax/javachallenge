@@ -1,7 +1,11 @@
 package jmx.javachallenge.builder;
 
 import eu.loxon.centralcontrol.WsCoordinate;
+import jmx.javachallenge.helper.MoveStrategy;
+import jmx.javachallenge.helper.Tile;
+import jmx.javachallenge.helper.Util;
 import jmx.javachallenge.logger.Logger;
+import sun.rmi.runtime.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,108 +25,63 @@ import java.util.function.Supplier;
 // képest a távolságuk maximális legyen
 public class ExplorerStrategy implements Strategy {
     private final int unitID;
-    private int current = 0;
-    private List<WsCoordinate> coordinates;
-    private WsCoordinate exitPoint;
-    //generátor ami mindig az egyre távolabbi szomszédokat adja vissza
-    //először az 1 távolságra lévőket, aztán a 2, 3, 4, stb.
-    private final Supplier<List<WsCoordinate>> generator = new Supplier<List<WsCoordinate>>() {
-        private WsCoordinate center = service.getSpaceShuttleCoord();
+    private final JMXBuilder builderUnit;
+    private WsCoordinate destination;
 
-        @Override
-        public List<WsCoordinate> get() {
-            System.out.println("GETBE JUT A GENERÁTOR");
-            List<WsCoordinate> coordinates = new ArrayList<>();
-            WsCoordinate currentCoordinate = service.builderUnits.get(unitID).getCord();
-            if (isUnitInSpaceComp(unitID)) {
-                exitPoint = service.getSpaceShuttleExitPos();
-                Logger.log("!! még a kompban");
-                System.out.println(exitPoint);
-                coordinates.add(exitPoint);
-                coordinates.add(exitPoint);
-
-                return coordinates;
-                // coordinates.add(exitPoint);
-
-            } else {
-
-
-                int maxX = service.initialGameState.getSize().getX();
-                int maxY = service.initialGameState.getSize().getY();
-                Random r = new Random();
-                int x = r.nextInt(maxX) + 1;
-                int y = r.nextInt(maxY) + 1;
-                for (int i = 0; i < 5; i++) {
-                    x = r.nextInt(maxX) + 1;
-                    y = r.nextInt(maxY) + 1;
-                }
-                System.out.println("---------");
-                System.out.println(x);
-                System.out.println(y);
-                int tx = currentCoordinate.getX();
-                int ty = currentCoordinate.getY();
-                for (int i = 0; i < (x + y) * 2; i++) {
-                    if (i % 2 == 0) {
-                        if (tx <= x) {
-                            coordinates.add(new WsCoordinate(tx, ty));
-                            if (x < tx)
-                                tx--;
-                            else
-                                tx++;
-                        }
-                    } else {
-                        if (ty <= y) {
-                            coordinates.add(new WsCoordinate(tx, ty));
-                            if (y < ty)
-                                ty--;
-                            else
-                                ty++;
-                        }
-                    }
-                }
-                Logger.log(unitID + " -» útvonal:" + coordinates);
-            }
-            return coordinates;
-        }
-
-
-    };
+    public void setDestination(WsCoordinate destination) {
+        this.destination = destination;
+    }
 
     public ExplorerStrategy(int unitID) {
         this.unitID = unitID;
-        this.coordinates = generator.get();
-    }
-
-    public void clear() {
-        coordinates.clear();
-        current = 0;
-        coordinates.addAll(generator.get());
+        this.builderUnit = service.builderUnits.get(unitID);
+        this.destination = Util.getRandomCoordinate();
     }
 
     @Override
     public WsCoordinate nextCoordinate() {
-        if (coordinates.isEmpty()) {
-            clear();
+        if (builderUnit.getCord().equals(service.getSpaceShuttleCoord())) {
+            return service.getSpaceShuttleExitPos();
+        } else {
+            if (destination == null) {
+                Logger.log("HIBA: Nincs megadva cél!");
+                return builderUnit.getCord();
+            }
+            if (destination.equals(builderUnit.getCord())) {
+                // Célban vagyunk
+                Logger.log("Megérkeztünk, új koordinátát keresünk");
+                this.destination = Util.getRandomCoordinate();
+            }
+            ArrayList<WsCoordinate> path = Util.planRoute(service.getCurrentMap(), builderUnit.getCord(), destination, new MoveStrategy() {
+                @Override
+                public int getDistanceTo(Tile tile) {
+                    return Util.getCostOfMoveToTile(tile);
+                }
+            });
+            if (path != null) {
+                if (path.size() > 1) {
+                    return path.get(1);
+                } else {
+                    // TODO
+                    Logger.log("HIBA: Meg vagyunk érkezve, várakozunk");
+                    return path.get(0);
+                }
+            } else {
+                // TODO
+                Logger.log("HIBA: Nem tudunk odaérni a kiválasztott ponthoz, várunk egy kicsit és keresünk újat");
+                this.destination = Util.getRandomCoordinate();
+                return builderUnit.getCord();
+            }
         }
-        WsCoordinate c = coordinates.get(current);
-        if (current + 1 >= coordinates.size()) {//ha már csak 1 elem maradna, akkor feltöltjük a listát az eggyel távolabbi szomszédokkal
-            clear();// coordinates.addAll(generator.get());
-        }
-
-        return c;
-
-    }
-
-    private boolean isUnitInSpaceComp(int unitID) {
-        return service.builderUnits.get(unitID).getCord().equals(service.getSpaceShuttleCoord());
     }
 
     @Override
     public boolean done() {
-        current++;
-        //coordinates.remove((0));
         return true;
     }
 
+    @Override
+    public void clear() {
 
+    }
 }

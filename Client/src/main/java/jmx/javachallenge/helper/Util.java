@@ -17,6 +17,7 @@ import java.util.*;
 public class Util {
     private static final int INFINITY = 1234567890;
     private static Service service = Service.getInstance();
+    private static Random random = new Random();
 
     @Nullable
     public static WsDirection calculateDirection(WsCoordinate source, WsCoordinate target) {
@@ -152,9 +153,9 @@ public class Util {
             case UNKNOWN:
                 return (char) 27 + "[30m ";
             case ROCK:
-                return (char) 27 + "[30m▪";
+                return (char) 27 + "[30m.";
             case GRANITE:
-                return (char) 27 + "[30m●";
+                return (char) 27 + "[30m;";
             case OBSIDIAN:
                 return (char) 27 + "[30m#";
             case SHUTTLE:
@@ -273,4 +274,35 @@ public class Util {
     private static int distanceHeuristics(WsCoordinate startCoord, WsCoordinate endCoord) {
         return Math.abs(startCoord.getX() - endCoord.getX()) + Math.abs(startCoord.getY() - endCoord.getY());
     }
+
+    public static int getCostOfMoveToTile(Tile tile) {
+        switch (tile.getTileType()) {
+            case UNKNOWN:
+                return 5;
+            case SHUTTLE:
+                return 10000;
+            case ROCK:
+                return service.getActionCosts().getDrill() + service.getActionCosts().getMove();
+            case OBSIDIAN:
+                return 10000;
+            case TUNNEL:
+                return service.getActionCosts().getMove();
+            case BUILDER:
+                return service.getActionCosts().getMove() + 20;
+            case GRANITE:
+                return service.getActionCosts().getExplode() + service.getActionCosts().getDrill() + service.getActionCosts().getMove();
+            case ENEMY_TUNNEL:
+                return service.getActionCosts().getExplode() + service.getActionCosts().getDrill() + service.getActionCosts().getMove();
+            case ENEMY_SHUTTLE:
+                return 10000;
+            case ENEMY_BUILDER:
+                return 50;
+        }
+        return 1;
+    }
+
+    public static WsCoordinate getRandomCoordinate() {
+        return new WsCoordinate(random.nextInt(service.getCurrentMap().getXSize()), random.nextInt(service.getCurrentMap().getYSize()));
+    }
+
 }

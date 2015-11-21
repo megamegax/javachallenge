@@ -28,7 +28,6 @@ public class Service {
 
     public CentralControl api = null;
     public CommonResp serviceState;
-    public int actionPointsForTurn = 14;
     private WsCoordinate spaceShuttleCoord;
     public HashMap<Integer, JMXBuilder> builderUnits = new HashMap<>();
     public int turnLeft = 51;
@@ -37,6 +36,7 @@ public class Service {
     private WsCoordinate spaceShuttleExitPos;
     private ActionCostResponse actionCosts;
     private GameMap currentMap;
+    private int remainingActionPoints = 0;
 
     private Service() {
         CentralControlServiceService centralControlServiceService = new CentralControlServiceService();
@@ -74,7 +74,7 @@ public class Service {
     private void processResult(CommonResp result) {
         // TODO: tároljuk le az infókat ezekből az adatokból, minden dolog után friss infónk legyen mindenről
         serviceState = result;
-        actionPointsForTurn = result.getActionPointsLeft();
+        remainingActionPoints = result.getActionPointsLeft();
         currentBuilder = selectBuilder(result.getBuilderUnit());
         if (turnLeft > result.getTurnsLeft()) {
             this.newTurnFound(50 - turnLeft);
@@ -127,7 +127,7 @@ public class Service {
     }
 
     public boolean watch(int unitID) {
-        if (actionPointsForTurn - actionCosts.getWatch() >= 0) {
+        if (remainingActionPoints - actionCosts.getWatch() >= 0) {
             WatchRequest req = new WatchRequest(unitID);
             WatchResponse res = api.watch(req);
             Logger.log("Request sent: " + req.toString());
@@ -157,7 +157,7 @@ public class Service {
     }
 
     public boolean moveUnit(int unitID, WsDirection direction) {
-        if (actionPointsForTurn - actionCosts.getMove() >= 0) {
+        if (remainingActionPoints - actionCosts.getMove() >= 0) {
             MoveBuilderUnitRequest req = new MoveBuilderUnitRequest();
             req.setUnit(unitID);
             req.setDirection(direction);
@@ -183,7 +183,7 @@ public class Service {
     }
 
     public boolean radar(int unitID, List<WsCoordinate> coordinates) {
-        if (actionPointsForTurn - actionCosts.getRadar() * coordinates.size() > 0) {
+        if (remainingActionPoints - actionCosts.getRadar() * coordinates.size() > 0) {
             RadarRequest req = new RadarRequest();
             req.setUnit(unitID);
             req.getCord().addAll(coordinates);
@@ -207,7 +207,7 @@ public class Service {
     }
 
     public boolean structureTunnel(int unitID, WsDirection direction) {
-        if (actionPointsForTurn - actionCosts.getDrill() >= 0) {
+        if (remainingActionPoints - actionCosts.getDrill() >= 0) {
 
             StructureTunnelRequest req = new StructureTunnelRequest();
             req.setUnit(unitID);
@@ -255,5 +255,9 @@ public class Service {
 
     public WsCoordinate getSpaceShuttleExitPos() {
         return spaceShuttleExitPos;
+    }
+
+    public int getRemainingActionPoints() {
+        return remainingActionPoints;
     }
 }

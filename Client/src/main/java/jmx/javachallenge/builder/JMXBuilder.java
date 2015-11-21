@@ -52,13 +52,15 @@ public class JMXBuilder extends WsBuilderunit {
 
         //a Client.javaból át lehet emelni a logikát, ami eldönti, hogy lépünk, fúrunk, vagy mit csinálunk
 
-        service.watch(unitid);
-        // service.watch(unitid);
-        WsCoordinate coordinate = strategy.nextCoordinate();
-        if (doMove(map, Util.calculateDirection(unitid, coordinate))) {
-            service.builderUnits.get(unitid).strategy.done();
+        int previousActionPoints = 10000;
+        while (previousActionPoints > service.getRemainingActionPoints()) {
+            previousActionPoints = service.getRemainingActionPoints();
+            service.watch(unitid);
+            WsCoordinate coordinate = strategy.nextCoordinate();
+            if (doMove(map, Util.calculateDirection(unitid, coordinate))) {
+                service.builderUnits.get(unitid).strategy.done();
+            }
         }
-
     }
 
     private boolean doMove(GameMap map, WsDirection direction) {
