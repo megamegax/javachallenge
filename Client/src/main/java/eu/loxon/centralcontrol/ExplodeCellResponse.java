@@ -61,4 +61,10 @@ public class ExplodeCellResponse {
         this.result = value;
     }
 
+    @Override
+    public String toString() {
+        return "ExplodeCellResponse{" +
+                "result=" + result +
+                '}';
+    }
 }

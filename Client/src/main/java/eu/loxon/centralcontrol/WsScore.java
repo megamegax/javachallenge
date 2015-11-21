@@ -105,11 +105,4 @@ public class WsScore {
                 ", total=" + total +
                 '}';
     }
-
-    public String toLog() {
-        return "Score:" + "reward=" + reward +
-                ", bonus=" + bonus +
-                ", penalty=" + penalty +
-                ", total=" + total;
-    }
 }

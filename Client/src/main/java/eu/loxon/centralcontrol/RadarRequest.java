@@ -87,4 +87,11 @@ public class RadarRequest {
         return this.cord;
     }
 
+    @Override
+    public String toString() {
+        return "RadarRequest{" +
+                "unit=" + unit +
+                ", cord=" + cord +
+                '}';
+    }
 }

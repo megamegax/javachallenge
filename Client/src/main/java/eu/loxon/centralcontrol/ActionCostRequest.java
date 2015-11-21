@@ -30,5 +30,8 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement(name = "actionCostRequest")
 public class ActionCostRequest {
 
-
+    @Override
+    public String toString() {
+        return "ActionCostRequest{}";
+    }
 }

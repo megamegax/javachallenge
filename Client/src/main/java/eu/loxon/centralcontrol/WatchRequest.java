@@ -57,4 +57,10 @@ public class WatchRequest {
         this.unit = value;
     }
 
+    @Override
+    public String toString() {
+        return "WatchRequest{" +
+                "unit=" + unit +
+                '}';
+    }
 }

@@ -82,4 +82,11 @@ public class MoveBuilderUnitRequest {
         this.direction = value;
     }
 
+    @Override
+    public String toString() {
+        return "MoveBuilderUnitRequest{" +
+                "unit=" + unit +
+                ", direction=" + direction +
+                '}';
+    }
 }

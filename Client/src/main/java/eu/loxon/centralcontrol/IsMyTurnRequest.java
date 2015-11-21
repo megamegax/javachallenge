@@ -30,5 +30,8 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement(name = "isMyTurnRequest")
 public class IsMyTurnRequest {
 
-
+    @Override
+    public String toString() {
+        return "IsMyTurnRequest{}";
+    }
 }

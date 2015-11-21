@@ -82,4 +82,11 @@ public class ExplodeCellRequest {
         this.direction = value;
     }
 
+    @Override
+    public String toString() {
+        return "ExplodeCellRequest{" +
+                "unit=" + unit +
+                ", direction=" + direction +
+                '}';
+    }
 }

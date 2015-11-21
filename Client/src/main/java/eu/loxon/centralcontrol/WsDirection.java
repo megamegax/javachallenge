@@ -39,5 +39,4 @@ public enum WsDirection {
         return name();
     }
 
-
 }

@@ -71,24 +71,21 @@ public class Util {
         }
     }
 
-    public static WsCoordinate updateCoords(int unitID, WsDirection direction) {
-
-        WsCoordinate oldCoordinate = service.builderUnits.get(unitID).getCord();
+    public static WsCoordinate coordinateInDirection(WsCoordinate oldCoordinate, @Nullable WsDirection direction) {
+        if (direction == null) {
+            return oldCoordinate;
+        }
         switch (direction) {
             case LEFT:
-                Service.getInstance().builderUnits.get(unitID).setCord(new WsCoordinate(oldCoordinate.getX() - 1, oldCoordinate.getY()));
-                break;
+                return new WsCoordinate(oldCoordinate.getX() - 1, oldCoordinate.getY());
             case RIGHT:
-                Service.getInstance().builderUnits.get(unitID).setCord(new WsCoordinate(oldCoordinate.getX() + 1, oldCoordinate.getY()));
-                break;
+                return new WsCoordinate(oldCoordinate.getX() + 1, oldCoordinate.getY());
             case UP:
-                Service.getInstance().builderUnits.get(unitID).setCord(new WsCoordinate(oldCoordinate.getX(), oldCoordinate.getY() + 1));
-                break;
+                return new WsCoordinate(oldCoordinate.getX(), oldCoordinate.getY() + 1);
             case DOWN:
-                Service.getInstance().builderUnits.get(unitID).setCord(new WsCoordinate(oldCoordinate.getX(), oldCoordinate.getY() - 1));
-                break;
+                return new WsCoordinate(oldCoordinate.getX(), oldCoordinate.getY() - 1);
         }
-        return Service.getInstance().builderUnits.get(unitID).getCord();
+        return oldCoordinate;
     }
 
     public static TileType stringToCellType(String object, boolean myTeam) {
@@ -155,9 +152,9 @@ public class Util {
             case UNKNOWN:
                 return (char) 27 + "[30m ";
             case ROCK:
-                return (char) 27 + "[30m.";
+                return (char) 27 + "[30m▪";
             case GRANITE:
-                return (char) 27 + "[30m;";
+                return (char) 27 + "[30m●";
             case OBSIDIAN:
                 return (char) 27 + "[30m#";
             case SHUTTLE:

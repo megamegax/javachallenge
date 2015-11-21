@@ -30,5 +30,8 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement(name = "startGameRequest")
 public class StartGameRequest {
 
-
+    @Override
+    public String toString() {
+        return "StartGameRequest{}";
+    }
 }

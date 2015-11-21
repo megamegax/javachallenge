@@ -30,5 +30,8 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement(name = "getSpaceShuttleExitPosRequest")
 public class GetSpaceShuttleExitPosRequest {
 
-
+    @Override
+    public String toString() {
+        return "GetSpaceShuttleExitPosRequest{}";
+    }
 }

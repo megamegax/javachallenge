@@ -6,6 +6,7 @@ import jmx.javachallenge.builder.JMXBuilder;
 import jmx.javachallenge.helper.TileType;
 import jmx.javachallenge.helper.Util;
 import jmx.javachallenge.logger.Logger;
+import sun.rmi.runtime.Log;
 
 import java.util.HashMap;
 import java.util.List;
@@ -58,27 +59,13 @@ public class Service {
         builderUnits.get(1).setStrategy(new ExplorerStrategy(1));
         builderUnits.get(2).setStrategy(new ExplorerStrategy(2));
         builderUnits.get(3).setStrategy(new ExplorerStrategy(3));
-
-        /** jociFaktor(); **/
-    }
-
-    private void jociFaktor() {
-        OptionalDouble average = Stream.iterate(0, e -> e + 1)
-                .limit(40)
-                .mapToLong(e -> {
-                    long before = System.currentTimeMillis();
-                    api.startGame(new StartGameRequest());
-                    return System.currentTimeMillis() - before;
-                })
-                .average();
-        if (average.isPresent()) {
-            Logger.log(average.getAsDouble());
-        }
     }
 
     public void startGame() {
-        StartGameResponse res = api.startGame(new StartGameRequest());
-        Logger.log("StartGame: " + res.toString());
+        StartGameRequest req = new StartGameRequest();
+        StartGameResponse res = api.startGame(req);
+        Logger.log("Request sent: " + req.toString());
+        Logger.log("Answer: " + res.toString());
         initialGameState = res;
         for (WsBuilderunit builderunit : initialGameState.getUnits()) {
             JMXBuilder jmxBuilder = new JMXBuilder(builderunit);
@@ -101,14 +88,20 @@ public class Service {
     }
 
     public boolean isMyTurn() {
-        IsMyTurnResponse res = api.isMyTurn(new IsMyTurnRequest());
+        IsMyTurnRequest req = new IsMyTurnRequest();
+        IsMyTurnResponse res = api.isMyTurn(req);
+        Logger.log("Request sent: " + req.toString());
+        Logger.log("Answer: " + res.toString());
         processResult(res.getResult());
         Logger.log(res.isIsYourTurn() + " " + res.getResult().getBuilderUnit());
         return res.isIsYourTurn();
     }
 
     public void saveActionCost() {
-        ActionCostResponse res = api.getActionCost(new ActionCostRequest());
+        ActionCostRequest req = new ActionCostRequest();
+        ActionCostResponse res = api.getActionCost(req);
+        Logger.log("Request sent: " + req.toString());
+        Logger.log("Answer: " + res.toString());
         actionCosts = res;
         Logger.log(actionCosts.toString());
         processResult(res.getResult());
@@ -116,7 +109,10 @@ public class Service {
 
     public void saveSpaceShuttlePos() {
         if (spaceShuttleCoord == null) {
-            GetSpaceShuttlePosResponse res = api.getSpaceShuttlePos(new GetSpaceShuttlePosRequest());
+            GetSpaceShuttlePosRequest req = new GetSpaceShuttlePosRequest();
+            GetSpaceShuttlePosResponse res = api.getSpaceShuttlePos(req);
+            Logger.log("Request sent: " + req.toString());
+            Logger.log("Answer: " + res.toString());
             processResult(res.getResult());
             spaceShuttleCoord = res.getCord();
 
@@ -127,7 +123,10 @@ public class Service {
 
     public GetSpaceShuttleExitPosResponse getSpaceShuttlePosExit() {
         if (initialExitPos == null) {
-            GetSpaceShuttleExitPosResponse res = api.getSpaceShuttleExitPos(new GetSpaceShuttleExitPosRequest());
+            GetSpaceShuttleExitPosRequest req = new GetSpaceShuttleExitPosRequest();
+            GetSpaceShuttleExitPosResponse res = api.getSpaceShuttleExitPos(req);
+            Logger.log("Request sent: " + req.toString());
+            Logger.log("Answer: " + res.toString());
             processResult(res.getResult());
             initialExitPos = res;
             Logger.log(res.toString());
@@ -137,7 +136,10 @@ public class Service {
 
     public boolean watch(int unitID) {
         if (actionPointsForTurn - actionCosts.getWatch() >= 0) {
-            WatchResponse res = api.watch(new WatchRequest(unitID));
+            WatchRequest req = new WatchRequest(unitID);
+            WatchResponse res = api.watch(req);
+            Logger.log("Request sent: " + req.toString());
+            Logger.log("Answer: " + res.toString());
             processResult(res.getResult());
             if (res.getResult().getType().equals(ResultType.DONE)) {
                 Logger.log(res.toString());
@@ -167,16 +169,16 @@ public class Service {
             req.setUnit(unitID);
             req.setDirection(direction);
             MoveBuilderUnitResponse res = api.moveBuilderUnit(req);
+            Logger.log("Request sent: " + req.toString());
+            Logger.log("Answer: " + res.toString());
             processResult(res.getResult());
-            Logger.log("próbálom : mozgatni");
             if (res.getResult().getType().equals(ResultType.DONE)) {
                 Logger.log(res);
-                WsCoordinate oldCoordinate = builderUnits.get(unitID).getCord();
-                currentMap.getMapTile(oldCoordinate.getX(), oldCoordinate.getY()).setBuilder(-1);
-                WsCoordinate coordinate = Util.updateCoords(unitID, direction);
-                currentMap.getMapTile(coordinate.getX(), coordinate.getY()).setBuilder(unitID);
+                JMXBuilder builder = builderUnits.get(unitID);
+                WsCoordinate oldCoordinate = builder.getCord();
+                WsCoordinate newCoordinate = Util.coordinateInDirection(oldCoordinate, direction);
+                builder.setCord(newCoordinate);
                 Util.printMap(currentMap);
-
                 return true;
             } else {
                 return false;
@@ -194,6 +196,8 @@ public class Service {
             req.setUnit(unitID);
             req.getCord().addAll(coordinates);
             RadarResponse res = api.radar(req);
+            Logger.log("Request sent: " + req.toString());
+            Logger.log("Answer: " + res.toString());
             processResult(res.getResult());
             if (res.getResult().getType().equals(ResultType.DONE)) {
                 Logger.log(res.toString());
@@ -216,8 +220,9 @@ public class Service {
             req.setUnit(unitID);
             req.setDirection(direction);
             StructureTunnelResponse res = api.structureTunnel(req);
+            Logger.log("Request sent: " + req.toString());
+            Logger.log("Answer: " + res.toString());
             processResult(res.getResult());
-            Logger.log("próbálom : építeni --»" + unitID + "--»»" + direction);
             if (res.getResult().getType().equals(ResultType.DONE)) {
                 Logger.log("build - done");
                 currentMap.getMapTile(selectBuilder(unitID).getCord().getX(), selectBuilder(unitID).getCord().getY()).setTileType(TileType.TUNNEL);
