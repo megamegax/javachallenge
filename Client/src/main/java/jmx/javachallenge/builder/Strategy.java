@@ -9,8 +9,4 @@ import jmx.javachallenge.service.Service;
 public interface Strategy {
     Service service = Service.getInstance();
     WsCoordinate nextCoordinate();
-
-    boolean done();
-
-    void clear();
 }
