@@ -231,8 +231,28 @@ public class Service {
     }
 
     public boolean explode(int unitID, WsDirection direction) {
-        Logger.log("EXPLOOOOOODE");
-        return false;
+        if (remainingActionPoints - actionCosts.getExplode() >= 0) {
+            ExplodeCellRequest req = new ExplodeCellRequest();
+            req.setUnit(unitID);
+            req.setDirection(direction);
+            ExplodeCellResponse res = api.explodeCell(req);
+            Logger.log("Request sent: " + req.toString());
+            Logger.log("Answer: " + res.toString());
+            processResult(res.getResult());
+            if (res.getResult().getType().equals(ResultType.DONE)) {
+                JMXBuilder builder = builderUnits.get(unitID);
+                WsCoordinate oldCoordinate = builder.getCord();
+                WsCoordinate newCoordinate = Util.coordinateInDirection(oldCoordinate, direction);
+                getCurrentMap().getMapTile(newCoordinate).setTileType(TileType.ROCK);
+                Util.printMap(currentMap);
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            Logger.log("HIBA: Nincs elég pont robbantani");
+            return false;
+        }
     }
 
 
