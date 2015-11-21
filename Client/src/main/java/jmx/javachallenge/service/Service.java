@@ -38,8 +38,8 @@ public class Service {
     public StartGameResponse initialGameState;
     public JMXBuilder selectedBuilder;
     public GetSpaceShuttleExitPosResponse initialExitPos;
-    private Tile[][] myMap;
     private ActionCostResponse initialActionCost;
+    private GameMap currentMap;
 
     private Service() {
         Logger.log("service constructor");
@@ -52,38 +52,6 @@ public class Service {
             service = new Service();
         }
         return service;
-    }
-
-    /**
-     * Visszaadja az adott mezőt, a szerver által használt koordináta rendszerben.
-     *
-     * @param x Vízszintes koordináta, bal oldalon 0, jobbra növekszik
-     * @param y Függőleges koordináta, lent 0, felfelé növekszik
-     * @return A Tile objektum
-     */
-    public Tile getMapTile(int x, int y) {
-        if (x >= initialGameState.getSize().getX() || y >= initialGameState.getSize().getY() ||
-                x < 0 || y < 0) {
-            Tile tile = new Tile();
-            tile.setTileType(TileType.OBSIDIAN);
-            return tile;
-        }
-        return myMap[x][y];
-    }
-
-    /**
-     * Újracsinálja a térképet, üres infókkal
-     *
-     * @param xSize Vízszintes méret
-     * @param ySize Függőleges méret
-     */
-    private void initMap(int xSize, int ySize) {
-        myMap = new Tile[xSize][ySize];
-        for (int y = 0; y < ySize; y++) {
-            for (int x = 0; x < xSize; x++) {
-                myMap[x][y] = new Tile();
-            }
-        }
     }
 
     public void init() {
@@ -123,7 +91,7 @@ public class Service {
         Logger.log("StartGame: " + res.toString());
         initialGameState = res;
         processResult(res.getResult());
-        initMap(res.getSize().getX(), res.getSize().getY());
+        currentMap = new GameMap(res.getSize().getX(), res.getSize().getY());
         return res;
     }
 
@@ -160,8 +128,8 @@ public class Service {
             processResult(res.getResult());
             initialPos = res;
 
-            getMapTile(res.getCord().getX(), res.getCord().getY()).setTileType(TileType.SHUTTLE);
-            Util.printMap();
+            currentMap.getMapTile(res.getCord().getX(), res.getCord().getY()).setTileType(TileType.SHUTTLE);
+            Util.printMap(currentMap);
             return res;
         } else return initialPos;
     }
@@ -183,13 +151,13 @@ public class Service {
             if (res.getResult().getType().equals(ResultType.DONE)) {
                 Logger.log(res.toString());
                 for (Scouting scout : res.getScout()) {
-                    getMapTile(scout.getCord().getX(), scout.getCord().getY()).setTileType(Util.stringToCellType(scout.getObject().name(), MY_TEAM_NAME.equalsIgnoreCase(scout.getTeam())));
+                    currentMap.getMapTile(scout.getCord().getX(), scout.getCord().getY()).setTileType(Util.stringToCellType(scout.getObject().name(), MY_TEAM_NAME.equalsIgnoreCase(scout.getTeam())));
                 }
                 builderUnits.get(unitID).setCord(new WsCoordinate(res.getScout().get(0).getCord().getX(), res.getScout().get(2).getCord().getY()));
                 if (!builderUnits.get(unitID).getCord().equals(service.initialPos.getCord())) {
-                    getMapTile(builderUnits.get(unitID).getCord().getX(), builderUnits.get(unitID).getCord().getY()).setBuilder(unitID);
+                    currentMap.getMapTile(builderUnits.get(unitID).getCord().getX(), builderUnits.get(unitID).getCord().getY()).setBuilder(unitID);
                 }
-                Util.printMap();
+                Util.printMap(currentMap);
 
                 return true;
             } else {
@@ -214,10 +182,10 @@ public class Service {
             if (res.getResult().getType().equals(ResultType.DONE)) {
                 Logger.log(res);
                 WsCoordinate oldCoordinate = builderUnits.get(unitID).getCord();
-                getMapTile(oldCoordinate.getX(), oldCoordinate.getY()).setBuilder(-1);
+                currentMap.getMapTile(oldCoordinate.getX(), oldCoordinate.getY()).setBuilder(-1);
                 WsCoordinate coordinate = Util.updateCoords(unitID, direction);
-                getMapTile(coordinate.getX(), coordinate.getY()).setBuilder(unitID);
-                Util.printMap();
+                currentMap.getMapTile(coordinate.getX(), coordinate.getY()).setBuilder(unitID);
+                Util.printMap(currentMap);
 
                 return true;
             } else {
@@ -240,9 +208,9 @@ public class Service {
             if (res.getResult().getType().equals(ResultType.DONE)) {
                 Logger.log(res.toString());
                 for (Scouting scout : res.getScout()) {
-                    getMapTile(scout.getCord().getX(), scout.getCord().getY()).setTileType(Util.stringToCellType(scout.getObject().name(), scout.getTeam().equalsIgnoreCase(MY_TEAM_NAME)));
+                    currentMap.getMapTile(scout.getCord().getX(), scout.getCord().getY()).setTileType(Util.stringToCellType(scout.getObject().name(), scout.getTeam().equalsIgnoreCase(MY_TEAM_NAME)));
                 }
-                Util.printMap();
+                Util.printMap(currentMap);
                 return true;
             } else {
                 return false;
@@ -262,8 +230,8 @@ public class Service {
             Logger.log("próbálom : építeni --»" + unitID + "--»»" + direction);
             if (res.getResult().getType().equals(ResultType.DONE)) {
                 Logger.log("build - done");
-                getMapTile(selectBuilder(unitID).getCord().getX(), selectBuilder(unitID).getCord().getY()).setTileType(TileType.TUNNEL);
-                Util.printMap();
+                currentMap.getMapTile(selectBuilder(unitID).getCord().getX(), selectBuilder(unitID).getCord().getY()).setTileType(TileType.TUNNEL);
+                Util.printMap(currentMap);
                 return true;
             } else {
                 return false;
@@ -283,5 +251,9 @@ public class Service {
     public void newTurnFound(int i) {
         Logger.log("Kör: " + i);
         // builderUnits.get(serviceState.getBuilderUnit()).getCord();
+    }
+
+    public GameMap getCurrentMap() {
+        return currentMap;
     }
 }

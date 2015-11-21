@@ -6,8 +6,10 @@ import eu.loxon.centralcontrol.WsDirection;
 import jmx.javachallenge.helper.Step;
 import jmx.javachallenge.helper.Util;
 import jmx.javachallenge.logger.Logger;
+import jmx.javachallenge.service.GameMap;
 import jmx.javachallenge.service.Service;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
@@ -33,7 +35,7 @@ public class JMXBuilder extends WsBuilderunit {
         this.strategy = strategy;
     }
 
-    public void step() {
+    public void step(GameMap map) {
         Logger.log(unitid + "'s building turn");
 
         //TODO lekérni a strategy objektumtól a következő mezőt és a watch alapján eldönteni h mit akarunk
@@ -50,15 +52,15 @@ public class JMXBuilder extends WsBuilderunit {
 
         // service.watch(unitid);
         coordinate = strategy.nextCoordinate();
-        if (doMove(Util.calculateDirection(unitid, coordinate))) {
+        if (doMove(map, Util.calculateDirection(unitid, coordinate))) {
             service.builderUnits.get(unitid).strategy.done();
         }
 
     }
 
-    private boolean doMove(WsDirection direction) {
+    private boolean doMove(GameMap map, WsDirection direction) {
         WsCoordinate simulatedCoordinate = Util.simulateMove(service.builderUnits.get(unitid), direction);
-        Step step = Util.checkMovement(simulatedCoordinate);
+        Step step = Util.checkMovement(map, simulatedCoordinate);
         Logger.log(step);
         switch (step) {
             case BUILD:

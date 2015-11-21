@@ -39,7 +39,7 @@ public class Client {
                 JMXBuilder builder = service.selectedBuilder;
                 int unitID = builder.getUnitid();
                 service.watch(unitID);
-                builder.step();
+                builder.step(service.getCurrentMap());
             }
         }
     }
