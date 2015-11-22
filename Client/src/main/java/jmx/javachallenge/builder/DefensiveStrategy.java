@@ -13,42 +13,47 @@ import java.util.function.Supplier;
 public class DefensiveStrategy implements Strategy {
     //generátor ami mindig az egyre távolabbi szomszédokat adja vissza
     //először az 1 távolságra lévőket, aztán a 2, 3, 4, stb.
-    private final Supplier<List<WsCoordinate>> generator = new Supplier<List<WsCoordinate>>() {
-        private int radius = 1;
-        private WsCoordinate center = service.getSpaceShuttleCoord();
+    private Supplier<List<WsCoordinate>> generator;
+    private List<WsCoordinate> coordinates;
+    private WsCoordinate center;
+    private WsCoordinate exit;
+    private WsCoordinate previous;
+    private int unitID;
 
-        @Override
-        public List<WsCoordinate> get() {
-            List<WsCoordinate> coordinates = new ArrayList<>();
-            for (int i = -radius; i <= radius; ++i) {
-                for (int j = -radius; j <= radius; ++j) {
-                    if (onBorder(i, j)) {
-                        coordinates.add(new WsCoordinate(center.getX() - i, center.getY() - j));
+    public DefensiveStrategy(int unitID, WsCoordinate center, WsCoordinate exit) {
+        this.unitID = unitID;
+        this.center = center;
+        this.exit = exit;
+        this.generator = new Supplier<List<WsCoordinate>>() {
+            private int radius = 1;
+
+            @Override
+            public List<WsCoordinate> get() {
+                List<WsCoordinate> coordinates = new ArrayList<>();
+                for (int i = -radius; i <= radius; ++i) {
+                    for (int j = -radius; j <= radius; ++j) {
+                        if (onBorder(i, j)) {
+                            coordinates.add(new WsCoordinate(DefensiveStrategy.this.center.getX() - i, DefensiveStrategy.this.center.getY() - j));
+                        }
                     }
                 }
+                radius++;
+                return coordinates;
             }
-            radius++;
-            return coordinates;
-        }
 
-        private boolean onBorder(int i, int j) {
-            return i == -radius || i == radius || j == -radius || j == radius;
-        }
-    };
-    private List<WsCoordinate> coordinates;
-    private WsCoordinate exitPoint = service.getSpaceShuttleExitPos();
-    private WsCoordinate previous;
-
-    public DefensiveStrategy() {
+            private boolean onBorder(int i, int j) {
+                return i == -radius || i == radius || j == -radius || j == radius;
+            }
+        };
         this.coordinates = generator.get();
     }
 
     @Override
     public WsCoordinate nextCoordinate() {
-        if (coordinates.contains(exitPoint)) {//első lépés
-            coordinates.remove(exitPoint);
-            previous = exitPoint;
-            return exitPoint;
+        if (coordinates.contains(exit)) {//első lépés
+            coordinates.remove(exit);
+            previous = exit;
+            return exit;
         } else {
             //megkeressük az előző koordináta egyik szomszédját
             WsCoordinate next =
@@ -58,7 +63,7 @@ public class DefensiveStrategy implements Strategy {
                             .findFirst()
                             .get();
             coordinates.remove(next);
-            if(coordinates.size()==1){//ha már csak 1 elem maradna, akkor feltöltjük a listát az eggyel távolabbi szomszédokkal
+            if (coordinates.size() == 1) {//ha már csak 1 elem maradna, akkor feltöltjük a listát az eggyel távolabbi szomszédokkal
                 coordinates.addAll(generator.get());
             }
             previous = next;
