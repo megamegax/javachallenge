@@ -79,11 +79,11 @@ public class RepairerStrategy implements Strategy {
             case SHUTTLE:
                 return 10000;
             case ROCK:
-                return service.getActionCosts().getDrill() + service.getActionCosts().getMove()+20;
+                return service.getActionCosts().getDrill() + service.getActionCosts().getMove();
             case OBSIDIAN:
                 return 10000;
             case TUNNEL:
-                return service.getActionCosts().getMove();
+                return service.getActionCosts().getMove()+service.getActionCosts().getDrill();
             case BUILDER:
                 return service.getActionCosts().getMove() + 20;
             case GRANITE:

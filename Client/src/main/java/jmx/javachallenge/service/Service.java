@@ -54,8 +54,8 @@ public class Service {
     public void setStrategies() {
         builderUnits.get(0).setStrategy(new RepairerStrategy(0));
         builderUnits.get(1).setStrategy(new RepairerStrategy(1));
-        builderUnits.get(2).setStrategy(new ExplorerStrategy(2));
-        builderUnits.get(3).setStrategy(new ExplorerStrategy(3));
+        builderUnits.get(2).setStrategy(new RepairerStrategy(2));
+        builderUnits.get(3).setStrategy(new RepairerStrategy(3));
     }
 
     public void startGame() {
