@@ -3,6 +3,7 @@ package jmx.javachallenge.service;
 import eu.loxon.centralcontrol.*;
 import jmx.javachallenge.builder.ExplorerStrategy;
 import jmx.javachallenge.builder.JMXBuilder;
+import jmx.javachallenge.builder.RepairerStrategy;
 import jmx.javachallenge.helper.TileType;
 import jmx.javachallenge.helper.Util;
 import jmx.javachallenge.logger.Logger;
@@ -51,8 +52,8 @@ public class Service {
     }
 
     public void setStrategies() {
-        builderUnits.get(0).setStrategy(new ExplorerStrategy(0));
-        builderUnits.get(1).setStrategy(new ExplorerStrategy(1));
+        builderUnits.get(0).setStrategy(new RepairerStrategy(0));
+        builderUnits.get(1).setStrategy(new RepairerStrategy(1));
         builderUnits.get(2).setStrategy(new ExplorerStrategy(2));
         builderUnits.get(3).setStrategy(new ExplorerStrategy(3));
     }

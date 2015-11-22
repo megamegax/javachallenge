@@ -58,7 +58,7 @@ public class JMXBuilder extends WsBuilderunit {
             service.watch(unitid);
             WsCoordinate coordinate = strategy.nextCoordinate();
             if (doMove(map, Util.calculateDirection(unitid, coordinate))) {
-                service.builderUnits.get(unitid).strategy.done();
+               // service.builderUnits.get(unitid).strategy.done();
             }
         }
     }
@@ -90,7 +90,7 @@ public class JMXBuilder extends WsBuilderunit {
                 //if (doMove(moveRandomly())) {
                 // return true;//service.builderUnits.get(unitID).strategy.done();
                 //}
-                strategy.clear();
+              //  strategy.clear();
                 return false;
 
             case NO_POINTS:
