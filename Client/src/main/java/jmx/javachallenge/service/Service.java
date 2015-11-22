@@ -1,6 +1,7 @@
 package jmx.javachallenge.service;
 
 import eu.loxon.centralcontrol.*;
+import jmx.javachallenge.builder.DefensiveStrategy;
 import jmx.javachallenge.builder.ExplorerStrategy;
 import jmx.javachallenge.builder.JMXBuilder;
 import jmx.javachallenge.builder.RepairerStrategy;
@@ -52,7 +53,8 @@ public class Service {
     }
 
     public void setStrategies() {
-        builderUnits.get(0).setStrategy(new RepairerStrategy(0));
+      //  builderUnits.get(0).setStrategy(new DefensiveStrategy(0,spaceShuttleCoord, spaceShuttleExitPos));
+        builderUnits.get(0).setStrategy(new ExplorerStrategy(0));
         builderUnits.get(1).setStrategy(new RepairerStrategy(1));
         builderUnits.get(2).setStrategy(new RepairerStrategy(2));
         builderUnits.get(3).setStrategy(new RepairerStrategy(3));
@@ -85,12 +87,16 @@ public class Service {
     }
 
     public boolean isMyTurn() {
-        IsMyTurnRequest req = new IsMyTurnRequest();
-        IsMyTurnResponse res = api.isMyTurn(req);
-        Logger.log("Request sent: " + req.toString());
-        Logger.log("Answer: " + res.toString());
-        processResult(res.getResult());
-        return res.isIsYourTurn();
+        try {
+            IsMyTurnRequest req = new IsMyTurnRequest();
+            IsMyTurnResponse res = api.isMyTurn(req);
+            Logger.log("Request sent: " + req.toString());
+            Logger.log("Answer: " + res.toString());
+            processResult(res.getResult());
+            return res.isIsYourTurn();
+        }catch(Exception e){
+            return false;
+        }
     }
 
     public void saveActionCost() {

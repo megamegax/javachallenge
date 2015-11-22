@@ -85,7 +85,7 @@ public class RepairerStrategy implements Strategy {
             case TUNNEL:
                 return service.getActionCosts().getMove()+service.getActionCosts().getDrill();
             case BUILDER:
-                return service.getActionCosts().getMove() + 20;
+                return service.getActionCosts().getMove() + 60;
             case GRANITE:
                 return service.getActionCosts().getExplode() + service.getActionCosts().getDrill() + service.getActionCosts().getMove()+50;
             case ENEMY_TUNNEL:
