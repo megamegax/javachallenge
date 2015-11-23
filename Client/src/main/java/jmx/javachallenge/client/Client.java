@@ -38,10 +38,10 @@ public class Client {
                     lastTurnLeft = service.turnLeft;
                     lastBuilderId = service.currentBuilder.getUnitid();
                 } else {
-                    Logger.log("Ezzel az egységgel már léptünk ebben a körben.");
+                    //Logger.log("Ezzel az egységgel már léptünk ebben a körben.");
                 }
             } else {
-                Logger.log("Nem a mi körünk");
+                //Logger.log("Nem a mi körünk");
             }
         }
     }
