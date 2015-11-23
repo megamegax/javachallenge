@@ -16,6 +16,9 @@ import java.util.*;
  */
 public class Util {
     private static final int INFINITY = 1234567890;
+    public static final String DEFAULT_COLOR = (char) 27 + "[39m";
+    public static final String GREEN_COLOR = (char) 27 + "[32m";
+    public static final String RED_COLOR = (char) 27 + "[31m";
     private static Service service = Service.getInstance();
     private static Random random = new Random();
 
@@ -123,25 +126,25 @@ public class Util {
     public static void printMap(GameMap map) {
         System.out.print("    ");
         for (int x = 0; x < map.getXSize(); x++) {
-            System.out.print((char) 27 + "[39m" + x % 10 + " ");
+            System.out.print(DEFAULT_COLOR + x % 10 + " ");
         }
         System.out.println();
-        System.out.println((char) 27 + "[39m    -----------------------------------------");
+        System.out.println(DEFAULT_COLOR + "    -----------------------------------------");
         for (int y = map.getYSize() - 1; y >= 0; y--) {
             String rowString = "";
-            System.out.print((char) 27 + "[39m" + (y <= 9 ? " " + (y) : y) + "| ");
+            System.out.print(DEFAULT_COLOR + "" + (y <= 9 ? " " + (y) : y) + "| ");
             for (int x = 0; x < map.getXSize(); x++) {
                 Tile tile = map.getMapTile(x, y);
                 if (tile.getUnitId() >= 0) {
-                    rowString += (char) 27 + "[32m" + Integer.toString(tile.getUnitId()) + " ";
+                    rowString += GREEN_COLOR + Integer.toString(tile.getUnitId()) + " ";
                 } else {
-                    rowString += (char) 27 + "[39m" + getTileTypeChar(tile.getTileType()) + " ";
+                    rowString += DEFAULT_COLOR + getTileTypeChar(tile.getTileType()) + " ";
                 }
             }
-            System.out.println((char) 27 + "[39m" + rowString);
+            System.out.println(DEFAULT_COLOR + rowString);
         }
-        System.out.println((char) 27 + "[39m    -----------------------------------------");
-        System.out.print((char) 27 + "[39m    ");
+        System.out.println(DEFAULT_COLOR + "    -----------------------------------------");
+        System.out.print(DEFAULT_COLOR + "    ");
         for (int x = 0; x < map.getXSize(); x++) {
             System.out.print(x % 10 + " ");
         }
@@ -151,27 +154,27 @@ public class Util {
     private static String getTileTypeChar(TileType tileType) {
         switch (tileType) {
             case UNKNOWN:
-                return (char) 27 + "[39m ";
+                return DEFAULT_COLOR + " ";
             case ROCK:
-                return (char) 27 + "[39m.";
+                return DEFAULT_COLOR + ".";
             case GRANITE:
-                return (char) 27 + "[39m;";
+                return DEFAULT_COLOR + ";";
             case OBSIDIAN:
-                return (char) 27 + "[39m#";
+                return DEFAULT_COLOR + "#";
             case SHUTTLE:
-                return (char) 27 + "[32m@";
+                return GREEN_COLOR + "@";
             case ENEMY_SHUTTLE:
-                return (char) 27 + "[31m!";
+                return RED_COLOR + "!";
             case TUNNEL:
-                return (char) 27 + "[32m+";
+                return GREEN_COLOR + "+";
             case ENEMY_TUNNEL:
-                return (char) 27 + "[31m-";
+                return RED_COLOR + "-";
             case BUILDER:
-                return (char) 27 + "[32mB";
+                return GREEN_COLOR + "B";
             case ENEMY_BUILDER:
-                return (char) 27 + "[31mE";
+                return RED_COLOR + "E";
         }
-        return (char) 27 + "[39m?";
+        return DEFAULT_COLOR + "?";
     }
 
     public static void printResult(CommonResp result) {

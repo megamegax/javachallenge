@@ -17,7 +17,7 @@ public class Client {
     private Service service;
 
     public void run() {
-        System.out.println((char) 27 + "[39mHello JMX");
+        System.out.println(Util.DEFAULT_COLOR + "Hello JMX");
         Logger.init(new LogLevels[]{LogLevels.DEBUG, LogLevels.MAP});
 //        Logger.init(new LogLevels[]{});
         service = Service.getInstance();
