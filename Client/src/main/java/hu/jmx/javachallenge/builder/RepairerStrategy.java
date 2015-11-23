@@ -20,7 +20,6 @@ import java.util.ArrayList;
 //és az új célpontokat úgy kéne kikalkulálni, hogy az előző pontokhoz
 // képest a távolságuk maximális legyen
 public class RepairerStrategy implements Strategy {
-    private final int unitID;
     private final JMXBuilder builderUnit;
     private WsCoordinate destination;
 
@@ -28,9 +27,8 @@ public class RepairerStrategy implements Strategy {
         this.destination = destination;
     }
 
-    public RepairerStrategy(int unitID) {
-        this.unitID = unitID;
-        this.builderUnit = service.builderUnits.get(unitID);
+    public RepairerStrategy(JMXBuilder builder) {
+        this.builderUnit = builder;
         this.destination = Util.getRandomCoordinate();
     }
 

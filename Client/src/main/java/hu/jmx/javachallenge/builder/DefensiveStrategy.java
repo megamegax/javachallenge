@@ -15,13 +15,11 @@ public class DefensiveStrategy implements Strategy {
     //generátor ami mindig az egyre távolabbi szomszédokat adja vissza
     //először az 1 távolságra lévőket, aztán a 2, 3, 4, stb.
     private final JMXBuilder builderUnit;
-    private int unitID;
     private WsCoordinate destination;
 
-    public DefensiveStrategy(int unitID, WsCoordinate destination) {
-        this.unitID = unitID;
+    public DefensiveStrategy(JMXBuilder builder, WsCoordinate destination) {
+        this.builderUnit = builder;
         this.destination = destination;
-        this.builderUnit = service.builderUnits.get(unitID);
     }
 
     @Override

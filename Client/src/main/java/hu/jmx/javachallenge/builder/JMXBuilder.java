@@ -12,6 +12,9 @@ import hu.jmx.javachallenge.logger.Logger;
 import hu.jmx.javachallenge.service.GameMap;
 import hu.jmx.javachallenge.service.Service;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -52,6 +55,7 @@ public class JMXBuilder extends WsBuilderunit {
 
         //a Client.javaból át lehet emelni a logikát, ami eldönti, hogy lépünk, fúrunk, vagy mit csinálunk
 
+        long startTime = System.currentTimeMillis();
         int previousActionPoints = 10000;
         while (previousActionPoints > service.getRemainingActionPoints()) {
             previousActionPoints = service.getRemainingActionPoints();
@@ -61,6 +65,59 @@ public class JMXBuilder extends WsBuilderunit {
                // service.builderUnits.get(unitid).strategy.done();
             }
             service.watch(unitid);
+        }
+        List<WsCoordinate> radarPoints = findRadarPoints(service.getRemainingActionPoints() / service.getActionCosts().getRadar());
+        service.radar(unitid, radarPoints);
+        System.out.println("Turn length: " + (System.currentTimeMillis() - startTime));
+    }
+
+    private List<WsCoordinate> findRadarPoints(int points) {
+        if (points == 0) {
+            return new ArrayList<>();
+        }
+        ArrayList<WsCoordinate> possibleTiles = new ArrayList<>();
+        for (int i = -3; i <= 3; ++i) {
+            for (int j = -1; j <= 3; ++j) {
+                if (Math.abs(i) <= 1 && j == 0 || Math.abs(j) <= 1 && i == 0) {
+                    // Ezt a watch is tudja
+                    continue;
+                }
+                WsCoordinate coordinate = new WsCoordinate(getCord().getX()+i, getCord().getY()+i);
+                Tile tile = service.getCurrentMap().getMapTile(coordinate);
+                switch (tile.getTileType()) {
+                    case UNKNOWN:
+                        possibleTiles.add(coordinate);
+                        break;
+                    case SHUTTLE:
+                        break;
+                    case ROCK:
+                        possibleTiles.add(coordinate);
+                        break;
+                    case OBSIDIAN:
+                        break;
+                    case TUNNEL:
+                        possibleTiles.add(coordinate);
+                        break;
+                    case BUILDER:
+                        break;
+                    case GRANITE:
+                        possibleTiles.add(coordinate);
+                        break;
+                    case ENEMY_TUNNEL:
+                        break;
+                    case ENEMY_SHUTTLE:
+                        break;
+                    case ENEMY_BUILDER:
+                        possibleTiles.add(coordinate);
+                        break;
+                }
+            }
+        }
+        Collections.shuffle(possibleTiles);
+        if (possibleTiles.size() < points) {
+            return possibleTiles;
+        } else {
+            return possibleTiles.subList(0, points);
         }
     }
 

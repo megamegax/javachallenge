@@ -44,11 +44,19 @@ public class Service {
     }
 
     public void setStrategies() {
-      //  builderUnits.get(0).setStrategy(new DefensiveStrategy(0,spaceShuttleCoord, spaceShuttleExitPos));
-        builderUnits.get(0).setStrategy(new DefensiveStrategy(0, spaceShuttleCoord)); // FIXME id-k nem biztos jók lesznek
-        builderUnits.get(1).setStrategy(new DefensiveStrategy(1, new WsCoordinate(currentMap.getXSize() - spaceShuttleCoord.getX(), currentMap.getYSize() - spaceShuttleCoord.getY())));
-        builderUnits.get(2).setStrategy(new DefensiveStrategy(2, new WsCoordinate(currentMap.getXSize()/2+1, currentMap.getYSize()/2+1)));
-        builderUnits.get(3).setStrategy(new RepairerStrategy(3));
+
+        JMXBuilder builder0 = builderUnits.get(0);
+        JMXBuilder builder1 = builderUnits.get(1);
+        JMXBuilder builder2 = builderUnits.get(2);
+        JMXBuilder builder3 = builderUnits.get(3);
+
+        //  builderUnits.get(0).setStrategy(new DefensiveStrategy(0,spaceShuttleCoord, spaceShuttleExitPos));
+        builder0.setStrategy(new DefensiveStrategy(builder0, spaceShuttleCoord));
+        //builderUnits.get(1).setStrategy(new RepairerStrategy(1));
+        builder1.setStrategy(new DefensiveStrategy(builder1, new WsCoordinate(currentMap.getXSize() - spaceShuttleCoord.getX(), currentMap.getYSize() - spaceShuttleCoord.getY())));
+        builder2.setStrategy(new RepairerStrategy(builder2));
+        //builderUnits.get(2).setStrategy(new DefensiveStrategy(2, new WsCoordinate(currentMap.getXSize()/2+1, currentMap.getYSize()/2+1)));
+        builder3.setStrategy(new RepairerStrategy(builder3));
     }
 
     public void startGame() {
@@ -184,7 +192,7 @@ public class Service {
     }
 
     public boolean radar(int unitID, List<WsCoordinate> coordinates) {
-        if (remainingActionPoints - actionCosts.getRadar() * coordinates.size() > 0) {
+        if (remainingActionPoints - actionCosts.getRadar() * coordinates.size() >= 0) {
             RadarRequest req = new RadarRequest();
             req.setUnit(unitID);
             req.getCord().addAll(coordinates);
