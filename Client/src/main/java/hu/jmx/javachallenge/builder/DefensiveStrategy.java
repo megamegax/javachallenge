@@ -16,9 +16,11 @@ public class DefensiveStrategy implements Strategy {
     //először az 1 távolságra lévőket, aztán a 2, 3, 4, stb.
     private final JMXBuilder builderUnit;
     private int unitID;
+    private WsCoordinate destination;
 
-    public DefensiveStrategy(int unitID) {
+    public DefensiveStrategy(int unitID, WsCoordinate destination) {
         this.unitID = unitID;
+        this.destination = destination;
         this.builderUnit = service.builderUnits.get(unitID);
     }
 
@@ -32,7 +34,7 @@ public class DefensiveStrategy implements Strategy {
             for (int radius = 0; radius < service.getCurrentMap().getXSize(); ++radius) {
                 for (int x = -radius; x <= radius; ++x) {
                     for (int y = -radius; y <= radius; ++y) {
-                        WsCoordinate coordinate = new WsCoordinate(service.getSpaceShuttleCoord().getX() + x, service.getSpaceShuttleCoord().getY() + y);
+                        WsCoordinate coordinate = new WsCoordinate(destination.getX() + x, destination.getY() + y);
                         Tile tile = service.getCurrentMap().getMapTile(coordinate);
                         switch (tile.getTileType()) {
                             case UNKNOWN:

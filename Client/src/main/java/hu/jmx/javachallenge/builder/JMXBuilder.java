@@ -60,6 +60,7 @@ public class JMXBuilder extends WsBuilderunit {
             if (doMove(map, Util.calculateDirection(unitid, coordinate))) {
                // service.builderUnits.get(unitid).strategy.done();
             }
+            service.watch(unitid);
         }
     }
 
