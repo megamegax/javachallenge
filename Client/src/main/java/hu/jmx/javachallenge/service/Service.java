@@ -19,15 +19,6 @@ public class Service {
     public static final String MY_TEAM_NAME = "jmx";
     private static Service service = null;
 
-    static {
-        java.net.Authenticator.setDefault(new java.net.Authenticator() {
-            @Override
-            protected java.net.PasswordAuthentication getPasswordAuthentication() {
-                return new java.net.PasswordAuthentication("jmx", "XWHD7855".toCharArray());
-            }
-        });
-    }
-
     public CentralControl api = null;
     public CommonResp serviceState;
     private WsCoordinate spaceShuttleCoord;

@@ -16,6 +16,19 @@ import java.util.List;
 public class Client {
     private Service service;
 
+    public Client() {
+        this("jmx", "XWHD7855");
+    }
+
+    public Client(String username, String password) {
+        java.net.Authenticator.setDefault(new java.net.Authenticator() {
+            @Override
+            protected java.net.PasswordAuthentication getPasswordAuthentication() {
+                return new java.net.PasswordAuthentication(username, password.toCharArray());
+            }
+        });
+    }
+
     public void run() {
         System.out.println(Util.DEFAULT_COLOR + "Hello JMX");
         Logger.init(new LogLevels[]{LogLevels.DEBUG, LogLevels.MAP});
