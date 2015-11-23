@@ -29,7 +29,7 @@ public class DefensiveStrategyTest {
     
     @Before
     public void setUp() {
-        s = new DefensiveStrategy(0, new WsCoordinate(5, 5), new WsCoordinate(5,6));
+        s = new DefensiveStrategy(0);
     }
     
     @After

@@ -1,6 +1,10 @@
 package jmx.javachallenge.builder;
 
 import eu.loxon.centralcontrol.WsCoordinate;
+import jmx.javachallenge.helper.MoveStrategy;
+import jmx.javachallenge.helper.Tile;
+import jmx.javachallenge.helper.Util;
+import jmx.javachallenge.logger.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,73 +17,100 @@ import java.util.function.Supplier;
 public class DefensiveStrategy implements Strategy {
     //generátor ami mindig az egyre távolabbi szomszédokat adja vissza
     //először az 1 távolságra lévőket, aztán a 2, 3, 4, stb.
-    private Supplier<List<WsCoordinate>> generator;
-    private List<WsCoordinate> coordinates;
-    private WsCoordinate center;
-    private WsCoordinate exit;
-    private WsCoordinate previous;
+    private final JMXBuilder builderUnit;
     private int unitID;
 
-    public DefensiveStrategy(int unitID, WsCoordinate center, WsCoordinate exit) {
+    public DefensiveStrategy(int unitID) {
         this.unitID = unitID;
-        this.center = center;
-        this.exit = exit;
-        this.generator = new Supplier<List<WsCoordinate>>() {
-            private int radius = 1;
-
-            @Override
-            public List<WsCoordinate> get() {
-                List<WsCoordinate> coordinates = new ArrayList<>();
-                for (int i = -radius; i <= radius; ++i) {
-                    for (int j = -radius; j <= radius; ++j) {
-                        if (onBorder(i, j)) {
-                            coordinates.add(new WsCoordinate(DefensiveStrategy.this.center.getX() - i, DefensiveStrategy.this.center.getY() - j));
-                        }
-                    }
-                }
-                radius++;
-                return coordinates;
-            }
-
-            private boolean onBorder(int i, int j) {
-                return i == -radius || i == radius || j == -radius || j == radius;
-            }
-        };
-        this.coordinates = generator.get();
+        this.builderUnit = service.builderUnits.get(unitID);
     }
 
     @Override
     public WsCoordinate nextCoordinate() {
-        if (coordinates.contains(exit)) {//első lépés
-            coordinates.remove(exit);
-            previous = exit;
-            return exit;
+        if (builderUnit.getCord().equals(service.getSpaceShuttleCoord())) {
+            return service.getSpaceShuttleExitPos();
         } else {
-            //megkeressük az előző koordináta egyik szomszédját
-            WsCoordinate next =
-                    coordinates
-                            .stream()
-                            .filter(this::isNeighbor)
-                            .findFirst()
-                            .get();
-            coordinates.remove(next);
-            if (coordinates.size() == 1) {//ha már csak 1 elem maradna, akkor feltöltjük a listát az eggyel távolabbi szomszédokkal
-                coordinates.addAll(generator.get());
-            }
-            previous = next;
-            return next;
-        }
-    }
+            // Megnézzük, mekkora sugárig van felfedezve a dolog
+            ArrayList<WsCoordinate> tilesToVisit = new ArrayList<>();
+            for (int radius = 0; radius < service.getCurrentMap().getXSize(); ++radius) {
+                for (int x = -radius; x <= radius; ++x) {
+                    for (int y = -radius; y <= radius; ++y) {
+                        WsCoordinate coordinate = new WsCoordinate(service.getSpaceShuttleCoord().getX() + x, service.getSpaceShuttleCoord().getY() + y);
+                        Tile tile = service.getCurrentMap().getMapTile(coordinate);
+                        switch (tile.getTileType()) {
+                            case UNKNOWN:
+                                tilesToVisit.add(coordinate);
+                                break;
+                            case SHUTTLE:
+                                break;
+                            case ROCK:
+                                tilesToVisit.add(coordinate);
+                                break;
+                            case OBSIDIAN:
+                                break;
+                            case TUNNEL:
+                                break;
+                            case BUILDER:
+                                break;
+                            case GRANITE:
+                                tilesToVisit.add(coordinate);
+                                break;
+                            case ENEMY_TUNNEL:
+                                tilesToVisit.add(coordinate);
+                                break;
+                            case ENEMY_SHUTTLE:
+                                break;
+                            case ENEMY_BUILDER:
+                                break;
+                        }
+                    }
+                }
+                if (tilesToVisit.size() > 0) {
+                    ArrayList<WsCoordinate> minPath = null;
+                    for (WsCoordinate coordinate : tilesToVisit) {
+                        ArrayList<WsCoordinate> path = Util.planRoute(service.getCurrentMap(), builderUnit.getCord(), coordinate, new MoveStrategy() {
+                            @Override
+                            public boolean canMoveTo(Tile tile) {
+                                switch (tile.getTileType()) {
+                                    case UNKNOWN:
+                                        return true;
+                                    case SHUTTLE:
+                                        return false;
+                                    case ROCK:
+                                        return true;
+                                    case OBSIDIAN:
+                                        return false;
+                                    case TUNNEL:
+                                        return true;
+                                    case BUILDER:
+                                        return false;
+                                    case GRANITE:
+                                        return true;
+                                    case ENEMY_TUNNEL:
+                                        return true;
+                                    case ENEMY_SHUTTLE:
+                                        return false;
+                                    case ENEMY_BUILDER:
+                                        return false;
+                                }
+                                return false;
+                            }
 
-    private boolean isNeighbor(WsCoordinate c) {
-        if (previous == null) {
-            previous = coordinates.get(1);
+                            @Override
+                            public int getDistanceTo(Tile tile) {
+                                return Util.getCostOfMoveToTile(tile);
+                            }
+                        });
+                        if (minPath == null || (path != null && minPath.size() > path.size())) {
+                            minPath = path;
+                        }
+                    }
+                    if (minPath != null) {
+                        return minPath.get(0);
+                    }
+                }
+            }
+            return builderUnit.getCord();
         }
-        int x1 = previous.getX();
-        int y1 = previous.getY();
-        int x2 = c.getX();
-        int y2 = c.getY();
-        //megegyezik az egyik koordinátájuk és a másik különbsége 1, azaz szomszédok
-        return (x1 - x2 == 0 && Math.abs(y1 - y2) == 1) || (y1 - y2 == 0 && Math.abs(x1 - x2) == 1);
     }
 }

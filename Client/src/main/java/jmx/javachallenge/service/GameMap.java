@@ -38,7 +38,7 @@ public class GameMap {
      * @return A Tile objektum
      */
     public Tile getMapTile(int x, int y) {
-        if (x >= xSize || y >= ySize || x < 0 || y < 0) {
+        if (x >= xSize || y >= ySize || x <= 0 || y <= 0) {
             Tile tile = new Tile();
             tile.setTileType(TileType.OBSIDIAN);
             return tile;

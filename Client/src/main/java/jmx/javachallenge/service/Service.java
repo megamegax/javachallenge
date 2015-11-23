@@ -54,10 +54,10 @@ public class Service {
 
     public void setStrategies() {
       //  builderUnits.get(0).setStrategy(new DefensiveStrategy(0,spaceShuttleCoord, spaceShuttleExitPos));
-        builderUnits.get(0).setStrategy(new RepairerStrategy(0));
-        builderUnits.get(1).setStrategy(new ExplorerStrategy(1));
+        builderUnits.get(0).setStrategy(new DefensiveStrategy(0)); // FIXME id-k nem biztos jók lesznek
+        builderUnits.get(1).setStrategy(new RepairerStrategy(1));
         builderUnits.get(2).setStrategy(new RepairerStrategy(2));
-        builderUnits.get(3).setStrategy(new RepairerStrategy(3));
+        builderUnits.get(3).setStrategy(new ExplorerStrategy(3));
     }
 
     public void startGame() {

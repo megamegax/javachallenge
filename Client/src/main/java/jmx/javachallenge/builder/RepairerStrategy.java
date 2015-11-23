@@ -51,6 +51,33 @@ public class RepairerStrategy implements Strategy {
             }
             ArrayList<WsCoordinate> path = Util.planRoute(service.getCurrentMap(), builderUnit.getCord(), destination, new MoveStrategy() {
                 @Override
+                public boolean canMoveTo(Tile tile) {
+                    switch (tile.getTileType()) {
+                        case UNKNOWN:
+                            return true;
+                        case SHUTTLE:
+                            return false;
+                        case ROCK:
+                            return true;
+                        case OBSIDIAN:
+                            return false;
+                        case TUNNEL:
+                            return true;
+                        case BUILDER:
+                            return false;
+                        case GRANITE:
+                            return true;
+                        case ENEMY_TUNNEL:
+                            return true;
+                        case ENEMY_SHUTTLE:
+                            return false;
+                        case ENEMY_BUILDER:
+                            return false;
+                    }
+                    return false;
+                }
+
+                @Override
                 public int getDistanceTo(Tile tile) {
                     return getCostOfMoveToTile(tile);
                 }
