@@ -228,6 +228,9 @@ public class Util {
                     actualCoord = cameFrom[actualCoord.getX()][actualCoord.getY()];
                 }
                 Collections.reverse(path);
+                if (path.size() == 0) {
+                    path.add(startCoord);
+                }
                 return path;
             } else {
                 closedSet.add(minCoord);

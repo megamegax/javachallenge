@@ -79,7 +79,7 @@ public class RepairerStrategy implements Strategy {
                     return getCostOfMoveToTile(tile);
                 }
             });
-            if (path != null) {
+            if (path != null && path.size() != 0) {
                 if (path.size() > 1) {
                     return path.get(1);
                 } else {

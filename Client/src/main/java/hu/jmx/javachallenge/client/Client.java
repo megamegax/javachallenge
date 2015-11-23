@@ -48,16 +48,20 @@ public class Client {
         int lastBuilderId = -1;
         while (service.turnLeft != 0) {
             Util.wait(310);
-            if (service.isMyTurn()) {
-                if (service.turnLeft != lastTurnLeft || service.currentBuilder.getUnitid() != lastBuilderId) {
-                    service.currentBuilder.step(service.getCurrentMap());
-                    lastTurnLeft = service.turnLeft;
-                    lastBuilderId = service.currentBuilder.getUnitid();
+            try {
+                if (service.isMyTurn()) {
+                    if (service.turnLeft != lastTurnLeft || service.currentBuilder.getUnitid() != lastBuilderId) {
+                        service.currentBuilder.step(service.getCurrentMap());
+                        lastTurnLeft = service.turnLeft;
+                        lastBuilderId = service.currentBuilder.getUnitid();
+                    } else {
+                        //Logger.log("Ezzel az egységgel már léptünk ebben a körben.");
+                    }
                 } else {
-                    //Logger.log("Ezzel az egységgel már léptünk ebben a körben.");
+                    //Logger.log("Nem a mi körünk");
                 }
-            } else {
-                //Logger.log("Nem a mi körünk");
+            } catch (Throwable e) {
+                e.printStackTrace();
             }
         }
     }
