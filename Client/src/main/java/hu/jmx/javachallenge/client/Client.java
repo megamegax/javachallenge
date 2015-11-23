@@ -15,18 +15,21 @@ import java.util.List;
  */
 public class Client {
     private Service service;
+    private String username;
 
     public Client() {
         this("jmx", "XWHD7855");
     }
 
     public Client(String username, String password) {
+        this.username = username;
         java.net.Authenticator.setDefault(new java.net.Authenticator() {
             @Override
             protected java.net.PasswordAuthentication getPasswordAuthentication() {
                 return new java.net.PasswordAuthentication(username, password.toCharArray());
             }
         });
+
     }
 
     public void run() {
@@ -34,6 +37,7 @@ public class Client {
         Logger.init(new LogLevels[]{LogLevels.DEBUG, LogLevels.MAP});
 //        Logger.init(new LogLevels[]{});
         service = Service.getInstance();
+        service.setMyTeamName(username);
 
         service.startGame();
         service.saveSpaceShuttlePos();

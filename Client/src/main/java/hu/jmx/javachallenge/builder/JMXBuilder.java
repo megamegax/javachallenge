@@ -67,7 +67,9 @@ public class JMXBuilder extends WsBuilderunit {
             service.watch(unitid);
         }
         List<WsCoordinate> radarPoints = findRadarPoints(service.getRemainingActionPoints() / service.getActionCosts().getRadar());
-        service.radar(unitid, radarPoints);
+        if (radarPoints.size() != 0) {
+            service.radar(unitid, radarPoints);
+        }
         System.out.println("Turn length: " + (System.currentTimeMillis() - startTime));
     }
 

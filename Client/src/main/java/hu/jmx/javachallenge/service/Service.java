@@ -5,7 +5,6 @@ import hu.jmx.javachallenge.builder.JMXBuilder;
 import hu.jmx.javachallenge.builder.RepairerStrategy;
 import hu.jmx.javachallenge.logger.Logger;
 import hu.jmx.javachallenge.builder.DefensiveStrategy;
-import hu.jmx.javachallenge.builder.ExplorerStrategy;
 import hu.jmx.javachallenge.helper.TileType;
 import hu.jmx.javachallenge.helper.Util;
 
@@ -16,9 +15,9 @@ import java.util.List;
  * Created by MegaX on 2015. 11. 12..
  */
 public class Service {
-    public static final String MY_TEAM_NAME = "jmx";
     private static Service service = null;
 
+    public String myTeamName = "jmx";
     public CentralControl api = null;
     public CommonResp serviceState;
     private WsCoordinate spaceShuttleCoord;
@@ -41,6 +40,10 @@ public class Service {
             service = new Service();
         }
         return service;
+    }
+
+    public void setMyTeamName(String myTeamName) {
+        this.myTeamName = myTeamName;
     }
 
     public void setStrategies() {
@@ -144,7 +147,7 @@ public class Service {
             processResult(res.getResult());
             if (res.getResult().getType().equals(ResultType.DONE)) {
                 for (Scouting scout : res.getScout()) {
-                    currentMap.getMapTile(scout.getCord()).setTileType(Util.stringToCellType(scout.getObject().name(), MY_TEAM_NAME.equalsIgnoreCase(scout.getTeam()), scout.getCord()));
+                    currentMap.getMapTile(scout.getCord()).setTileType(Util.stringToCellType(scout.getObject().name(), myTeamName.equalsIgnoreCase(scout.getTeam()), scout.getCord()));
                 }
                 // Saját koordináta meghatározása a szomszédos mezők koordinátáiból
                 builderUnits.get(unitID).setCord(new WsCoordinate(res.getScout().get(0).getCord().getX(), res.getScout().get(2).getCord().getY()));
@@ -202,7 +205,7 @@ public class Service {
             processResult(res.getResult());
             if (res.getResult().getType().equals(ResultType.DONE)) {
                 for (Scouting scout : res.getScout()) {
-                    currentMap.getMapTile(scout.getCord()).setTileType(Util.stringToCellType(scout.getObject().name(), MY_TEAM_NAME.equalsIgnoreCase(scout.getTeam()), scout.getCord()));
+                    currentMap.getMapTile(scout.getCord()).setTileType(Util.stringToCellType(scout.getObject().name(), myTeamName.equalsIgnoreCase(scout.getTeam()), scout.getCord()));
                 }
                 Util.printMap(currentMap);
                 return true;
