@@ -1,14 +1,14 @@
-package jmx.javachallenge.helper;
+package hu.jmx.javachallenge.helper;
 
-import com.sun.istack.internal.Nullable;
 import eu.loxon.centralcontrol.CommonResp;
 import eu.loxon.centralcontrol.WsBuilderunit;
 import eu.loxon.centralcontrol.WsCoordinate;
 import eu.loxon.centralcontrol.WsDirection;
-import jmx.javachallenge.logger.Logger;
-import jmx.javachallenge.service.GameMap;
-import jmx.javachallenge.service.Service;
+import hu.jmx.javachallenge.logger.Logger;
+import hu.jmx.javachallenge.service.GameMap;
+import hu.jmx.javachallenge.service.Service;
 
+import javax.annotation.Nullable;
 import java.util.*;
 
 /**
@@ -123,25 +123,25 @@ public class Util {
     public static void printMap(GameMap map) {
         System.out.print("    ");
         for (int x = 0; x < map.getXSize(); x++) {
-            System.out.print((char) 27 + "[30m" + x % 10 + " ");
+            System.out.print((char) 27 + "[39m" + x % 10 + " ");
         }
         System.out.println();
-        System.out.println((char) 27 + "[30m    -----------------------------------------");
+        System.out.println((char) 27 + "[39m    -----------------------------------------");
         for (int y = map.getYSize() - 1; y >= 0; y--) {
             String rowString = "";
-            System.out.print((char) 27 + "[30m" + (y <= 9 ? " " + (y) : y) + "| ");
+            System.out.print((char) 27 + "[39m" + (y <= 9 ? " " + (y) : y) + "| ");
             for (int x = 0; x < map.getXSize(); x++) {
                 Tile tile = map.getMapTile(x, y);
                 if (tile.getUnitId() >= 0) {
                     rowString += (char) 27 + "[32m" + Integer.toString(tile.getUnitId()) + " ";
                 } else {
-                    rowString += (char) 27 + "[30m" + getTileTypeChar(tile.getTileType()) + " ";
+                    rowString += (char) 27 + "[39m" + getTileTypeChar(tile.getTileType()) + " ";
                 }
             }
-            System.out.println((char) 27 + "[30m" + rowString);
+            System.out.println((char) 27 + "[39m" + rowString);
         }
-        System.out.println((char) 27 + "[30m    -----------------------------------------");
-        System.out.print((char) 27 + "[30m    ");
+        System.out.println((char) 27 + "[39m    -----------------------------------------");
+        System.out.print((char) 27 + "[39m    ");
         for (int x = 0; x < map.getXSize(); x++) {
             System.out.print(x % 10 + " ");
         }
@@ -151,13 +151,13 @@ public class Util {
     private static String getTileTypeChar(TileType tileType) {
         switch (tileType) {
             case UNKNOWN:
-                return (char) 27 + "[30m ";
+                return (char) 27 + "[39m ";
             case ROCK:
-                return (char) 27 + "[30m.";
+                return (char) 27 + "[39m.";
             case GRANITE:
-                return (char) 27 + "[30m;";
+                return (char) 27 + "[39m;";
             case OBSIDIAN:
-                return (char) 27 + "[30m#";
+                return (char) 27 + "[39m#";
             case SHUTTLE:
                 return (char) 27 + "[32m@";
             case ENEMY_SHUTTLE:
@@ -171,7 +171,7 @@ public class Util {
             case ENEMY_BUILDER:
                 return (char) 27 + "[31mE";
         }
-        return (char) 27 + "[30m?";
+        return (char) 27 + "[39m?";
     }
 
     public static void printResult(CommonResp result) {

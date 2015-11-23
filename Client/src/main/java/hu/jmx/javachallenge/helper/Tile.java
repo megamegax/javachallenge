@@ -1,4 +1,4 @@
-package jmx.javachallenge.helper;
+package hu.jmx.javachallenge.helper;
 
 /**
  * Created by megam on 2015. 11. 15..

@@ -1,14 +1,11 @@
-package jmx.javachallenge.builder;
+package hu.jmx.javachallenge.builder;
 
 import eu.loxon.centralcontrol.WsCoordinate;
-import jmx.javachallenge.helper.MoveStrategy;
-import jmx.javachallenge.helper.Tile;
-import jmx.javachallenge.helper.Util;
-import jmx.javachallenge.logger.Logger;
+import hu.jmx.javachallenge.helper.MoveStrategy;
+import hu.jmx.javachallenge.helper.Tile;
+import hu.jmx.javachallenge.helper.Util;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Supplier;
 
 /**
  * Created by joci on 11/19/15.

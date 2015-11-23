@@ -1,13 +1,13 @@
-package jmx.javachallenge.service;
+package hu.jmx.javachallenge.service;
 
 import eu.loxon.centralcontrol.*;
-import jmx.javachallenge.builder.DefensiveStrategy;
-import jmx.javachallenge.builder.ExplorerStrategy;
-import jmx.javachallenge.builder.JMXBuilder;
-import jmx.javachallenge.builder.RepairerStrategy;
-import jmx.javachallenge.helper.TileType;
-import jmx.javachallenge.helper.Util;
-import jmx.javachallenge.logger.Logger;
+import hu.jmx.javachallenge.builder.JMXBuilder;
+import hu.jmx.javachallenge.builder.RepairerStrategy;
+import hu.jmx.javachallenge.logger.Logger;
+import hu.jmx.javachallenge.builder.DefensiveStrategy;
+import hu.jmx.javachallenge.builder.ExplorerStrategy;
+import hu.jmx.javachallenge.helper.TileType;
+import hu.jmx.javachallenge.helper.Util;
 
 import java.util.HashMap;
 import java.util.List;

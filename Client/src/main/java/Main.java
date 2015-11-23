@@ -1,4 +1,4 @@
-import jmx.javachallenge.client.Client;
+import hu.jmx.javachallenge.client.Client;
 
 /**
  * Created by MegaX on 2015. 11. 13..

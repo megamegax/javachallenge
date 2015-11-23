@@ -1,4 +1,4 @@
-package jmx.javachallenge.logger;
+package hu.jmx.javachallenge.logger;
 
 import com.google.gson.Gson;
 

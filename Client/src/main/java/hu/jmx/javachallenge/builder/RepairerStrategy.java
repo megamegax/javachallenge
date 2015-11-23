@@ -1,16 +1,12 @@
-package jmx.javachallenge.builder;
+package hu.jmx.javachallenge.builder;
 
 import eu.loxon.centralcontrol.WsCoordinate;
-import jmx.javachallenge.helper.MoveStrategy;
-import jmx.javachallenge.helper.Tile;
-import jmx.javachallenge.helper.Util;
-import jmx.javachallenge.logger.Logger;
-import sun.rmi.runtime.Log;
+import hu.jmx.javachallenge.helper.MoveStrategy;
+import hu.jmx.javachallenge.helper.Tile;
+import hu.jmx.javachallenge.helper.Util;
+import hu.jmx.javachallenge.logger.Logger;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.function.Supplier;
 
 /**
  * Created by joci on 11/19/15.
@@ -23,7 +19,7 @@ import java.util.function.Supplier;
 //TODO statikus listában tárolni a többi explorer strategy célpontját
 //és az új célpontokat úgy kéne kikalkulálni, hogy az előző pontokhoz
 // képest a távolságuk maximális legyen
-public class ExplorerStrategy implements Strategy {
+public class RepairerStrategy implements Strategy {
     private final int unitID;
     private final JMXBuilder builderUnit;
     private WsCoordinate destination;
@@ -32,7 +28,7 @@ public class ExplorerStrategy implements Strategy {
         this.destination = destination;
     }
 
-    public ExplorerStrategy(int unitID) {
+    public RepairerStrategy(int unitID) {
         this.unitID = unitID;
         this.builderUnit = service.builderUnits.get(unitID);
         this.destination = Util.getRandomCoordinate();
@@ -54,8 +50,35 @@ public class ExplorerStrategy implements Strategy {
             }
             ArrayList<WsCoordinate> path = Util.planRoute(service.getCurrentMap(), builderUnit.getCord(), destination, new MoveStrategy() {
                 @Override
+                public boolean canMoveTo(Tile tile) {
+                    switch (tile.getTileType()) {
+                        case UNKNOWN:
+                            return true;
+                        case SHUTTLE:
+                            return false;
+                        case ROCK:
+                            return true;
+                        case OBSIDIAN:
+                            return false;
+                        case TUNNEL:
+                            return true;
+                        case BUILDER:
+                            return false;
+                        case GRANITE:
+                            return true;
+                        case ENEMY_TUNNEL:
+                            return true;
+                        case ENEMY_SHUTTLE:
+                            return false;
+                        case ENEMY_BUILDER:
+                            return false;
+                    }
+                    return false;
+                }
+
+                @Override
                 public int getDistanceTo(Tile tile) {
-                    return Util.getCostOfMoveToTile(tile);
+                    return getCostOfMoveToTile(tile);
                 }
             });
             if (path != null) {
@@ -73,6 +96,32 @@ public class ExplorerStrategy implements Strategy {
                 return builderUnit.getCord();
             }
         }
+    }
+
+    private int getCostOfMoveToTile(Tile tile){
+        switch (tile.getTileType()) {
+            case UNKNOWN:
+                return 50;
+            case SHUTTLE:
+                return 10000;
+            case ROCK:
+                return service.getActionCosts().getDrill() + service.getActionCosts().getMove();
+            case OBSIDIAN:
+                return 10000;
+            case TUNNEL:
+                return service.getActionCosts().getMove()+service.getActionCosts().getDrill();
+            case BUILDER:
+                return service.getActionCosts().getMove() + 60;
+            case GRANITE:
+                return service.getActionCosts().getExplode() + service.getActionCosts().getDrill() + service.getActionCosts().getMove()+50;
+            case ENEMY_TUNNEL:
+                return 1;
+            case ENEMY_SHUTTLE:
+                return 10000;
+            case ENEMY_BUILDER:
+                return 500;
+        }
+        return 1;
     }
 
 }

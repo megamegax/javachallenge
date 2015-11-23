@@ -1,12 +1,11 @@
-package jmx.javachallenge.client;
+package hu.jmx.javachallenge.client;
 
 import eu.loxon.centralcontrol.WsCoordinate;
 import eu.loxon.centralcontrol.WsDirection;
-import jmx.javachallenge.builder.JMXBuilder;
-import jmx.javachallenge.helper.Util;
-import jmx.javachallenge.logger.LogLevels;
-import jmx.javachallenge.logger.Logger;
-import jmx.javachallenge.service.Service;
+import hu.jmx.javachallenge.logger.LogLevels;
+import hu.jmx.javachallenge.logger.Logger;
+import hu.jmx.javachallenge.service.Service;
+import hu.jmx.javachallenge.helper.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,8 +17,8 @@ public class Client {
     private Service service;
 
     public void run() {
-        System.out.println((char) 27 + "[30mHello JMX");
-        Logger.init(new LogLevels[]{LogLevels.DEBUG,LogLevels.MAP});
+        System.out.println((char) 27 + "[39mHello JMX");
+        Logger.init(new LogLevels[]{LogLevels.DEBUG, LogLevels.MAP});
 //        Logger.init(new LogLevels[]{});
         service = Service.getInstance();
 

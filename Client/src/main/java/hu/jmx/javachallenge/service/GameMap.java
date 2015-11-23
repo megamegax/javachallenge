@@ -1,8 +1,8 @@
-package jmx.javachallenge.service;
+package hu.jmx.javachallenge.service;
 
 import eu.loxon.centralcontrol.WsCoordinate;
-import jmx.javachallenge.helper.Tile;
-import jmx.javachallenge.helper.TileType;
+import hu.jmx.javachallenge.helper.Tile;
+import hu.jmx.javachallenge.helper.TileType;
 
 /**
  * Created by Márton on 2015. 11. 21..

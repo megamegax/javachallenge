@@ -1,4 +1,4 @@
-package jmx.javachallenge.helper;
+package hu.jmx.javachallenge.helper;
 
 /**
  * Created by Márton on 2015. 11. 21..

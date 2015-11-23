@@ -1,4 +1,4 @@
-package jmx.javachallenge.logger;
+package hu.jmx.javachallenge.logger;
 
 /**
  * Created by megam on 2015. 11. 18..

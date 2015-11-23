@@ -3,14 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package jmx.javachallenge.builder;
+package hu.jmx.javachallenge.builder;
 
-import eu.loxon.centralcontrol.WsCoordinate;
 import org.junit.*;
-
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 /**
  *
@@ -42,8 +37,8 @@ public class DefensiveStrategyTest {
     @Test
     public void testCorrectOrder() {
         int until = 25;
-        List<WsCoordinate> result = IntStream.range(0,until).mapToObj(i -> s.nextCoordinate()).collect(Collectors.toList());
-        result.forEach(System.out::println);
+//        List<WsCoordinate> result = IntStream.range(0,until).mapToObj(i -> s.nextCoordinate()).collect(Collectors.toList());
+//        result.forEach(System.out::println);
     }
     
 }

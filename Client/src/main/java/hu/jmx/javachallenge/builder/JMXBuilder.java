@@ -1,16 +1,16 @@
-package jmx.javachallenge.builder;
+package hu.jmx.javachallenge.builder;
 
-import com.sun.istack.internal.NotNull;
+import javax.annotation.Nonnull;
 import eu.loxon.centralcontrol.WsBuilderunit;
 import eu.loxon.centralcontrol.WsCoordinate;
 import eu.loxon.centralcontrol.WsDirection;
-import jmx.javachallenge.helper.Step;
-import jmx.javachallenge.helper.Tile;
-import jmx.javachallenge.helper.TileType;
-import jmx.javachallenge.helper.Util;
-import jmx.javachallenge.logger.Logger;
-import jmx.javachallenge.service.GameMap;
-import jmx.javachallenge.service.Service;
+import hu.jmx.javachallenge.helper.Step;
+import hu.jmx.javachallenge.helper.Tile;
+import hu.jmx.javachallenge.helper.TileType;
+import hu.jmx.javachallenge.helper.Util;
+import hu.jmx.javachallenge.logger.Logger;
+import hu.jmx.javachallenge.service.GameMap;
+import hu.jmx.javachallenge.service.Service;
 
 import java.util.Random;
 
@@ -116,7 +116,7 @@ public class JMXBuilder extends WsBuilderunit {
     }
 
     @Override
-    public void setCord(@NotNull WsCoordinate coordinate) {
+    public void setCord(@Nonnull WsCoordinate coordinate) {
         if (getCord() != null && !getCord().equals(service.getSpaceShuttleCoord())) {
             Tile oldTile = service.getCurrentMap().getMapTile(getCord());
             oldTile.setBuilder(-1);
