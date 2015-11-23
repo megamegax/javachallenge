@@ -54,9 +54,9 @@ public class Service {
         JMXBuilder builder3 = builderUnits.get(3);
 
         //  builderUnits.get(0).setStrategy(new DefensiveStrategy(0,spaceShuttleCoord, spaceShuttleExitPos));
-        builder0.setStrategy(new DefensiveStrategy(builder0, spaceShuttleCoord));
+        builder0.setStrategy(new DefensiveStrategy(builder0, new WsCoordinate(currentMap.getXSize() - spaceShuttleCoord.getX(), currentMap.getYSize() - spaceShuttleCoord.getY())));
+        builder1.setStrategy(new DefensiveStrategy(builder1, spaceShuttleCoord));
         //builderUnits.get(1).setStrategy(new RepairerStrategy(1));
-        builder1.setStrategy(new DefensiveStrategy(builder1, new WsCoordinate(currentMap.getXSize() - spaceShuttleCoord.getX(), currentMap.getYSize() - spaceShuttleCoord.getY())));
         builder2.setStrategy(new RepairerStrategy(builder2));
         //builderUnits.get(2).setStrategy(new DefensiveStrategy(2, new WsCoordinate(currentMap.getXSize()/2+1, currentMap.getYSize()/2+1)));
         builder3.setStrategy(new RepairerStrategy(builder3));

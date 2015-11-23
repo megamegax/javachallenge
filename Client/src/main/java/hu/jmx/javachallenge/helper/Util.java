@@ -62,7 +62,6 @@ public class Util {
     public static Step checkMovement(GameMap map, WsCoordinate simulatedCoordinate) {
         if (simulatedCoordinate.getX() < service.initialGameState.getSize().getX() && simulatedCoordinate.getY() < service.initialGameState.getSize().getY()) {
             int tileType = map.getMapTile(simulatedCoordinate).getTileTypeIndex();
-            Logger.log("Lépés ellenőrzés:::::::" + tileType);
             return Step.getStep(tileType);
         } else return Step.STAY;
     }

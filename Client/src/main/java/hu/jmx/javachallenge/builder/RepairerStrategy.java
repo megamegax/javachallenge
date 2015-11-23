@@ -99,7 +99,7 @@ public class RepairerStrategy implements Strategy {
     private int getCostOfMoveToTile(Tile tile){
         switch (tile.getTileType()) {
             case UNKNOWN:
-                return 50;
+                return service.getActionCosts().getDrill() + service.getActionCosts().getMove();
             case SHUTTLE:
                 return 10000;
             case ROCK:
@@ -107,11 +107,11 @@ public class RepairerStrategy implements Strategy {
             case OBSIDIAN:
                 return 10000;
             case TUNNEL:
-                return service.getActionCosts().getMove()+service.getActionCosts().getDrill();
+                return service.getActionCosts().getMove()+service.getActionCosts().getDrill()+20;
             case BUILDER:
-                return service.getActionCosts().getMove() + 60;
+                return service.getActionCosts().getMove() + 200;
             case GRANITE:
-                return service.getActionCosts().getExplode() + service.getActionCosts().getDrill() + service.getActionCosts().getMove()+50;
+                return service.getActionCosts().getExplode() + service.getActionCosts().getDrill() + service.getActionCosts().getMove()+10;
             case ENEMY_TUNNEL:
                 return 1;
             case ENEMY_SHUTTLE:
