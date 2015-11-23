@@ -1,0 +1,7 @@
+Defensive strategyt tenni több pontba
+Radarozzon mindenki a maradék pontjaiból
+- Saját alagút
+- Üres mezõ
+- Ellenség áll
+- Nincs saját közelében
+Megcsinálni a mavenes cuccot
