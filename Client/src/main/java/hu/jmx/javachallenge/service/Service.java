@@ -78,12 +78,13 @@ public class Service {
 
     private void processResult(CommonResp result) {
         // TODO: tároljuk le az infókat ezekből az adatokból, minden dolog után friss infónk legyen mindenről
-        if (serviceState == null || !serviceState.toString().equals(result.toString())) {
-            Util.printResult(result);
-        }
+        Util.printResult(result);
         serviceState = result;
-        remainingActionPoints = result.getActionPointsLeft();
-        currentBuilder = selectBuilder(result.getBuilderUnit());
+        if (result.getActionPointsLeft() > remainingActionPoints) {
+            remainingActionPoints = 0;
+        } else {
+            remainingActionPoints = result.getActionPointsLeft();
+        }
         if (turnLeft > result.getTurnsLeft()) {
             this.newTurnFound(75 - turnLeft);
         }
@@ -96,6 +97,10 @@ public class Service {
             IsMyTurnResponse res = api.isMyTurn(req);
             //Logger.log("Request sent: " + req.toString());
             //Logger.log("Answer: " + res.toString());
+            if (res.isIsYourTurn()) {
+                remainingActionPoints = res.getResult().getActionPointsLeft();
+                currentBuilder = selectBuilder(res.getResult().getBuilderUnit());
+            }
             processResult(res.getResult());
             return res.isIsYourTurn();
         }catch(Exception e){
