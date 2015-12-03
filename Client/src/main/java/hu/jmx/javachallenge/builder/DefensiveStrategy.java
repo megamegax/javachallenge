@@ -25,7 +25,7 @@ public class DefensiveStrategy implements Strategy {
 
     @Override
     public WsCoordinate nextCoordinate() {
-        if (service.turnLeft < 15) {
+        if (service.turnLeft < 10) {
             destination = service.getSpaceShuttleCoord();
         }
 
