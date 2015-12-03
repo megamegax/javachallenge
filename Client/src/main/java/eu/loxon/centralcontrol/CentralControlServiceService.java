@@ -13,7 +13,7 @@ import java.net.URL;
  * Generated source version: 2.2
  * 
  */
-@WebServiceClient(name = "CentralControlServiceService", targetNamespace = "http://www.loxon.eu/CentralControl/", wsdlLocation = "192.168.1.2:8443/engine/CentralControl?wsdl")
+@WebServiceClient(name = "CentralControlServiceService", targetNamespace = "http://www.loxon.eu/CentralControl/", wsdlLocation = "http://192.168.1.2:8443/engine/CentralControl?wsdl")
 public class CentralControlServiceService
     extends Service
 {

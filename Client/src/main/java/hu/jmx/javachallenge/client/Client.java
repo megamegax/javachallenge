@@ -51,9 +51,9 @@ public class Client {
             try {
                 if (service.isMyTurn()) {
                     if (service.turnLeft != lastTurnLeft || service.currentBuilder.getUnitid() != lastBuilderId) {
-                        service.currentBuilder.step(service.getCurrentMap());
                         lastTurnLeft = service.turnLeft;
                         lastBuilderId = service.currentBuilder.getUnitid();
+                        service.currentBuilder.step(service.getCurrentMap());
                     } else {
                         //Logger.log("Ezzel az egységgel már léptünk ebben a körben.");
                     }
