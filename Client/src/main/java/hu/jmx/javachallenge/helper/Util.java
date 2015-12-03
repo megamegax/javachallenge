@@ -4,7 +4,6 @@ import eu.loxon.centralcontrol.CommonResp;
 import eu.loxon.centralcontrol.WsBuilderunit;
 import eu.loxon.centralcontrol.WsCoordinate;
 import eu.loxon.centralcontrol.WsDirection;
-import hu.jmx.javachallenge.logger.Logger;
 import hu.jmx.javachallenge.service.GameMap;
 import hu.jmx.javachallenge.service.Service;
 
@@ -21,6 +20,7 @@ public class Util {
     public static final String RED_COLOR = (char) 27 + "[31m";
     private static Service service = Service.getInstance();
     private static Random random = new Random();
+    private static Set<WsCoordinate> tabooRandomSet = new HashSet<>();
 
     @Nullable
     public static WsDirection calculateDirection(WsCoordinate source, WsCoordinate target) {
@@ -307,7 +307,12 @@ public class Util {
     }
 
     public static WsCoordinate getRandomCoordinate() {
-        return new WsCoordinate(random.nextInt(service.getCurrentMap().getXSize()), random.nextInt(service.getCurrentMap().getYSize()));
+        WsCoordinate candidate = new WsCoordinate(random.nextInt(service.getCurrentMap().getXSize()), random.nextInt(service.getCurrentMap().getYSize()));
+        while(tabooRandomSet.contains(candidate)){
+            candidate = new WsCoordinate(random.nextInt(service.getCurrentMap().getXSize()), random.nextInt(service.getCurrentMap().getYSize()));
+        }
+        tabooRandomSet.add(candidate);
+        return candidate;
     }
 
     public static WsCoordinate halfWay(WsCoordinate first, WsCoordinate second) {
