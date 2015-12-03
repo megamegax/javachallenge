@@ -22,7 +22,7 @@ public class Service {
     public CommonResp serviceState;
     private WsCoordinate spaceShuttleCoord;
     public HashMap<Integer, JMXBuilder> builderUnits = new HashMap<>();
-    public int turnLeft = 51;
+    public int turnLeft = 76;
     public StartGameResponse initialGameState;
     public JMXBuilder currentBuilder;
     private WsCoordinate spaceShuttleExitPos;
@@ -85,7 +85,7 @@ public class Service {
         remainingActionPoints = result.getActionPointsLeft();
         currentBuilder = selectBuilder(result.getBuilderUnit());
         if (turnLeft > result.getTurnsLeft()) {
-            this.newTurnFound(50 - turnLeft);
+            this.newTurnFound(75 - turnLeft);
         }
         turnLeft = result.getTurnsLeft();
     }

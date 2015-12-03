@@ -1,14 +1,10 @@
 
 package eu.loxon.centralcontrol;
 
+import javax.xml.namespace.QName;
+import javax.xml.ws.*;
 import java.net.MalformedURLException;
 import java.net.URL;
-import javax.xml.namespace.QName;
-import javax.xml.ws.Service;
-import javax.xml.ws.WebEndpoint;
-import javax.xml.ws.WebServiceClient;
-import javax.xml.ws.WebServiceException;
-import javax.xml.ws.WebServiceFeature;
 
 
 /**
@@ -17,7 +13,7 @@ import javax.xml.ws.WebServiceFeature;
  * Generated source version: 2.2
  * 
  */
-@WebServiceClient(name = "CentralControlServiceService", targetNamespace = "http://www.loxon.eu/CentralControl/", wsdlLocation = "http://javachallenge.loxon.hu:8443/engine/CentralControl?wsdl")
+@WebServiceClient(name = "CentralControlServiceService", targetNamespace = "http://www.loxon.eu/CentralControl/", wsdlLocation = "192.168.1.2:8443/engine/CentralControl?wsdl")
 public class CentralControlServiceService
     extends Service
 {
@@ -30,7 +26,7 @@ public class CentralControlServiceService
         URL url = null;
         WebServiceException e = null;
         try {
-            url = new URL("http://javachallenge.loxon.hu:8443/engine/CentralControl?wsdl");
+            url = new URL("http://192.168.1.2:8443/engine/CentralControl?wsdl");
         } catch (MalformedURLException ex) {
             e = new WebServiceException(ex);
         }
