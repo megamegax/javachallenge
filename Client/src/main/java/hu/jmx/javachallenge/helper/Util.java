@@ -283,7 +283,7 @@ public class Util {
     public static int getCostOfMoveToTile(Tile tile) {
         switch (tile.getTileType()) {
             case UNKNOWN:
-                return 5;
+                return 7;
             case SHUTTLE:
                 return 10000;
             case ROCK:
@@ -308,6 +308,10 @@ public class Util {
 
     public static WsCoordinate getRandomCoordinate() {
         return new WsCoordinate(random.nextInt(service.getCurrentMap().getXSize()), random.nextInt(service.getCurrentMap().getYSize()));
+    }
+
+    public static WsCoordinate halfWay(WsCoordinate first, WsCoordinate second) {
+        return new WsCoordinate((first.getX() + second.getX()) / 2, (first.getY() + second.getY()) / 2);
     }
 
 }

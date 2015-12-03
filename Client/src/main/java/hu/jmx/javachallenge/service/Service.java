@@ -52,14 +52,21 @@ public class Service {
         JMXBuilder builder1 = builderUnits.get(1);
         JMXBuilder builder2 = builderUnits.get(2);
         JMXBuilder builder3 = builderUnits.get(3);
-
+/*
         //  builderUnits.get(0).setStrategy(new DefensiveStrategy(0,spaceShuttleCoord, spaceShuttleExitPos));
         builder0.setStrategy(new DefensiveStrategy(builder0, new WsCoordinate(currentMap.getXSize() - spaceShuttleCoord.getX(), currentMap.getYSize() - spaceShuttleCoord.getY())));
         builder1.setStrategy(new DefensiveStrategy(builder1, spaceShuttleCoord));
         //builderUnits.get(1).setStrategy(new RepairerStrategy(1));
         builder2.setStrategy(new RepairerStrategy(builder2));
         //builderUnits.get(2).setStrategy(new DefensiveStrategy(2, new WsCoordinate(currentMap.getXSize()/2+1, currentMap.getYSize()/2+1)));
-        builder3.setStrategy(new RepairerStrategy(builder3));
+        builder3.setStrategy(new RepairerStrategy(builder3));*/
+
+        WsCoordinate myCorner = new WsCoordinate(spaceShuttleCoord.getX() < currentMap.getXSize() / 2 ? 1 : currentMap.getXSize(), spaceShuttleCoord.getY() < currentMap.getYSize() / 2 ? 1 : currentMap.getYSize());
+
+        builder0.setStrategy(new DefensiveStrategy(builder0, myCorner));
+        builder1.setStrategy(new DefensiveStrategy(builder1, spaceShuttleCoord));
+        builder2.setStrategy(new DefensiveStrategy(builder2, new WsCoordinate(spaceShuttleCoord.getX(), currentMap.getYSize() - spaceShuttleCoord.getY())));
+        builder3.setStrategy(new DefensiveStrategy(builder3, new WsCoordinate(currentMap.getXSize() - spaceShuttleCoord.getX(), spaceShuttleCoord.getY())));
     }
 
     public void startGame() {

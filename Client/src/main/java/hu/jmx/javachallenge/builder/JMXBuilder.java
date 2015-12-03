@@ -11,6 +11,7 @@ import hu.jmx.javachallenge.helper.Util;
 import hu.jmx.javachallenge.logger.Logger;
 import hu.jmx.javachallenge.service.GameMap;
 import hu.jmx.javachallenge.service.Service;
+import sun.rmi.runtime.Log;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -61,6 +62,7 @@ public class JMXBuilder extends WsBuilderunit {
             previousActionPoints = service.getRemainingActionPoints();
             service.watch(unitid);
             WsCoordinate coordinate = strategy.nextCoordinate();
+            Logger.log("Next coordinate: " + coordinate);
             if (doMove(map, Util.calculateDirection(unitid, coordinate))) {
                // service.builderUnits.get(unitid).strategy.done();
             }

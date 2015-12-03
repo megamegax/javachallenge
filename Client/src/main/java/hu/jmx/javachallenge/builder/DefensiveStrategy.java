@@ -4,6 +4,7 @@ import eu.loxon.centralcontrol.WsCoordinate;
 import hu.jmx.javachallenge.helper.MoveStrategy;
 import hu.jmx.javachallenge.helper.Tile;
 import hu.jmx.javachallenge.helper.Util;
+import hu.jmx.javachallenge.logger.Logger;
 
 import java.util.ArrayList;
 
@@ -103,6 +104,7 @@ public class DefensiveStrategy implements Strategy {
                         }
                     }
                     if (minPath != null) {
+                        Logger.log("Route plan: " + minPath.toString());
                         return minPath.get(0);
                     }
                 }
