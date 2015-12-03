@@ -47,7 +47,7 @@ public class Client {
         int lastTurnLeft = -1;
         int lastBuilderId = -1;
         while (service.turnLeft != 0) {
-            Util.wait(310);
+            Util.wait(160);
             try {
                 if (service.isMyTurn()) {
                     if (service.turnLeft != lastTurnLeft || service.currentBuilder.getUnitid() != lastBuilderId) {
