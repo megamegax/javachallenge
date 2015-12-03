@@ -139,7 +139,7 @@ public class Service {
     }
 
     public boolean watch(int unitID) {
-        if (remainingActionPoints - actionCosts.getWatch() >= 0) {
+        if (remainingActionPoints - actionCosts.getWatch() > 0) {
             WatchRequest req = new WatchRequest(unitID);
             WatchResponse res = api.watch(req);
             Logger.log("Request sent: " + req.toString());
