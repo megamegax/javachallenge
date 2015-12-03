@@ -224,6 +224,7 @@ public class Util {
                 WsCoordinate actualCoord = minCoord;
                 ArrayList<WsCoordinate> path = new ArrayList<>();
                 while (cameFrom[actualCoord.getX()][actualCoord.getY()] != null) {
+                    System.out.println("C " + actualCoord + " G: " + gScore[actualCoord.getX()][actualCoord.getY()] + " F: " + fScore[actualCoord.getX()][actualCoord.getY()]);
                     path.add(actualCoord);
                     actualCoord = cameFrom[actualCoord.getX()][actualCoord.getY()];
                 }
@@ -231,6 +232,7 @@ public class Util {
                 if (path.size() == 0) {
                     path.add(startCoord);
                 }
+                System.out.println("Path: " + path);
                 return path;
             } else {
                 closedSet.add(minCoord);
@@ -242,7 +244,7 @@ public class Util {
                     int newGScore = gScore[minCoord.getX()][minCoord.getY()] + moveStrategy.getDistanceTo(map.getMapTile(neighbour));
                     if (!openSet.contains(neighbour)) {
                         openSet.add(neighbour);
-                    } else if (newGScore >= gScore[neighbour.getX()][neighbour.getY()] + distanceHeuristics(neighbour, endCoord)) {
+                    } else if (newGScore >= gScore[neighbour.getX()][neighbour.getY()]) {
                         continue;
                     }
                     cameFrom[neighbour.getX()][neighbour.getY()] = minCoord;
@@ -283,7 +285,7 @@ public class Util {
     public static int getCostOfMoveToTile(Tile tile) {
         switch (tile.getTileType()) {
             case UNKNOWN:
-                return 7;
+                return 15;
             case SHUTTLE:
                 return 10000;
             case ROCK:

@@ -63,7 +63,7 @@ public class Service {
 
         WsCoordinate myCorner = new WsCoordinate(spaceShuttleCoord.getX() < currentMap.getXSize() / 2 ? 1 : currentMap.getXSize(), spaceShuttleCoord.getY() < currentMap.getYSize() / 2 ? 1 : currentMap.getYSize());
 
-        builder0.setStrategy(new DefensiveStrategy(builder0, Util.halfWay(myCorner, spaceShuttleCoord)));
+        builder0.setStrategy(new DefensiveStrategy(builder0, myCorner));
         builder1.setStrategy(new DefensiveStrategy(builder1, spaceShuttleCoord));
         builder2.setStrategy(new DefensiveStrategy(builder2, new WsCoordinate(spaceShuttleCoord.getX(), currentMap.getYSize() - spaceShuttleCoord.getY())));
         builder3.setStrategy(new DefensiveStrategy(builder3, new WsCoordinate(currentMap.getXSize() - spaceShuttleCoord.getX(), spaceShuttleCoord.getY())));
