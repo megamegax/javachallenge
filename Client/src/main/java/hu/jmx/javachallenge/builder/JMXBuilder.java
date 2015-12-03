@@ -151,6 +151,7 @@ public class JMXBuilder extends WsBuilderunit {
                 // return true;//service.builderUnits.get(unitID).strategy.done();
                 //}
               //  strategy.clear();
+                Logger.log("STAY: most: " + getCord().toString() + "; " + strategy.nextCoordinate());
                 return false;
 
             case NO_POINTS:
